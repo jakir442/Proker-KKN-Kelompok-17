@@ -1,0 +1,63 @@
+import {
+    LayoutDashboard,
+    Users,
+    Wallet,
+    Droplets,
+    FileText,
+    Store,
+    Bot,
+    Settings,
+} from "lucide-react";
+
+import { ROLES } from "@/constants/roles";
+
+export interface NavigationItem {
+    title: string;
+    href: string;
+    icon: React.ComponentType<{ className?: string }>;
+}
+
+export const navigation: Record<string, NavigationItem[]> = {
+    [ROLES.SUPER_ADMIN]: [
+        {
+            title: "Dashboard",
+            href: "/dashboard",
+            icon: LayoutDashboard,
+        },
+        {
+            title: "Pengguna",
+            href: "/dashboard/users",
+            icon: Users,
+        },
+        {
+            title: "APBDes",
+            href: "/dashboard/apbdes",
+            icon: Wallet,
+        },
+        {
+            title: "Air Bersih",
+            href: "/dashboard/water",
+            icon: Droplets,
+        },
+        {
+            title: "Administrasi Surat",
+            href: "/dashboard/letters",
+            icon: FileText,
+        },
+        {
+            title: "UMKM",
+            href: "/dashboard/umkm",
+            icon: Store,
+        },
+        {
+            title: "Asisten AI",
+            href: "/dashboard/ai",
+            icon: Bot,
+        },
+        {
+            title: "Pengaturan",
+            href: "/dashboard/settings",
+            icon: Settings,
+        },
+    ],
+};
