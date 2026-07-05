@@ -1,24 +1,20 @@
 import { ReactNode } from "react";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 
-import { Header } from "@/components/layout/header";
+import { Sidebar } from "./dashboard/layout/Sidebar";
+import { Header } from "./dashboard/layout/Header";
 
-interface DashboardLayoutProps {
+type DashboardLayoutProps = {
     children: ReactNode;
-}
+};
 
-export default async function DashboardLayout({ children }: DashboardLayoutProps) {
-    const session = await auth();
-
-    if (!session) {
-        redirect("/login");
-    }
-
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return (
-        <>
-            <Header />
-            <main className="p-6">{children}</main>
-        </>
+        <div className="min-h-screen bg-slate-100">
+            <Sidebar role="navigation" />
+            <div className="ml-64 flex min-h-screen flex-col">
+                <Header />
+                <main className="flex-1 p-6">{children}</main>
+            </div>
+        </div>
     );
 }
