@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 
 import { Sidebar } from "./dashboard/layout/Sidebar";
 import { Header } from "./dashboard/layout/Header";
+import { Toaster } from "@/components/ui/sonner";
 
 type DashboardLayoutProps = {
     children: ReactNode;
@@ -13,7 +14,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <Sidebar role="navigation" />
             <div className="ml-64 flex min-h-screen flex-col">
                 <Header />
-                <main className="flex-1 p-6">{children}</main>
+                <main className="flex-1 p-6">
+                    {children}
+                    <Toaster richColors position="top-right" />
+                </main>
             </div>
         </div>
     );
