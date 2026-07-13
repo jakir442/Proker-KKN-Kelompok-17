@@ -2,31 +2,11 @@ import { Container } from "../layout/Container";
 import { SectionHeader } from "../common/SectionHeader";
 import { TourismCard } from "./TourismCard";
 
-const tourism = [
-    {
-        name: "Bukit Cintanagara",
-        image: "/images/wisata-placeholder.jpg",
-        location: "Dusun Sukamaju",
-        description:
-            "Panorama alam yang indah dengan udara yang sejuk dan cocok untuk menikmati matahari terbit.",
-    },
-    {
-        name: "Curug Alam",
-        image: "/images/wisata-placeholder.jpg",
-        location: "Dusun Cibodas",
-        description:
-            "Air terjun alami yang menjadi salah satu destinasi favorit masyarakat sekitar.",
-    },
-    {
-        name: "Perkebunan Teh",
-        image: "/images/wisata-placeholder.jpg",
-        location: "Dusun Cintajaya",
-        description:
-            "Hamparan kebun teh hijau yang menawarkan pemandangan pegunungan yang memukau.",
-    },
-];
+import { findFeaturedTourism } from "@/repositories/tourism.repository";
 
-export function Tourism() {
+export async function Tourism() {
+    const tourism = await findFeaturedTourism(6);
+
     return (
         <section className="py-24">
             <Container>
@@ -38,7 +18,16 @@ export function Tourism() {
 
                 <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
                     {tourism.map((item) => (
-                        <TourismCard key={item.name} {...item} />
+                        <TourismCard
+                            key={item._id.toString()}
+                            id={item._id.toString()}
+                            slug={item.slug}
+                            name={item.name}
+                            image={item.image}
+                            location={item.address}
+                            description={item.shortDescription}
+                            category={item.category}
+                        />
                     ))}
                 </div>
             </Container>

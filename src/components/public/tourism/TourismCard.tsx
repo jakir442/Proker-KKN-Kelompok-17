@@ -1,49 +1,70 @@
 import Image from "next/image";
 import Link from "next/link";
+
 import { ArrowRight, MapPin } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface TourismCardProps {
+    id: string;
+    slug: string;
+
     name: string;
     image: string;
+
     location: string;
     description: string;
+
+    category: string;
 }
 
-export function TourismCard({ name, image, location, description }: TourismCardProps) {
+export function TourismCard({
+    slug,
+    name,
+    image,
+    location,
+    description,
+    category,
+}: TourismCardProps) {
     return (
-        <article className="group overflow-hidden rounded-2xl border bg-white transition hover:-translate-y-2 hover:shadow-xl">
-            <div className="relative h-64 overflow-hidden">
+        <Card className="group overflow-hidden rounded-2xl border-0 bg-background shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div className="relative h-60 overflow-hidden">
                 <Image
                     src={image}
                     alt={name}
                     fill
-                    className="object-cover transition duration-500 group-hover:scale-110"
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
 
-                <span className="absolute left-4 top-4 rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white">
-                    Wisata
-                </span>
+                <div className="absolute left-4 top-4">
+                    <Badge>{category}</Badge>
+                </div>
             </div>
 
-            <div className="p-6">
-                <h3 className="text-xl font-bold">{name}</h3>
+            <CardContent className="space-y-4 p-6">
+                <div>
+                    <h3 className="line-clamp-1 text-xl font-semibold">{name}</h3>
 
-                <div className="mt-3 flex items-center gap-2 text-sm text-slate-600">
-                    <MapPin className="h-4 w-4 text-emerald-600" />
-                    {location}
+                    <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+                        <MapPin className="h-4 w-4" />
+
+                        <span className="line-clamp-1">{location}</span>
+                    </div>
                 </div>
 
-                <p className="mt-4 line-clamp-3 text-slate-600">{description}</p>
+                <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                    {description}
+                </p>
 
-                <Button variant="link" className="mt-4 p-0 text-emerald-600">
-                    <Link href="#">
-                        Lihat Detail
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                </Button>
-            </div>
-        </article>
+                <Link
+                    href={`/tourism/${slug}`}
+                    className="inline-flex items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-primary/80"
+                >
+                    Lihat Detail
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+            </CardContent>
+        </Card>
     );
 }
