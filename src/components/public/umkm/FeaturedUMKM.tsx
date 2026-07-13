@@ -2,34 +2,17 @@ import { Container } from "../layout/Container";
 import { SectionHeader } from "../common/SectionHeader";
 import { UMKMCard } from "./UMKMCard";
 
-const umkms = [
-    {
-        id: "1",
-        slug: "kopi-cintanagara",
-        name: "Kopi Cintanagara",
-        image: "/images/umkm-placeholder.jpg",
-        category: "Kuliner",
-        address: "Dusun Sukamaju",
-    },
-    {
-        id: "2",
-        slug: "kerajinan-bambu-lestari",
-        name: "Kerajinan Bambu Lestari",
-        image: "/images/umkm-placeholder.jpg",
-        category: "Kerajinan",
-        address: "Dusun Cibodas",
-    },
-    {
-        id: "3",
-        slug: "sayuran-organik-makmur",
-        name: "Sayuran Organik Makmur",
-        image: "/images/umkm-placeholder.jpg",
-        category: "Pertanian",
-        address: "Dusun Cintajaya",
-    },
-];
+import { getFeaturedUMKMAction } from "@/actions/public/get-featured-umkm";
 
-export function FeaturedUMKM() {
+export async function FeaturedUMKM() {
+    const result = await getFeaturedUMKMAction();
+
+    const umkm = result.success ? result.data : [];
+
+    if (umkm.length === 0) {
+        return null;
+    }
+
     return (
         <section className="bg-slate-50 py-24">
             <Container>
@@ -40,8 +23,18 @@ export function FeaturedUMKM() {
                 />
 
                 <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-                    {umkms.map((item) => (
-                        <UMKMCard key={item.name} item={item} />
+                    {umkm.map((item) => (
+                        <UMKMCard
+                            key={item._id.toString()}
+                            item={{
+                                id: item._id.toString(),
+                                slug: item.slug,
+                                name: item.name,
+                                image: item.logo || "/images/umkm-placeholder.jpg",
+                                category: item.category,
+                                address: item.address,
+                            }}
+                        />
                     ))}
                 </div>
             </Container>

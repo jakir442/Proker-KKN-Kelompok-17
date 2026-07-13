@@ -27,11 +27,13 @@ interface UserActionsProps {
 export function UserActions({ onEdit, onDelete }: UserActionsProps) {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
-                <Button variant="ghost" size="icon">
-                    <MoreHorizontal className="h-4 w-4" />
-                </Button>
-            </DropdownMenuTrigger>
+            <DropdownMenuTrigger
+                render={
+                    <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                }
+            />
 
             <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={onEdit}>
