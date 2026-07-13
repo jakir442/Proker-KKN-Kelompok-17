@@ -27,9 +27,18 @@ import { DataTablePagination } from "./data-table-pagination";
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    showToolbar?: boolean;
+    searchColumn?: string;
+    placeholder?: string;
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+    columns,
+    data,
+    showToolbar = true,
+    searchColumn,
+    placeholder,
+}: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -52,7 +61,13 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 
     return (
         <div className="overflow-hidden rounded-xl border bg-background">
-            <DataTableToolbar table={table} />
+            {showToolbar && (
+                <DataTableToolbar
+                    table={table}
+                    searchColumn={searchColumn ?? "title"}
+                    placeholder={placeholder}
+                />
+            )}
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((group) => (
