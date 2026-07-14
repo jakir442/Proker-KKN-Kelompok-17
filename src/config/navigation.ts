@@ -76,5 +76,10 @@ export const navigation: Record<string, NavigationItem[]> = {
             href: "/dashboard/service",
             icon: FileText,
         },
+        {
+            title: "Gallery",
+            href: "/dashboard/gallery",
+            icon: FileText,
+        },
     ],
 };
