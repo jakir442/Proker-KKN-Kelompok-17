@@ -30,6 +30,10 @@ const menus = [
         href: "/galeri",
     },
     {
+        name: "Layanan",
+        href: "/layanan",
+    },
+    {
         name: "Kontak",
         href: "/kontak",
     },
