@@ -13,6 +13,7 @@ const menus = [
     { name: "Wisata", href: "/wisata" },
     { name: "Galeri", href: "/galeri" },
     { name: "Kontak", href: "/kontak" },
+    { name: "Layanan", href: "/layanan" },
 ];
 
 export function MobileMenu() {
