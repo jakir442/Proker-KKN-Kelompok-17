@@ -106,6 +106,12 @@ export default async function DashboardPage() {
                             <ArrowRight className="h-4 w-4" />
                         </Button>
                     </Link>
+                    <Link href="/dashboard/gallery">
+                        <Button variant="outline" className="w-full justify-between">
+                            Kelola Gallery
+                            <ArrowRight className="h-4 w-4" />
+                        </Button>
+                    </Link>
                 </div>
             </div>
 
