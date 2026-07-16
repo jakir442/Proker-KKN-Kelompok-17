@@ -81,5 +81,15 @@ export const navigation: Record<string, NavigationItem[]> = {
             href: "/dashboard/gallery",
             icon: FileText,
         },
+        {
+            title: "Pengumuman",
+            href: "/dashboard/announcements",
+            icon: FileText,
+        },
+        {
+            title: "Agenda",
+            href: "/dashboard/events",
+            icon: FileText,
+        },
     ],
 };
