@@ -37,6 +37,14 @@ const menus = [
         name: "Kontak",
         href: "/kontak",
     },
+    {
+        name: "Pengumuman",
+        href: "/pengumuman",
+    },
+    {
+        name: "Agenda",
+        href: "/agenda",
+    },
 ];
 
 export function NavLinks() {

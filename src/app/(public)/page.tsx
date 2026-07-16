@@ -1,3 +1,5 @@
+import { LatestAnnouncements } from "@/components/public/announcements/LatestAnnouncements";
+import { UpcomingEvents } from "@/components/public/events/UpcomingEvents";
 import { Gallery } from "@/components/public/gallery/Gallery";
 import { About } from "@/components/public/home/About";
 import { CTA } from "@/components/public/home/CTA";
@@ -11,6 +13,8 @@ export default function HomePage() {
         <>
             <Hero />
             <About />
+            <LatestAnnouncements />
+            <UpcomingEvents />
             <LatestNews />
             <FeaturedUMKM />
             <Tourism />
