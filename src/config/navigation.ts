@@ -91,5 +91,10 @@ export const navigation: Record<string, NavigationItem[]> = {
             href: "/dashboard/events",
             icon: FileText,
         },
+        {
+            title: "APBDes",
+            href: "/dashboard/apbdes",
+            icon: FileText,
+        },
     ],
 };
