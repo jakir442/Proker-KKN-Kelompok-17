@@ -124,6 +124,12 @@ export default async function DashboardPage() {
                             <ArrowRight className="h-4 w-4" />
                         </Button>
                     </Link>
+                    <Link href="/dashboard/apbdes">
+                        <Button variant="outline" className="w-full justify-between">
+                            Kelola APBDes
+                            <ArrowRight className="h-4 w-4" />
+                        </Button>
+                    </Link>
                 </div>
             </div>
 

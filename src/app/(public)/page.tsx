@@ -7,6 +7,7 @@ import { Hero } from "@/components/public/home/Hero";
 import { LatestNews } from "@/components/public/news/LatestNews";
 import { Tourism } from "@/components/public/tourism/Tourism";
 import { FeaturedUMKM } from "@/components/public/umkm/FeaturedUMKM";
+import { APBDesOverview } from "@/components/public/apbdes/APBDesOverview";
 
 export default function HomePage() {
     return (
@@ -18,6 +19,7 @@ export default function HomePage() {
             <LatestNews />
             <FeaturedUMKM />
             <Tourism />
+            <APBDesOverview />
             <Gallery />
             <CTA />
         </>

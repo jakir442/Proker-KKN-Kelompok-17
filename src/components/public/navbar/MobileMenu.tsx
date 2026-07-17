@@ -12,8 +12,12 @@ const menus = [
     { name: "UMKM", href: "/umkm" },
     { name: "Wisata", href: "/wisata" },
     { name: "Galeri", href: "/galeri" },
-    { name: "Kontak", href: "/kontak" },
+    // { name: "Kontak", href: "/kontak" },
     { name: "Layanan", href: "/layanan" },
+    { name: "Kontak", href: "/kontak" },
+    { name: "Pengumuman", href: "/pengumuman" },
+    { name: "Agenda", href: "/agenda" },
+    { name: "Transparansi", href: "/transparansi" },
 ];
 
 export function MobileMenu() {
