@@ -96,5 +96,10 @@ export const navigation: Record<string, NavigationItem[]> = {
             href: "/dashboard/apbdes",
             icon: FileText,
         },
+        {
+            title: "Keluhan",
+            href: "/dashboard/complaints",
+            icon: FileText,
+        },
     ],
 };
