@@ -49,6 +49,10 @@ const menus = [
         name: "Transparansi",
         href: "/transparansi",
     },
+    {
+        name: "Aspirasi",
+        href: "/aspirasi",
+    },
 ];
 
 export function NavLinks() {
