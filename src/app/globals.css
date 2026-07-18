@@ -9,3 +9,10 @@
 @import "./styles/utilities.css";
 @import "./styles/animation.css";
 @import "./styles/components.css";
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-x: hidden;
+}

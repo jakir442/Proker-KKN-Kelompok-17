@@ -31,12 +31,16 @@ export async function connectDB() {
     }
 
     if (!cached.promise) {
+        console.log("Menghubungkan ke MongoDB...");
+
         cached.promise = mongoose.connect(MONGODB_URI, {
             dbName: "kkn-cintanagara",
         });
     }
 
     cached.conn = await cached.promise;
+
+    console.log("MongoDB Connected");
 
     return cached.conn;
 }
