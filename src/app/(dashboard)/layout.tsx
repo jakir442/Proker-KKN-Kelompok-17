@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
-import { Sidebar } from "./dashboard/layout/Sidebar";
-import { Header } from "./dashboard/layout/Header";
+import { Sidebar } from "./dashboard/super-admin/layout/Sidebar";
+import { Header } from "./dashboard/super-admin/layout/Header";
 import { Toaster } from "@/components/ui/sonner";
 
 type DashboardLayoutProps = {
