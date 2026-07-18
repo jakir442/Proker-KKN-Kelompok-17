@@ -1,0 +1,175 @@
+@layer components {
+    /*
+    |--------------------------------------------------------------------------
+    | Premium Card
+    |--------------------------------------------------------------------------
+    */
+
+    .card-premium {
+        @apply rounded-3xl border border-border/60 bg-card;
+
+        box-shadow: var(--shadow-soft);
+
+        transition:
+            transform 300ms ease,
+            box-shadow 300ms ease,
+            border-color 300ms ease;
+    }
+
+    .card-premium:hover {
+        transform: translateY(-4px);
+
+        box-shadow: var(--shadow-medium);
+
+        border-color: color-mix(in oklch, var(--primary) 30%, var(--border));
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Premium Button
+    |--------------------------------------------------------------------------
+    */
+
+    .btn-premium {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl font-medium;
+
+        height: 48px;
+
+        padding-inline: 1.25rem;
+
+        background: var(--primary);
+
+        color: var(--primary-foreground);
+
+        transition:
+            transform 200ms ease,
+            box-shadow 200ms ease,
+            opacity 200ms ease;
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-2px);
+
+        box-shadow: var(--shadow-soft);
+    }
+
+    .btn-premium:active {
+        transform: translateY(0);
+    }
+
+    .btn-premium:disabled {
+        opacity: 0.6;
+
+        transform: none;
+
+        box-shadow: none;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Premium Input
+    |--------------------------------------------------------------------------
+    */
+
+    .input-premium {
+        @apply rounded-xl border bg-background px-4;
+
+        height: 48px;
+
+        transition:
+            border-color 200ms ease,
+            box-shadow 200ms ease;
+    }
+
+    .input-premium:focus {
+        border-color: var(--primary);
+
+        box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 20%, transparent);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Badge
+    |--------------------------------------------------------------------------
+    */
+
+    .badge-premium {
+        @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium;
+
+        background: color-mix(in oklch, var(--primary) 12%, transparent);
+
+        color: var(--primary);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Section Header
+    |--------------------------------------------------------------------------
+    */
+
+    .section-title {
+        @apply text-3xl font-bold tracking-tight sm:text-4xl;
+    }
+
+    .section-description {
+        @apply mt-3 max-w-2xl text-muted-foreground leading-7;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Divider
+    |--------------------------------------------------------------------------
+    */
+
+    .divider {
+        height: 1px;
+
+        width: 100%;
+
+        background: var(--border);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard Stat Card
+    |--------------------------------------------------------------------------
+    */
+
+    .stat-card {
+        @apply rounded-2xl border bg-card p-6;
+
+        box-shadow: var(--shadow-soft);
+
+        transition:
+            transform 250ms ease,
+            box-shadow 250ms ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+
+        box-shadow: var(--shadow-medium);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Glass Navbar
+    |--------------------------------------------------------------------------
+    */
+
+    .navbar-glass {
+        background: color-mix(in oklch, var(--background) 75%, transparent);
+
+        @apply border-b border-border/50 backdrop-blur-xl;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Loading Skeleton
+    |--------------------------------------------------------------------------
+    */
+
+    .loading-skeleton {
+        @apply animate-pulse rounded-xl bg-muted;
+    }
+}
