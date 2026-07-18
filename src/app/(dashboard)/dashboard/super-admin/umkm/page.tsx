@@ -2,8 +2,8 @@ import { Store, Star, CheckCircle, XCircle } from "lucide-react";
 
 import { getUMKMsAction } from "@/actions/umkm/get-umkm";
 
-import { SectionHeader } from "../common/SectionHeader";
-import { StatCard } from "../cards/StatCard";
+import { SectionHeader } from "../../common/SectionHeader";
+import { StatCard } from "../../cards/StatCard";
 import { UMKMClient } from "./UMKMClient";
 
 interface UMKMPageProps {

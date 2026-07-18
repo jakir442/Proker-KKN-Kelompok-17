@@ -1,6 +1,6 @@
 "use client";
 
-import { EmptyState } from "../common/EmptyState";
+import { EmptyState } from "../../common/EmptyState";
 
 import { UMKMToolbar } from "@/components/dashboard/umkm/UMKMToolbar";
 import { UMKMTable } from "@/components/dashboard/umkm/UMKMTable";
