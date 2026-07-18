@@ -101,5 +101,15 @@ export const navigation: Record<string, NavigationItem[]> = {
             href: "/dashboard/complaints",
             icon: FileText,
         },
+        {
+            title: "Profile Desa",
+            href: "/dashboard/village-profile",
+            icon: FileText,
+        },
+        {
+            title: "Pejabat Desa",
+            href: "/dashboard/village-official",
+            icon: FileText,
+        },
     ],
 };

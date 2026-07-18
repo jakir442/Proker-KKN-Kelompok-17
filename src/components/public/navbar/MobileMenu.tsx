@@ -19,6 +19,7 @@ const menus = [
     { name: "Agenda", href: "/agenda" },
     { name: "Transparansi", href: "/transparansi" },
     { name: "Aspirasi", href: "/aspirasi" },
+    { name: "Pemerintahan", href: "/pemerintahan" },
 ];
 
 export function MobileMenu() {

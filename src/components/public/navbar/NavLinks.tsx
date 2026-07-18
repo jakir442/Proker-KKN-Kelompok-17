@@ -53,6 +53,10 @@ const menus = [
         name: "Aspirasi",
         href: "/aspirasi",
     },
+    {
+        name: "Pemerintahan",
+        href: "/pemerintahan",
+    },
 ];
 
 export function NavLinks() {

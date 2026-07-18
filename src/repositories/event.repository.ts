@@ -36,13 +36,13 @@ export async function deleteEvent(id: string): Promise<IEvent | null> {
 export async function findEventById(id: string): Promise<IEvent | null> {
     await connectDB();
 
-    return Event.findById(id).populate("createdBy");
+    return Event.findById(id);
 }
 
 export async function findEventBySlug(slug: string): Promise<IEvent | null> {
     await connectDB();
 
-    return Event.findOne({ slug }).populate("createdBy");
+    return Event.findOne({ slug });
 }
 
 export async function findEvents({
@@ -101,7 +101,7 @@ export async function findEvents({
     const total = await Event.countDocuments(query);
 
     const events = await Event.find(query)
-        .populate("createdBy")
+
         .sort({
             startDate: 1,
         })
@@ -125,7 +125,7 @@ export async function findPublishedEvents(limit = 6): Promise<IEvent[]> {
     return Event.find({
         published: true,
     })
-        .populate("createdBy")
+
         .sort({
             startDate: 1,
         })
@@ -141,7 +141,7 @@ export async function findUpcomingEvents(limit = 6): Promise<IEvent[]> {
             $gte: new Date(),
         },
     })
-        .populate("createdBy")
+
         .sort({
             startDate: 1,
         })
@@ -162,7 +162,7 @@ export async function findOngoingEvents(): Promise<IEvent[]> {
             $gte: now,
         },
     })
-        .populate("createdBy")
+
         .sort({
             startDate: 1,
         });
@@ -177,7 +177,7 @@ export async function findCompletedEvents(limit = 10): Promise<IEvent[]> {
             $lt: new Date(),
         },
     })
-        .populate("createdBy")
+
         .sort({
             endDate: -1,
         })
@@ -215,7 +215,7 @@ export async function findRelatedEvents(slug: string, limit = 3): Promise<IEvent
             },
         ],
     })
-        .populate("createdBy")
+
         .sort({
             startDate: 1,
         })
