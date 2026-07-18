@@ -136,6 +136,18 @@ export default async function DashboardPage() {
                             <ArrowRight className="h-4 w-4" />
                         </Button>
                     </Link>
+                    <Link href="/dashboard/village-profile">
+                        <Button variant="outline" className="w-full justify-between">
+                            Kelola Profile Desa
+                            <ArrowRight className="h-4 w-4" />
+                        </Button>
+                    </Link>
+                    <Link href="/dashboard/village-official">
+                        <Button variant="outline" className="w-full justify-between">
+                            Kelola Pejabat Desa
+                            <ArrowRight className="h-4 w-4" />
+                        </Button>
+                    </Link>
                 </div>
             </div>
 
