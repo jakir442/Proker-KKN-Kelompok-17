@@ -43,7 +43,7 @@ export const navigation: Record<string, NavigationItem[]> = {
         {
             title: "Administrasi Surat",
             breadcrumb: "Surat",
-            href: "/dashboard/super-admin/letters",
+            href: "/dashboard/super-admin/service",
             icon: FileText,
         },
         {

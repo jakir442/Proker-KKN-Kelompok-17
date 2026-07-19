@@ -36,7 +36,7 @@ const quickActions: QuickActionItem[] = [
     {
         title: "Administrasi Surat",
         description: "Proses permohonan surat masyarakat.",
-        href: "/dashboard/super-admin/letters",
+        href: "/dashboard/super-admin/service",
         icon: FileText,
         color: "emerald",
         roles: [ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.PETUGAS],
