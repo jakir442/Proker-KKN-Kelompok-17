@@ -1,11 +1,9 @@
 "use client";
 
-import { EmptyState } from "../../common/EmptyState";
-
-import { UMKMToolbar } from "@/components/dashboard/umkm/UMKMToolbar";
-import { UMKMTable } from "@/components/dashboard/umkm/UMKMTable";
-
-import type { UMKMColumn } from "@/components/dashboard/umkm/columns";
+import { EmptyState } from "../common/EmptyState";
+import type { UMKMColumn } from "./columns";
+import { UMKMTable } from "./UMKMTable";
+import { UMKMToolbar } from "./UMKMToolbar";
 
 interface UMKMClientProps {
     umkms: UMKMColumn[];
