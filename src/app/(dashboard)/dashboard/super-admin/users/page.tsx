@@ -1,11 +1,9 @@
 import { Users, ShieldCheck, UserCog, User } from "lucide-react";
-
 import { getUsersAction } from "@/actions/user/get-users";
-
-import { SectionHeader } from "../../common/SectionHeader";
-import { StatCard } from "../../cards/StatCard";
-import { EmptyState } from "../../common/EmptyState";
-import { UsersClient } from "./UsersClient";
+import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
+import { StatCard } from "@/components/dashboard/cards/StatCard";
+import { EmptyState } from "@/components/dashboard/common/EmptyState";
+import { UsersClient } from "@/components/dashboard/users/UsersClient";
 
 interface UsersPageProps {
     searchParams: Promise<{
