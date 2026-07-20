@@ -1,81 +1,55 @@
-"use client";
-
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
+
+import { navigation } from "@/config/navigation";
 import { cn } from "@/lib/utils";
 
-const menus = [
-    {
-        name: "Home",
-        href: "/",
-    },
-    {
-        name: "Profil",
-        href: "/profil",
-    },
-    {
-        name: "Berita",
-        href: "/berita",
-    },
-    {
-        name: "UMKM",
-        href: "/umkm",
-    },
-    {
-        name: "Wisata",
-        href: "/wisata",
-    },
-    {
-        name: "Galeri",
-        href: "/galeri",
-    },
-    {
-        name: "Layanan",
-        href: "/layanan",
-    },
-    {
-        name: "Kontak",
-        href: "/kontak",
-    },
-    {
-        name: "Pengumuman",
-        href: "/pengumuman",
-    },
-    {
-        name: "Agenda",
-        href: "/agenda",
-    },
-    {
-        name: "Transparansi",
-        href: "/transparansi",
-    },
-    {
-        name: "Aspirasi",
-        href: "/aspirasi",
-    },
-    {
-        name: "Pemerintahan",
-        href: "/pemerintahan",
-    },
-];
+import { NavigationDropdown } from "./NavigationDropdown";
 
 export function NavLinks() {
     const pathname = usePathname();
 
-    return (
-        <>
-            {menus.map((menu) => (
-                <Link
-                    key={menu.href}
-                    href={menu.href}
-                    className={cn(
-                        "text-sm font-medium transition-colors hover:text-emerald-600",
-                        pathname === menu.href ? "text-emerald-600" : "text-slate-700",
-                    )}
-                >
-                    {menu.name}
-                </Link>
-            ))}
-        </>
-    );
+    return navigation.map((item) => {
+        if (Array.isArray(item.children)) {
+            return (
+                <NavigationDropdown
+                    key={item.title}
+                    item={item as { title: string; children: { title: string; href: string }[] }}
+                />
+            );
+        }
+
+        const href = item.href;
+        if (!href) {
+            return null;
+        }
+
+        const active = pathname === href;
+
+        return (
+            <Link
+                key={href}
+                href={href}
+                className={cn(
+                    "group relative rounded-full px-3 py-2 text-[15px] font-medium transition-all duration-300",
+                    active ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                )}
+            >
+                <span className="relative z-10">{item.title}</span>
+
+                {active && (
+                    <motion.span
+                        layoutId="navbar-active"
+                        className="absolute inset-0 -z-10 rounded-full bg-primary/10"
+                        transition={{
+                            type: "spring",
+                            stiffness: 380,
+                            damping: 30,
+                        }}
+                    />
+                )}
+            </Link>
+        );
+    });
 }
