@@ -12,7 +12,7 @@ export const updateUserSchema = z.object({
         .refine((value) => !value || value.length >= 6, "Password minimal 6 karakter"),
     phoneNumber: z.string().optional(),
     address: z.string().optional(),
-    role: z.enum([ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.PETUGAS, ROLES.WARGA]),
+    role: z.enum([ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.PETUGAS, ROLES.UMKM]),
     isActive: z.boolean(),
 });
 

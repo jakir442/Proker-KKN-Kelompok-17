@@ -50,7 +50,7 @@ const UserSchema = new Schema<IUser>(
         role: {
             type: String,
             enum: Object.values(ROLES),
-            default: ROLES.WARGA,
+            default: ROLES.PETUGAS,
         },
 
         isActive: {

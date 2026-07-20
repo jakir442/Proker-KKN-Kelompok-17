@@ -53,7 +53,6 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                     icon={ShieldCheck}
                 />
                 <StatCard title="Admin" value="-" description="Segera tersedia" icon={UserCog} />
-                <StatCard title="Warga" value="-" description="Segera tersedia" icon={User} />
             </div>
 
             {users.length === 0 ? (

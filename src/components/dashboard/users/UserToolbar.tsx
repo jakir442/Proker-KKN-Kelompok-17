@@ -72,7 +72,6 @@ export function UserToolbar({
                         <SelectItem value={ROLES.ADMIN}>Admin</SelectItem>
                         <SelectItem value={ROLES.UMKM}>UMKM</SelectItem>
                         <SelectItem value={ROLES.PETUGAS}>Petugas</SelectItem>
-                        <SelectItem value={ROLES.WARGA}>Warga</SelectItem>
                     </SelectContent>
                 </Select>
 

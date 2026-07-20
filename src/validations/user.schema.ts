@@ -17,7 +17,7 @@ export const createUserSchema = z.object({
 
     address: z.string().optional(),
 
-    role: z.enum([ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.UMKM, ROLES.PETUGAS, ROLES.WARGA]),
+    role: z.enum([ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.UMKM, ROLES.PETUGAS]),
 
     isActive: z.boolean(),
 });

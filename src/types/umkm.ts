@@ -1,10 +1,13 @@
-import { Document } from "mongoose";
+import { HydratedDocument } from "mongoose";
 
-export interface IUMKM extends Document {
+export interface IUMKM {
+    _id: string;
+
     name: string;
     slug: string;
     description: string;
 
+    image?: string; // Cover utama UMKM
     logo: string;
     gallery: string[];
 
@@ -28,3 +31,5 @@ export interface IUMKM extends Document {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export type UMKMDocument = HydratedDocument<IUMKM>;

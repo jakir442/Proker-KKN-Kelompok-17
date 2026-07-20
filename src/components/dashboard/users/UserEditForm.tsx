@@ -35,7 +35,7 @@ export function UserEditForm({ user, onSuccess, onCancel }: UserEditFormProps) {
             email: "",
             phoneNumber: "",
             address: "",
-            role: "warga",
+            role: "petugas",
             isActive: true,
         },
     });

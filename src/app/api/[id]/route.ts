@@ -1,30 +1,38 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-// GET by id
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+// GET
+export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+
     const news = await prisma.news.findUnique({
-        where: { id: params.id },
+        where: { id },
     });
 
     return NextResponse.json(news);
 }
 
 // DELETE
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+    _request: NextRequest,
+    { params }: { params: Promise<{ id: string }> },
+) {
+    const { id } = await params;
+
     await prisma.news.delete({
-        where: { id: params.id },
+        where: { id },
     });
 
     return NextResponse.json({ message: "Deleted" });
 }
 
-// UPDATE
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-    const body = await req.json();
+// PATCH
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const body = await request.json();
 
     const news = await prisma.news.update({
-        where: { id: params.id },
+        where: { id },
         data: body,
     });
 

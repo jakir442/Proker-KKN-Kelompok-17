@@ -20,6 +20,8 @@ export async function registerUser(data: RegisterSchema) {
         password: hashedPassword,
         phoneNumber: data.phoneNumber,
         address: data.address,
+        role: "user",
+        isActive: true,
     });
 }
 
