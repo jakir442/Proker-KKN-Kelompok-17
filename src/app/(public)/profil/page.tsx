@@ -1,13 +1,14 @@
-import { Container } from "@/components/public/layout/Container";
-import { SectionHeader } from "@/components/public/common/SectionHeader";
-
-import { AboutSection } from "@/components/public/profile/AboutSection";
-import { HistorySection } from "@/components/public/profile/HistorySection";
-import { VisionMissionSection } from "@/components/public/profile/VisionMissionSection";
-import { HeadmanSection } from "@/components/public/profile/HeadmanSection";
-import { VillageStats } from "@/components/public/profile/VillageStats";
-import { VillageMap } from "@/components/public/profile/VillageMap";
 import { getVillageProfilePublicAction } from "@/actions/public/get-village-profile";
+
+import { Reveal } from "@/components/animations";
+import { Container } from "@/components/public/layout/Container";
+import { AboutSection } from "@/components/public/profile/AboutSection";
+import { HeadmanSection } from "@/components/public/profile/HeadmanSection";
+import { HistorySection } from "@/components/public/profile/HistorySection";
+import { ProfileHero } from "@/components/public/profile/ProfileHero";
+import { VillageMap } from "@/components/public/profile/VillageMap";
+import { VillageStats } from "@/components/public/profile/VillageStats";
+import { VisionMissionSection } from "@/components/public/profile/VisionMissionSection";
 
 export default async function VillageProfilePage() {
     const result = await getVillageProfilePublicAction();
@@ -15,10 +16,9 @@ export default async function VillageProfilePage() {
     if (!result.success || !result.data) {
         return (
             <Container className="py-16">
-                <SectionHeader
-                    badge="Profil"
-                    title="Profil Desa"
-                    description="Informasi profil desa belum tersedia."
+                <ProfileHero
+                    title="Profil Desa Cintanagara"
+                    description="Mengenal lebih dekat Desa Cintanagara, Kecamatan Cigedug, Kabupaten Garut. Jelajahi sejarah, visi misi, pemerintahan desa, statistik, dan berbagai informasi resmi dalam satu halaman."
                 />
             </Container>
         );
@@ -27,35 +27,48 @@ export default async function VillageProfilePage() {
     const profile = result.data;
 
     return (
-        <Container className="space-y-20 py-12">
-            <SectionHeader
-                badge="Profil"
-                title="Profil Desa Cintanagara"
-                description="Mengenal lebih dekat Desa Cintanagara, Kecamatan Cigedug."
-            />
+        <Container className="py-8 lg:py-10">
+            <div className="space-y-24">
+                <ProfileHero
+                    title="Profil Desa Cintanagara"
+                    description="Mengenal lebih dekat Desa Cintanagara, Kecamatan Cigedug, Kabupaten Garut. Jelajahi sejarah, visi misi, pemerintahan desa, statistik, dan berbagai informasi resmi dalam satu halaman."
+                />
 
-            <AboutSection about={profile.about} />
+                <Reveal className="scroll-mt-24">
+                    <AboutSection about={profile.about} />
+                </Reveal>
 
-            <HistorySection history={profile.history} />
+                <Reveal className="scroll-mt-24">
+                    <HistorySection history={profile.history} />
+                </Reveal>
 
-            <VisionMissionSection vision={profile.vision} mission={profile.mission} />
+                <Reveal className="scroll-mt-24">
+                    <VisionMissionSection vision={profile.vision} mission={profile.mission} />
+                </Reveal>
 
-            <HeadmanSection
-                name={profile.headmanName}
-                photo={profile.headmanPhoto}
-                greeting={profile.headmanGreeting}
-            />
+                <Reveal className="scroll-mt-24">
+                    <HeadmanSection
+                        name={profile.headmanName}
+                        photo={profile.headmanPhoto}
+                        greeting={profile.headmanGreeting}
+                    />
+                </Reveal>
 
-            <VillageStats
-                area={profile.area}
-                population={profile.population}
-                households={profile.households}
-                rt={profile.rt}
-                rw={profile.rw}
-                hamlets={profile.hamlets}
-            />
+                <Reveal className="scroll-mt-24">
+                    <VillageStats
+                        area={profile.area}
+                        population={profile.population}
+                        households={profile.households}
+                        rt={profile.rt}
+                        rw={profile.rw}
+                        hamlets={profile.hamlets}
+                    />
+                </Reveal>
 
-            <VillageMap latitude={profile.latitude} longitude={profile.longitude} />
+                <Reveal className="scroll-mt-24 pb-8">
+                    <VillageMap latitude={profile.latitude} longitude={profile.longitude} />
+                </Reveal>
+            </div>
         </Container>
     );
 }

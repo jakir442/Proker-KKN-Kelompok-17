@@ -1,7 +1,14 @@
 "use client";
 
+import { ReactNode } from "react";
+
 import { FadeUp } from "./FadeUp";
 
-export function Reveal({ children }: { children: React.ReactNode }) {
-    return <FadeUp>{children}</FadeUp>;
+interface RevealProps {
+    children: ReactNode;
+    className?: string;
+}
+
+export function Reveal({ children, className }: RevealProps) {
+    return <FadeUp className={className}>{children}</FadeUp>;
 }
