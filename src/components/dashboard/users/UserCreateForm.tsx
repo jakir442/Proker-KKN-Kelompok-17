@@ -32,7 +32,7 @@ export function UserCreateForm({ onSuccess, onCancel }: UserCreateFormProps) {
             password: "",
             phoneNumber: "",
             address: "",
-            role: ROLES.WARGA,
+            role: ROLES.PETUGAS,
             isActive: true,
         },
     });

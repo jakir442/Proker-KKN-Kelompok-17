@@ -26,14 +26,7 @@ export async function FeaturedUMKM() {
                     {umkm.map((item) => (
                         <UMKMCard
                             key={item._id.toString()}
-                            item={{
-                                id: item._id.toString(),
-                                slug: item.slug,
-                                name: item.name,
-                                image: item.logo || "/images/umkm-placeholder.jpg",
-                                category: item.category,
-                                address: item.address,
-                            }}
+                            item={item}
                         />
                     ))}
                 </div>

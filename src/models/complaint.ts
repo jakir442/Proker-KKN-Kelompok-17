@@ -1,6 +1,7 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Model, HydratedDocument } from "mongoose";
 
-export interface IComplaint extends Document {
+export interface IComplaint {
+    _id: string;
     name: string;
     phone?: string;
     email?: string;
@@ -83,6 +84,8 @@ const ComplaintSchema = new Schema<IComplaint>(
         timestamps: true,
     },
 );
+
+export type ComplaintDocument = HydratedDocument<IComplaint>;
 
 export const Complaint: Model<IComplaint> =
     mongoose.models.Complaint || mongoose.model<IComplaint>("Complaint", ComplaintSchema);

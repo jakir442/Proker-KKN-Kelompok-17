@@ -1,13 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-import { IComplaint } from "@/models/complaint";
-import { getComplaintColumns } from "./ComplaintColumns";
-import { ComplaintDetailDialog } from "./ComplaintDetailDialog";
+import type { IComplaint } from "@/models/complaint";
+
 import { DataTable } from "@/components/data-table";
 import { ComplaintToolbar } from "./ComplaintToolbar";
+import { ComplaintDetailDialog } from "./ComplaintDetailDialog";
 import { DeleteComplaintDialog } from "./DeleteComplaintDialog";
+import { getComplaintColumns } from "./ComplaintColumns";
 
 interface ComplaintTableProps {
     data: IComplaint[];
@@ -15,9 +16,12 @@ interface ComplaintTableProps {
 
 export function ComplaintTable({ data }: ComplaintTableProps) {
     const [selectedComplaint, setSelectedComplaint] = useState<IComplaint | null>(null);
+
     const [detailOpen, setDetailOpen] = useState(false);
-    const [deleteOpen, setDeleteOpen] = useState(false);
+
     const [deleteComplaint, setDeleteComplaint] = useState<IComplaint | null>(null);
+
+    const [deleteOpen, setDeleteOpen] = useState(false);
 
     const columns = getComplaintColumns({
         onView: (complaint) => {
@@ -34,14 +38,17 @@ export function ComplaintTable({ data }: ComplaintTableProps) {
     return (
         <>
             <ComplaintToolbar />
+
             <DataTable columns={columns} data={data} />
+
             <ComplaintDetailDialog
                 complaint={selectedComplaint}
                 open={detailOpen}
                 onOpenChange={setDetailOpen}
             />
+
             <DeleteComplaintDialog
-                id={deleteComplaint?._id.toString() ?? ""}
+                id={deleteComplaint?._id?.toString() ?? ""}
                 open={deleteOpen}
                 onOpenChange={setDeleteOpen}
             />
