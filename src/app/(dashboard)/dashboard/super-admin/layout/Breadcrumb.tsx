@@ -14,7 +14,9 @@ export function Breadcrumb() {
     // nanti akan diganti dari session
     const items = getNavigation(ROLES.SUPER_ADMIN);
 
-    const current = items.find((item: { href: string; breadcrumb?: string; title: string }) => item.href === pathname);
+    const current = Array.isArray(items)
+        ? items.find((item: { href: string; breadcrumb?: string; title: string }) => item.href === pathname)
+        : undefined;
 
     const breadcrumbs = [
         {
