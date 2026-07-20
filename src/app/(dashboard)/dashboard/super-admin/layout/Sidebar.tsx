@@ -2,19 +2,25 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { ComponentType } from "react";
 import clsx from "clsx";
 
 import { navigation } from "@/config/navigation";
-import { ROLES } from "@/constants/roles";
+
+interface NavigationItem {
+    href: string;
+    title: string;
+    icon: ComponentType<{ className?: string }>;
+}
 
 interface SidebarProps {
-    role: string;
+    role: keyof typeof navigation;
 }
 
 export function Sidebar({ role }: SidebarProps) {
     const pathname = usePathname();
 
-    const menus = navigation[role] ?? [];
+    const menus = Array.isArray(navigation[role]) ? navigation[role] : [];
 
     return (
         <aside className="fixed left-0 top-0 flex h-screen w-64 flex-col border-r bg-white">
