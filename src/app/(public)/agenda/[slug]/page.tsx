@@ -1,12 +1,16 @@
-import Image from "next/image";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CalendarDays, Clock3, MapPin } from "lucide-react";
+import { CalendarDays, Home } from "lucide-react";
+import Link from "next/link";
 import { Container } from "@/components/public/layout/Container";
 import { getEventBySlugAction } from "@/actions/events/get-event-by-slug";
 import { getRelatedEventsAction } from "@/actions/events/get-related-events";
-import { EventCard } from "@/components/public/events/EventCard";
-
-import type { Metadata } from "next";
+import { EventHero } from "@/components/public/events/detail/EventHero";
+import { EventInfo } from "@/components/public/events/detail/EventInfo";
+import { EventContent } from "@/components/public/events/detail/EventContent";
+import { ShareEvent } from "@/components/public/events/detail/ShareEvent";
+import { RelatedEvents } from "@/components/public/events/detail/RelatedEvents";
+import { EventLocation } from "@/components/public/events/detail/EventLocation";
 
 interface Props {
     params: Promise<{
@@ -14,33 +18,33 @@ interface Props {
     }>;
 }
 
-interface MetadataProps {
-    params: Promise<{
-        slug: string;
-    }>;
-}
-
-export async function generateMetadata({ params }: MetadataProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
-
     const result = await getEventBySlugAction(slug);
-
     if (!result.success || !result.data) {
         return {
             title: "Agenda Tidak Ditemukan",
         };
     }
-
     const event = result.data;
 
     return {
         title: `${event.title} | Agenda Desa Cintanagara`,
         description: event.description.slice(0, 160),
-
         openGraph: {
             title: event.title,
             description: event.description.slice(0, 160),
-            images: [event.coverImage],
+            images: [
+                {
+                    url: event.coverImage,
+                    width: 1200,
+                    height: 630,
+                    alt: event.title,
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
         },
     };
 }
@@ -48,73 +52,59 @@ export async function generateMetadata({ params }: MetadataProps): Promise<Metad
 export default async function EventDetailPage({ params }: Props) {
     const { slug } = await params;
     const result = await getEventBySlugAction(slug);
-
     if (!result.success || !result.data) {
         notFound();
     }
-
     const event = result.data;
     const related = await getRelatedEventsAction(event.slug, 3);
-
-    const tanggal = new Intl.DateTimeFormat("id-ID", {
-        dateStyle: "full",
-    }).format(new Date(event.startDate));
-
-    const jamMulai = new Intl.DateTimeFormat("id-ID", {
-        hour: "2-digit",
-        minute: "2-digit",
-    }).format(new Date(event.startDate));
-
-    const jamSelesai = new Intl.DateTimeFormat("id-ID", {
-        hour: "2-digit",
-        minute: "2-digit",
-    }).format(new Date(event.endDate));
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        name: event.title,
+        description: event.description,
+        image: [event.coverImage],
+        location: {
+            "@type": "Place",
+            name: event.location,
+        },
+        startDate: event.startDate,
+        endDate: event.endDate,
+    };
 
     return (
-        <Container className="py-20">
-            <div className="relative mb-10 aspect-[16/8] overflow-hidden rounded-2xl">
-                <Image src={event.coverImage} alt={event.title} fill className="object-cover" />
+        <Container className="py-10 lg:py-16">
+            {/* Structured Data */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(jsonLd),
+                }}
+            />
+
+            {/* Breadcrumb */}
+            <nav className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
+                <Link href="/" className="inline-flex items-center gap-1 hover:text-primary">
+                    <Home className="h-4 w-4" />
+                    Beranda
+                </Link>
+                <span>/</span>
+                <Link href="/agenda" className="hover:text-primary">
+                    Agenda
+                </Link>
+                <span>/</span>
+                <span className="line-clamp-1">{event.title}</span>
+            </nav>
+
+            <div className="space-y-14">
+                <EventHero event={event} />
+                <EventInfo event={event} />
+                <EventContent description={event.description} />
+                <EventLocation location={event.location} />
+                <ShareEvent title={event.title} />
+                {related.success && related.data.length > 0 && (
+                    <RelatedEvents events={related.data} />
+                )}
             </div>
-
-            <h1 className="mb-8 text-4xl font-bold">{event.title}</h1>
-
-            <div className="mb-10 space-y-4 rounded-xl border p-6">
-                <div className="flex items-center gap-3">
-                    <CalendarDays className="h-5 w-5 text-primary" />
-
-                    <span>{tanggal}</span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                    <Clock3 className="h-5 w-5 text-primary" />
-
-                    <span>
-                        {jamMulai} - {jamSelesai} WIB
-                    </span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                    <MapPin className="h-5 w-5 text-primary" />
-
-                    <span>{event.location}</span>
-                </div>
-            </div>
-
-            <article className="prose prose-neutral dark:prose-invert max-w-none whitespace-pre-line">
-                {event.description}
-            </article>
-
-            {related.success && related.data.length > 0 && (
-                <section className="mt-20">
-                    <h2 className="mb-8 text-3xl font-bold">Agenda Lainnya</h2>
-
-                    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                        {related.data.map((item) => (
-                            <EventCard key={item.id} event={item} />
-                        ))}
-                    </div>
-                </section>
-            )}
         </Container>
     );
 }
