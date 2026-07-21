@@ -5,7 +5,7 @@ interface FindAllAnnouncementsOptions {
     page?: number;
     limit?: number;
     search?: string;
-    category?: string;
+    category?: IAnnouncement["category"];
     published?: boolean;
 }
 
@@ -114,4 +114,98 @@ export async function findPublishedAnnouncements(limit = 6): Promise<IAnnounceme
             publishedAt: -1,
         })
         .limit(limit);
+}
+
+export async function findRelatedAnnouncements(
+    slug: string,
+    category: IAnnouncement["category"],
+    limit = 3,
+): Promise<IAnnouncement[]> {
+    await connectDB();
+
+    const related = await Announcement.find({
+        published: true,
+        slug: { $ne: slug },
+        category,
+    })
+        .sort({
+            publishedAt: -1,
+        })
+        .limit(limit);
+
+    if (related.length >= limit) {
+        return related;
+    }
+
+    const remaining = limit - related.length;
+
+    const fallback = await Announcement.find({
+        published: true,
+        slug: { $ne: slug },
+        _id: {
+            $nin: related.map((item) => item._id),
+        },
+    })
+        .sort({
+            publishedAt: -1,
+        })
+        .limit(remaining);
+
+    return [...related, ...fallback];
+}
+
+export async function findPreviousAnnouncement(publishedAt: Date): Promise<IAnnouncement | null> {
+    await connectDB();
+
+    return Announcement.findOne({
+        published: true,
+        publishedAt: {
+            $lt: publishedAt,
+        },
+    }).sort({
+        publishedAt: -1,
+    });
+}
+
+export async function findNextAnnouncement(publishedAt: Date): Promise<IAnnouncement | null> {
+    await connectDB();
+
+    return Announcement.findOne({
+        published: true,
+        publishedAt: {
+            $gt: publishedAt,
+        },
+    }).sort({
+        publishedAt: 1,
+    });
+}
+
+export async function countPublishedAnnouncements(): Promise<number> {
+    await connectDB();
+
+    return Announcement.countDocuments({
+        published: true,
+    });
+}
+
+export async function findAnnouncementCategories() {
+    await connectDB();
+
+    return Announcement.distinct("category", {
+        published: true,
+    });
+}
+
+export async function findAllPublishedAnnouncementSlugs() {
+    await connectDB();
+
+    return Announcement.find(
+        {
+            published: true,
+        },
+        {
+            slug: 1,
+            _id: 0,
+        },
+    ).lean();
 }

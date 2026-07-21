@@ -9,10 +9,70 @@
 @import "./styles/utilities.css";
 @import "./styles/animation.css";
 @import "./styles/components.css";
+
 html {
     scroll-behavior: smooth;
 }
 
 body {
     overflow-x: hidden;
+}
+
+@media print {
+    /* Hilangkan elemen yang tidak perlu */
+    nav,
+    aside,
+    button,
+    footer {
+        display: none !important;
+    }
+
+    /* Reset background */
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    /* Area artikel */
+    #announcement-print {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Judul */
+    #announcement-print h1 {
+        font-size: 28px !important;
+        line-height: 1.3 !important;
+        color: black !important;
+    }
+
+    /* Gambar */
+    #announcement-print img {
+        page-break-inside: avoid;
+        border-radius: 12px !important;
+    }
+
+    /* Text artikel */
+    #announcement-print p {
+        font-size: 12pt !important;
+        line-height: 1.8 !important;
+    }
+
+    /* Hindari potong halaman */
+    #announcement-print {
+        break-inside: avoid;
+    }
+
+    /* Hilangkan shadow */
+    * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    /* Header informasi */
+    #announcement-print header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
 }

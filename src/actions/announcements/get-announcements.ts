@@ -2,10 +2,18 @@
 
 import { findAnnouncements } from "@/repositories/announcement.repository";
 
+type AnnouncementCategory =
+    | "Umum"
+    | "Pelayanan"
+    | "Kesehatan"
+    | "Pendidikan"
+    | "Darurat"
+    | "Lainnya";
+
 interface GetAnnouncementsParams {
     search?: string;
-    category?: string;
-    status?: string;
+    category?: AnnouncementCategory | "ALL";
+    status?: "ALL" | "PUBLISHED";
     page?: number;
     limit?: number;
 }
@@ -28,20 +36,13 @@ export async function getAnnouncementsAction({
 
         const mapped = result.announcements.map((item) => ({
             id: item._id.toString(),
-
             title: item.title,
             slug: item.slug,
-
             excerpt: item.excerpt,
-
             category: item.category,
-
             coverImage: item.coverImage,
-
             published: item.published,
-
             publishedAt: item.publishedAt ? item.publishedAt.toISOString() : null,
-
             createdAt: item.createdAt.toISOString(),
             updatedAt: item.updatedAt.toISOString(),
         }));
