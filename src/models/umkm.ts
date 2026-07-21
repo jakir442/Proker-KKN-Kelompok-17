@@ -50,6 +50,19 @@ const UMKMSchema = new Schema<IUMKM>(
             trim: true,
         },
 
+        rating: {
+            type: Number,
+            default: 0,
+            min: 0,
+            max: 5,
+        },
+
+        reviewCount: {
+            type: Number,
+            default: 0,
+            min: 0,
+        },
+
         address: {
             type: String,
             required: true,

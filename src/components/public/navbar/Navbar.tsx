@@ -37,7 +37,7 @@ export function Navbar() {
 
                     <nav
                         aria-label="Main Navigation"
-                        className="hidden items-center gap-10 lg:flex"
+                        className="hidden items-center gap-4 xl:gap-5 lg:flex"
                     >
                         <NavLinks />
                     </nav>

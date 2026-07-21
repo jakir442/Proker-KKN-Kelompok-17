@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/mongodb";
 import { UMKM } from "@/models/umkm";
+import { serializeDocument, serializeDocuments } from "@/lib/serialize";
 import type { IUMKM } from "@/types/umkm";
 
 export async function createUMKM(data: Partial<IUMKM>) {
@@ -26,31 +27,35 @@ export async function deleteUMKM(id: string) {
 export async function findUMKMById(id: string) {
     await connectDB();
 
-    return UMKM.findById(id).lean();
+    const umkm = await UMKM.findById(id).lean();
+
+    return umkm ? serializeDocument(umkm) : null;
 }
 
 export async function findUMKMBySlug(slug: string) {
     await connectDB();
 
-    return UMKM.findOne({
+    const umkm = await UMKM.findOne({
         slug,
         isActive: true,
     }).lean();
+
+    return umkm ? serializeDocument(umkm) : null;
 }
 
 interface FindUMKMParams {
     search?: string;
     category?: string;
-    status?: string;
+    status?: "ACTIVE" | "INACTIVE";
 }
 
 export async function findAllUMKM({ search, category, status }: FindUMKMParams = {}) {
     await connectDB();
 
-    const filter: { [key: string]: unknown } = {};
+    const filter: Record<string, unknown> = {};
 
     if (search) {
-        filter["$or"] = [
+        filter.$or = [
             {
                 name: {
                     $regex: search,
@@ -73,28 +78,109 @@ export async function findAllUMKM({ search, category, status }: FindUMKMParams =
     }
 
     if (category && category !== "ALL") {
-        filter["category"] = category;
+        filter.category = category;
     }
 
     if (status === "ACTIVE") {
-        filter["isActive"] = true;
+        filter.isActive = true;
     }
 
     if (status === "INACTIVE") {
-        filter["isActive"] = false;
+        filter.isActive = false;
     }
 
-    return UMKM.find(filter)
-        .sort({
-            createdAt: -1,
-        })
-        .lean();
+    const data = await UMKM.aggregate([
+        {
+            $match: filter,
+        },
+        {
+            $lookup: {
+                from: "umkm_reviews",
+                localField: "_id",
+                foreignField: "umkmId",
+                as: "reviews",
+            },
+        },
+        {
+            $addFields: {
+                rating: {
+                    $round: [
+                        {
+                            $ifNull: [
+                                {
+                                    $avg: "$reviews.rating",
+                                },
+                                0,
+                            ],
+                        },
+                        1,
+                    ],
+                },
+                reviewCount: {
+                    $size: "$reviews",
+                },
+            },
+        },
+        {
+            $project: {
+                reviews: 0,
+            },
+        },
+        {
+            $sort: {
+                createdAt: -1,
+            },
+        },
+    ]);
+
+    return serializeDocuments(data);
+}
+
+function buildUMKMAggregate(filter: Record<string, unknown>) {
+    return [
+        {
+            $match: filter,
+        },
+        {
+            $lookup: {
+                from: "umkm_reviews",
+                localField: "_id",
+                foreignField: "umkmId",
+                as: "reviews",
+            },
+        },
+        {
+            $addFields: {
+                rating: {
+                    $round: [
+                        {
+                            $ifNull: [
+                                {
+                                    $avg: "$reviews.rating",
+                                },
+                                0,
+                            ],
+                        },
+                        1,
+                    ],
+                },
+                reviewCount: {
+                    $size: "$reviews",
+                },
+            },
+        },
+        {
+            $project: {
+                reviews: 0,
+            },
+        },
+    ];
 }
 
 export async function searchUMKM(keyword: string) {
     await connectDB();
 
-    return UMKM.find({
+    const data = await UMKM.find({
         isActive: true,
         $or: [
             {
@@ -117,10 +203,13 @@ export async function searchUMKM(keyword: string) {
             },
         ],
     }).lean();
+
+    return serializeDocuments(data);
 }
 
 export async function toggleFeatured(id: string) {
     await connectDB();
+
     const umkm = await UMKM.findById(id);
 
     if (!umkm) return null;
@@ -129,7 +218,7 @@ export async function toggleFeatured(id: string) {
 
     await umkm.save();
 
-    return umkm;
+    return serializeDocument(umkm.toObject());
 }
 
 export async function toggleActive(id: string) {
@@ -143,19 +232,96 @@ export async function toggleActive(id: string) {
 
     await umkm.save();
 
-    return umkm;
+    return serializeDocument(umkm.toObject());
 }
 
 export async function findFeaturedUMKM(limit = 6) {
     await connectDB();
 
-    return UMKM.find({
+    const data = await UMKM.aggregate([
+        {
+            $match: {
+                isActive: true,
+                featured: true,
+            },
+        },
+        {
+            $lookup: {
+                from: "umkm_reviews",
+                localField: "_id",
+                foreignField: "umkmId",
+                as: "reviews",
+            },
+        },
+        {
+            $addFields: {
+                rating: {
+                    $round: [
+                        {
+                            $ifNull: [
+                                {
+                                    $avg: "$reviews.rating",
+                                },
+                                0,
+                            ],
+                        },
+                        1,
+                    ],
+                },
+                reviewCount: {
+                    $size: "$reviews",
+                },
+            },
+        },
+        {
+            $project: {
+                reviews: 0,
+            },
+        },
+        {
+            $sort: {
+                createdAt: -1,
+            },
+        },
+        {
+            $limit: limit,
+        },
+    ]);
+
+    return serializeDocuments(data);
+}
+
+export async function findPublishedUMKM() {
+    await connectDB();
+
+    const data = await UMKM.find({
         isActive: true,
-        featured: true,
     })
         .sort({
+            featured: -1,
+            createdAt: -1,
+        })
+        .lean();
+
+    return serializeDocuments(data);
+}
+
+export async function findRelatedUMKM(category: string, currentSlug: string, limit = 3) {
+    await connectDB();
+
+    const data = await UMKM.find({
+        isActive: true,
+        slug: {
+            $ne: currentSlug,
+        },
+        category,
+    })
+        .sort({
+            featured: -1,
             createdAt: -1,
         })
         .limit(limit)
         .lean();
+
+    return serializeDocuments(data);
 }
