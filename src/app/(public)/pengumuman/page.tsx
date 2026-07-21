@@ -69,7 +69,7 @@ export default async function AnnouncementPage() {
     const featured = data[0];
 
     return (
-        <section className="relative overflow-hidden py-24">
+        <section className="relative overflow-hidden py-16 sm:py-20 lg:py-24">
             {/* Background */}
             <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 via-background to-background" />
 
@@ -147,14 +147,16 @@ export default async function AnnouncementPage() {
 
                 {/* Featured */}
                 {featured && (
-                    <section className="overflow-hidden rounded-3xl border bg-card shadow-xl">
+                    <section className="overflow-hidden rounded-3xl border bg-card shadow-lg">
                         <div className="grid lg:grid-cols-2">
-                            <div className="relative aspect-[16/10] lg:aspect-auto">
+                            <div className="relative min-h-[260px] sm:min-h-[360px] lg:min-h-full overflow-hidden">
                                 <Image
                                     src={featured.coverImage}
                                     alt={featured.title}
                                     fill
-                                    className="object-cover"
+                                    sizes="(max-width:1024px) 100vw, 50vw"
+                                    className="object-cover object-center transition-transform duration-700 hover:scale-105 "
+                                    priority
                                 />
                             </div>
 
@@ -189,9 +191,9 @@ export default async function AnnouncementPage() {
                 )}
 
                 {/* Heading */}
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                     <div>
-                        <h2 className="flex items-center gap-3 text-3xl font-bold">
+                        <h2 className="flex items-center gap-3 text-2xl font-bold sm:text-3xl">
                             <Newspaper className="h-7 w-7 text-primary" />
                             Semua Pengumuman
                         </h2>
@@ -200,10 +202,13 @@ export default async function AnnouncementPage() {
                         </p>
                     </div>
 
-                    <Badge variant="outline" className="hidden rounded-full px-4 py-2 md:flex">
+                    <Badge variant="outline" className="w-fit rounded-full px-4 py-2">
                         {data.length} Informasi
                     </Badge>
                 </div>
+
+                <div className="absolute -left-24 top-40 -z-10 h-60 w-60 rounded-full bg-primary/5 blur-3xl" />
+                <div className="absolute -right-20 bottom-0 -z-10 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
 
                 {/* Grid */}
                 <AnnouncementList announcements={data} />
