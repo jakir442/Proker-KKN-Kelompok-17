@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
 import { getLatestNews } from "@/repositories/news.repository";
 
 import { Container } from "../layout/Container";
@@ -22,7 +25,10 @@ export async function LatestNews() {
     }));
 
     return (
-        <section className="py-24">
+        <section className="relative overflow-hidden py-20 sm:py-24">
+            {/* Background Decoration */}
+            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-muted/20 to-background" />
+            <div className="absolute left-1/2 top-0 -z-10 h-80 w-80 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
             <Container>
                 <SectionHeader
                     badge="Berita Desa"
@@ -30,11 +36,32 @@ export async function LatestNews() {
                     description="Ikuti perkembangan terbaru mengenai kegiatan, program, dan informasi penting Desa Cintanagara."
                 />
 
-                <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-                    {latestNews.map((item) => (
-                        <NewsCard key={item.id} news={item} />
-                    ))}
-                </div>
+                {latestNews.length > 0 ? (
+                    <>
+                        <div className="mt-14 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                            {latestNews.map((item) => (
+                                <NewsCard key={item.id} news={item} />
+                            ))}
+                        </div>
+
+                        <div className="mt-12 flex justify-center">
+                            <Link
+                                href="/berita"
+                                className="group inline-flex items-center gap-2 rounded-full border bg-background px-6 py-3 text-sm font-semibold shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:text-primary hover:shadow-lg"
+                            >
+                                Lihat Semua Berita
+                                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                            </Link>
+                        </div>
+                    </>
+                ) : (
+                    <div className="mt-14 rounded-3xl border border-dashed bg-muted/30 px-8 py-16 text-center">
+                        <h3 className="text-lg font-semibold">Belum ada berita</h3>
+                        <p className="mt-2 text-muted-foreground">
+                            Informasi terbaru dari Desa Cintanagara akan ditampilkan di sini.
+                        </p>
+                    </div>
+                )}
             </Container>
         </section>
     );
