@@ -6,7 +6,7 @@ import type { IUMKM } from "@/types/umkm";
 interface GetUMKMParams {
     search?: string;
     category?: string;
-    status?: string;
+    status?: "ACTIVE" | "INACTIVE";
     page?: number;
     limit?: number;
 }

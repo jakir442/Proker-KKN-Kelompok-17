@@ -16,10 +16,15 @@ interface UMKMPageProps {
 
 export default async function UMKMPage({ searchParams }: UMKMPageProps) {
     const params = await searchParams;
+    const status =
+        params.status === "ACTIVE" || params.status === "INACTIVE"
+            ? params.status
+            : undefined;
+
     const result = await getUMKMsAction({
         search: params.search,
         category: params.category,
-        status: params.status,
+        status,
         page: Number(params.page) || 1,
         limit: Number(params.limit) || 10,
     });

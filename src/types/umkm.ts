@@ -7,7 +7,6 @@ export interface IUMKM {
     slug: string;
     description: string;
 
-    image?: string; // Cover utama UMKM
     logo: string;
     gallery: string[];
 
@@ -16,7 +15,8 @@ export interface IUMKM {
     whatsapp: string;
 
     category: string;
-
+    rating: number;
+    reviewCount: number;
     address: string;
 
     latitude?: number;
