@@ -84,9 +84,25 @@ export function AnnouncementDetail({ title, content, category, coverImage, publi
                 {/* Content */}
                 <div
                     className="
-                        prose prose-neutral
+                        prose
+                        prose-neutral
                         dark:prose-invert
                         max-w-none
+
+                        [&_*]:break-words
+                        [&_*]:overflow-wrap-anywhere
+
+                        break-words
+                        overflow-hidden
+                        [&_*>*]:max-w-full
+                        [&_*>*]:break-words
+                        [&_*>*]:overflow-wrap-anywhere
+
+                        prose-pre:overflow-x-auto
+                        prose-code:break-all
+
+                        prose-img:max-w-full
+                        prose-img:w-full
 
                         prose-headings:scroll-mt-24
                         prose-headings:font-bold
