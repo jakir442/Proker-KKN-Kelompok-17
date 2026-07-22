@@ -25,7 +25,7 @@ export async function getUMKMsAction({
             status,
         });
 
-        const data = result.map((item: IUMKM) => ({
+        const data = result.items.map((item: IUMKM) => ({
             id: item._id.toString(),
 
             name: item.name,
@@ -57,9 +57,9 @@ export async function getUMKMsAction({
         return {
             success: true,
             data,
-            total: data.length,
-            page,
-            totalPages: Math.ceil(data.length / limit),
+            total: result.total,
+            page: result.page,
+            totalPages: result.totalPages,
         };
     } catch (error) {
         console.error(error);

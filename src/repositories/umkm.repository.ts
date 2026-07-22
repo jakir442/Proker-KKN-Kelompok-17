@@ -47,9 +47,19 @@ interface FindUMKMParams {
     search?: string;
     category?: string;
     status?: "ACTIVE" | "INACTIVE";
+    sort?: "newest" | "oldest" | "name" | "rating";
+    page?: number;
+    limit?: number;
 }
 
-export async function findAllUMKM({ search, category, status }: FindUMKMParams = {}) {
+export async function findAllUMKM({
+    search,
+    category,
+    status,
+    sort = "newest",
+    page = 1,
+    limit = 9,
+}: FindUMKMParams = {}) {
     await connectDB();
 
     const filter: Record<string, unknown> = {};
@@ -89,51 +99,41 @@ export async function findAllUMKM({ search, category, status }: FindUMKMParams =
         filter.isActive = false;
     }
 
-    const data = await UMKM.aggregate([
-        {
-            $match: filter,
-        },
-        {
-            $lookup: {
-                from: "umkm_reviews",
-                localField: "_id",
-                foreignField: "umkmId",
-                as: "reviews",
-            },
-        },
-        {
-            $addFields: {
-                rating: {
-                    $round: [
-                        {
-                            $ifNull: [
-                                {
-                                    $avg: "$reviews.rating",
-                                },
-                                0,
-                            ],
-                        },
-                        1,
-                    ],
-                },
-                reviewCount: {
-                    $size: "$reviews",
-                },
-            },
-        },
-        {
-            $project: {
-                reviews: 0,
-            },
-        },
-        {
-            $sort: {
-                createdAt: -1,
-            },
-        },
-    ]);
+    let sortOption: Record<string, 1 | -1>;
 
-    return serializeDocuments(data);
+    switch (sort) {
+        case "oldest":
+            sortOption = { createdAt: 1 };
+            break;
+
+        case "name":
+            sortOption = { name: 1 };
+            break;
+
+        case "rating":
+            sortOption = { rating: -1 };
+            break;
+
+        default:
+            sortOption = { createdAt: -1 };
+    }
+
+    const total = await UMKM.countDocuments(filter);
+
+    const data = await UMKM.find(filter)
+        .sort(sortOption)
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean();
+
+    const serialized = serializeDocuments(data);
+
+    return {
+        items: serialized,
+        total,
+        totalPages: Math.ceil(total / limit),
+        page,
+    };
 }
 
 function buildUMKMAggregate(filter: Record<string, unknown>) {
@@ -324,4 +324,14 @@ export async function findRelatedUMKM(category: string, currentSlug: string, lim
         .lean();
 
     return serializeDocuments(data);
+}
+
+export async function findUMKMCategories() {
+    await connectDB();
+
+    const categories = await UMKM.distinct("category", {
+        isActive: true,
+    });
+
+    return categories.sort();
 }

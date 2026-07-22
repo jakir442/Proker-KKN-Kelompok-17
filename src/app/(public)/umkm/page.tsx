@@ -1,15 +1,34 @@
 import { Store, Sparkles, MapPinned } from "lucide-react";
-
-import { getUMKMAction } from "@/actions/public/get-umkm";
 import { Breadcrumb } from "@/components/public/layout/Breadcrumb";
 import { Container } from "@/components/public/layout/Container";
 import { SectionHeader } from "@/components/public/common/SectionHeader";
 import { UMKMCard } from "@/components/public/umkm/UMKMCard";
+import { UMKMToolbar } from "@/components/public/umkm/filters/UMKMToolbar";
+import { getAllUMKMAction } from "@/actions/umkm/get-all-umkm";
+import { getUMKMCategoriesAction } from "@/actions/umkm/get-umkm-categories";
+import { UMKMPagination } from "@/components/public/umkm/filters/UMKMPagination";
 
-export default async function UMKMPage() {
-    const result = await getUMKMAction();
+interface Props {
+    searchParams: Promise<{
+        search?: string;
+        category?: string;
+        sort?: "newest" | "oldest" | "name" | "rating";
+        page?: string;
+    }>;
+}
 
-    const umkm = result.success ? result.data : [];
+export default async function UMKMPage({ searchParams }: Props) {
+    const params = await searchParams;
+    const result = await getAllUMKMAction({
+        search: params.search,
+        category: params.category,
+        sort: params.sort,
+        page: Number(params.page ?? 1),
+        limit: 1,
+    });
+    const categoryResult = await getUMKMCategoriesAction();
+    const umkm = result.success ? result.data.items : [];
+    const categories = categoryResult.success ? categoryResult.data : [];
 
     return (
         <main className="bg-gradient-to-b from-slate-50 via-white to-slate-50">
@@ -17,7 +36,6 @@ export default async function UMKMPage() {
             <section className="relative overflow-hidden border-b">
                 <div className="absolute inset-0">
                     <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-emerald-300/20 blur-3xl" />
-
                     <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-sky-300/20 blur-3xl" />
                 </div>
 
@@ -49,19 +67,15 @@ export default async function UMKMPage() {
                         <div className="mt-12 grid gap-5 sm:grid-cols-2">
                             <div className="rounded-3xl border bg-white p-8 shadow-sm">
                                 <Store className="mx-auto h-10 w-10 text-emerald-600" />
-
                                 <h2 className="mt-5 text-4xl font-bold text-slate-900">
-                                    {umkm.length}
+                                    {result.success ? result.data.total : 0}
                                 </h2>
-
                                 <p className="mt-2 text-sm text-slate-500">Total UMKM Aktif</p>
                             </div>
 
                             <div className="rounded-3xl border bg-white p-8 shadow-sm">
                                 <MapPinned className="mx-auto h-10 w-10 text-sky-600" />
-
                                 <h2 className="mt-5 text-4xl font-bold text-slate-900">Desa</h2>
-
                                 <p className="mt-2 text-sm text-slate-500">
                                     Berbasis Lokal Cintanagara
                                 </p>
@@ -79,15 +93,13 @@ export default async function UMKMPage() {
                         title="Jelajahi UMKM"
                         description="Berbagai usaha mikro, kecil, dan menengah yang aktif melayani masyarakat Desa Cintanagara."
                     />
-
+                    <UMKMToolbar categories={categories} />
                     {umkm.length === 0 ? (
                         <div className="rounded-3xl border border-dashed bg-white py-20 text-center">
                             <Store className="mx-auto h-12 w-12 text-slate-300" />
-
                             <h3 className="mt-6 text-2xl font-bold text-slate-900">
                                 Belum Ada UMKM
                             </h3>
-
                             <p className="mt-3 text-slate-500">
                                 Saat ini belum terdapat UMKM yang dipublikasikan.
                             </p>
@@ -99,6 +111,7 @@ export default async function UMKMPage() {
                             ))}
                         </div>
                     )}
+                    <UMKMPagination page={result.data.page} totalPages={result.data.totalPages} />
                 </Container>
             </section>
 
