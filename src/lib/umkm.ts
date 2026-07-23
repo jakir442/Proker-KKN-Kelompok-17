@@ -8,40 +8,28 @@
  * 08:00
  * 17:30
  */
-export function isUMKMOpen(openTime: string, closeTime: string, currentDate = new Date()): boolean {
+export function isUMKMOpen(openTime?: string, closeTime?: string) {
     if (!openTime || !closeTime) return false;
 
+    const now = new Date();
+
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
     const [openHour, openMinute] = openTime.split(":").map(Number);
+
     const [closeHour, closeMinute] = closeTime.split(":").map(Number);
 
-    if (
-        Number.isNaN(openHour) ||
-        Number.isNaN(openMinute) ||
-        Number.isNaN(closeHour) ||
-        Number.isNaN(closeMinute)
-    ) {
-        return false;
+    const openMinutes = openHour * 60 + openMinute;
+
+    const closeMinutes = closeHour * 60 + closeMinute;
+
+    // Normal case
+    if (openMinutes < closeMinutes) {
+        return currentMinutes >= openMinutes && currentMinutes <= closeMinutes;
     }
 
-    const now = new Date(currentDate);
-
-    const open = new Date(currentDate);
-    open.setHours(openHour, openMinute, 0, 0);
-
-    const close = new Date(currentDate);
-    close.setHours(closeHour, closeMinute, 0, 0);
-
-    // Mendukung jam operasional yang melewati tengah malam
-    // Contoh: 18:00 - 02:00
-    if (close <= open) {
-        close.setDate(close.getDate() + 1);
-
-        if (now < open) {
-            now.setDate(now.getDate() + 1);
-        }
-    }
-
-    return now >= open && now <= close;
+    // Jika buka melewati tengah malam
+    return currentMinutes >= openMinutes || currentMinutes <= closeMinutes;
 }
 
 /**

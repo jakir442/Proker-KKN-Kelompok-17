@@ -1,8 +1,8 @@
 import { Store, Star, CheckCircle, XCircle } from "lucide-react";
 import { getUMKMsAction } from "@/actions/umkm/get-umkm";
-import { UMKMClient } from "@/components/dashboard/umkm/UMKMClient";
-import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
-import { StatCard } from "@/components/dashboard/cards/StatCard";
+import { UMKMClient } from "@/components/dashboard/super-admin/umkm/UMKMClient";
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
+import { StatCard } from "@/components/dashboard/super-admin/cards/StatCard";
 
 interface UMKMPageProps {
     searchParams: Promise<{
@@ -17,9 +17,7 @@ interface UMKMPageProps {
 export default async function UMKMPage({ searchParams }: UMKMPageProps) {
     const params = await searchParams;
     const status =
-        params.status === "ACTIVE" || params.status === "INACTIVE"
-            ? params.status
-            : undefined;
+        params.status === "ACTIVE" || params.status === "INACTIVE" ? params.status : undefined;
 
     const result = await getUMKMsAction({
         search: params.search,

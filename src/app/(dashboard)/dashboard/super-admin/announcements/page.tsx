@@ -1,8 +1,6 @@
-import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
-
-import { AnnouncementDialog } from "@/components/dashboard/announcements/announcement-dialog";
-import { AnnouncementTable } from "@/components/dashboard/announcements/announcement-table";
-
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
+import { AnnouncementDialog } from "@/components/dashboard/super-admin/announcements/announcement-dialog";
+import { AnnouncementTable } from "@/components/dashboard/super-admin/announcements/announcement-table";
 import { getAnnouncementsAction } from "@/actions/announcements/get-announcements";
 
 export default async function AnnouncementPage() {

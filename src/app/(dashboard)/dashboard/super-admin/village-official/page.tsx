@@ -1,7 +1,7 @@
 import { getOfficialsAction } from "@/actions/village-official/get-officials";
-import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
-import { OfficialTable } from "@/components/dashboard/village-official/OfficialTable";
-import { OfficialToolbar } from "@/components/dashboard/village-official/OfficialToolbar";
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
+import { OfficialTable } from "@/components/dashboard/super-admin/village-official/OfficialTable";
+import { OfficialToolbar } from "@/components/dashboard/super-admin/village-official/OfficialToolbar";
 
 interface Props {
     searchParams: Promise<{

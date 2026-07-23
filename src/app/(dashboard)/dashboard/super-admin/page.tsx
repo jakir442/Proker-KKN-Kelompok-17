@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { WelcomeBanner } from "@/components/dashboard/sections/WelcomeBanner";
-import { DashboardStats } from "@/components/dashboard/sections/DashboardStats";
-import { DashboardQuickActions } from "@/components/dashboard/sections/DashboardQuickActions";
-import { RecentActivity } from "@/components/dashboard/sections/RecentActivity";
+import { WelcomeBanner } from "@/components/dashboard/super-admin/sections/WelcomeBanner";
+import { DashboardStats } from "@/components/dashboard/super-admin/sections/DashboardStats";
+import { DashboardQuickActions } from "@/components/dashboard/super-admin/sections/DashboardQuickActions";
+import { RecentActivity } from "@/components/dashboard/super-admin/sections/RecentActivity";
 
 export default async function DashboardPage() {
     const session = await auth();

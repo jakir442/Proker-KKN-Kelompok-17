@@ -9,7 +9,7 @@ export default async function DashboardPage() {
     if (!session) {
         redirect("/login");
     }
-
+    console.log("ROLE =", session.user.role);
     const role = session.user.role;
 
     switch (role) {

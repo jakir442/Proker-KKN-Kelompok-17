@@ -52,7 +52,6 @@ export function UserTable({ users, onEdit, onDelete }: UserTableProps) {
 
                             <TableCell className="text-right">
                                 <UserActions
-                                    user={user}
                                     onEdit={() => onEdit(user)}
                                     onDelete={() => onDelete(user)}
                                 />

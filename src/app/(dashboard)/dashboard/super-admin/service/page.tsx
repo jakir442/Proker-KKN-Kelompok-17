@@ -1,6 +1,6 @@
-import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
-import { ServiceToolbar } from "@/components/dashboard/service/ServiceToolbar";
-import { ServiceTable } from "@/components/dashboard/service/ServiceTable";
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
+import { ServiceToolbar } from "@/components/dashboard/super-admin/service/ServiceToolbar";
+import { ServiceTable } from "@/components/dashboard/super-admin/service/ServiceTable";
 import { getServicesAction } from "@/actions/service/get-services";
 
 interface Props {

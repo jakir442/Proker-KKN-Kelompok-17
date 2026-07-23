@@ -1,7 +1,7 @@
 import { getAPBDesAction } from "@/actions/apbdes/get-apbdes";
-import { APBDesDialog } from "@/components/dashboard/apbdes/APBDesDialog";
-import { APBDesTable } from "@/components/dashboard/apbdes/APBDesTable";
-import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
+import { APBDesDialog } from "@/components/dashboard/super-admin/apbdes/APBDesDialog";
+import { APBDesTable } from "@/components/dashboard/super-admin/apbdes/APBDesTable";
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
 
 export default async function APBDesPage() {
     const result = await getAPBDesAction({});
