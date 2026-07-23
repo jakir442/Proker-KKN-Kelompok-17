@@ -1,5 +1,7 @@
+import type { Types } from "mongoose";
+
 export interface ITourism {
-    _id: string;
+    _id: Types.ObjectId;
     name: string;
     slug: string;
     shortDescription: string;
@@ -7,8 +9,8 @@ export interface ITourism {
     image: string;
     gallery: string[];
     address: string;
-    latitude?: number;
-    longitude?: number;
+    latitude?: number | null;
+    longitude?: number | null;
     category: "Alam" | "Budaya" | "Religi" | "Edukasi" | "Kuliner" | "Camping";
     facilities: string[];
     openingHours?: string;

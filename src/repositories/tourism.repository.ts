@@ -161,6 +161,105 @@ export async function findFeaturedTourism(limit = 6) {
         status: "published",
     })
         .sort({
+            featured: -1,
+            createdAt: -1,
+        })
+        .limit(limit)
+        .lean();
+}
+
+interface FindPublishedTourismParams {
+    page?: number;
+    limit?: number;
+    search?: string;
+    category?: string;
+}
+
+export async function findPublishedTourism({
+    page = 1,
+    limit = 9,
+    search,
+    category,
+}: FindPublishedTourismParams = {}) {
+    await connectDB();
+
+    const filter: Record<string, unknown> = {
+        status: "published",
+    };
+
+    if (search) {
+        filter.$or = [
+            {
+                name: {
+                    $regex: search,
+                    $options: "i",
+                },
+            },
+            {
+                address: {
+                    $regex: search,
+                    $options: "i",
+                },
+            },
+            {
+                category: {
+                    $regex: search,
+                    $options: "i",
+                },
+            },
+            {
+                shortDescription: {
+                    $regex: search,
+                    $options: "i",
+                },
+            },
+        ];
+    }
+
+    if (category && category !== "ALL") {
+        filter.category = category;
+    }
+
+    const totalItems = await TourismModel.countDocuments(filter);
+
+    const totalPages = Math.max(1, Math.ceil(totalItems / limit));
+
+    const currentPage = Math.min(page, totalPages);
+
+    const tourism = await TourismModel.find(filter)
+        .sort({
+            featured: -1,
+            createdAt: -1,
+        })
+        .skip((currentPage - 1) * limit)
+        .limit(limit)
+        .lean();
+
+    return {
+        tourism,
+        page: currentPage,
+        limit,
+        totalItems,
+        totalPages,
+        hasNextPage: currentPage < totalPages,
+        hasPreviousPage: currentPage > 1,
+    };
+}
+
+export async function findRelatedTourism(currentSlug: string, category: string, limit = 3) {
+    await connectDB();
+
+    const filter: Record<string, unknown> = {
+        status: "published",
+        category,
+        slug: {
+            $ne: currentSlug,
+        },
+    };
+
+    return TourismModel.find(filter)
+        .sort({
+            featured: -1,
             createdAt: -1,
         })
         .limit(limit)
