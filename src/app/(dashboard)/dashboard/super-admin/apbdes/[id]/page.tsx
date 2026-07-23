@@ -1,10 +1,7 @@
 import { notFound } from "next/navigation";
-
 import { APBDesRepository } from "@/repositories/apbdes.repository";
 import { APBDesItemRepository } from "@/repositories/apbdes-item.repository";
-
-import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
-
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
 import { APBDesSummary } from "./components/APBDesSummary";
 import { APBDesItemTable } from "./components/APBDesItemTable";
 import { APBDesItemDialog } from "./components/APBDesItemDialog";

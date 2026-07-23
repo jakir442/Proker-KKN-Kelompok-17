@@ -1,7 +1,7 @@
 import { findEvents } from "@/repositories/event.repository";
 
-import { EventDialog } from "@/components/dashboard/events/event-dialog";
-import { EventTable } from "@/components/dashboard/events/event-table";
+import { EventDialog } from "@/components/dashboard/super-admin/events/event-dialog";
+import { EventTable } from "@/components/dashboard/super-admin/events/event-table";
 
 export default async function DashboardEventsPage() {
     const { events } = await findEvents({

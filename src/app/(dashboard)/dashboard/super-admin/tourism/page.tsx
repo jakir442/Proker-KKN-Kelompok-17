@@ -1,6 +1,6 @@
-import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
-import { TourismToolbar } from "@/components/dashboard/tourism/TourismToolbar";
-import { TourismTable } from "@/components/dashboard/tourism/TourismTable";
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
+import { TourismToolbar } from "@/components/dashboard/super-admin/tourism/TourismToolbar";
+import { TourismTable } from "@/components/dashboard/super-admin/tourism/TourismTable";
 import { getTourismsAction } from "@/actions/tourism/get-tourism";
 
 interface Props {

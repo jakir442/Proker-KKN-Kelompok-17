@@ -48,7 +48,7 @@ export function Navbar() {
                             className="group rounded-full px-6 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md"
                         >
                             <Link href="/login" className="flex items-center gap-2">
-                                <span>Login</span>
+                                <span>Login Admin</span>
                                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                             </Link>
                         </Button>

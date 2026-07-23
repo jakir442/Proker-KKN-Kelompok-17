@@ -1,6 +1,6 @@
 import { getVillageProfileAction } from "@/actions/village-profile/get-village-profile";
-import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
-import { VillageProfileForm } from "@/components/dashboard/village-profile/VillageProfileForm";
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
+import { VillageProfileForm } from "@/components/dashboard/super-admin/village-profile/VillageProfileForm";
 
 export default async function VillageProfilePage() {
     const result = await getVillageProfileAction();

@@ -1,3 +1,5 @@
+import { CheckCircle2, XCircle } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 
 interface StatusBadgeProps {
@@ -5,9 +7,15 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ isActive }: StatusBadgeProps) {
-    if (isActive) {
-        return <Badge className="bg-green-600 hover:bg-green-700">Aktif</Badge>;
-    }
-
-    return <Badge variant="destructive">Nonaktif</Badge>;
+    return isActive ? (
+        <Badge className="gap-1 bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
+            <CheckCircle2 className="h-3 w-3" />
+            Aktif
+        </Badge>
+    ) : (
+        <Badge className="gap-1 bg-rose-100 text-rose-700 hover:bg-rose-100">
+            <XCircle className="h-3 w-3" />
+            Nonaktif
+        </Badge>
+    );
 }

@@ -1,8 +1,8 @@
 import { Users, ShieldCheck, UserCog, User } from "lucide-react";
 import { getUsersAction } from "@/actions/user/get-users";
-import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
-import { StatCard } from "@/components/dashboard/cards/StatCard";
-import { EmptyState } from "@/components/dashboard/common/EmptyState";
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
+import { StatCard } from "@/components/dashboard/super-admin/cards/StatCard";
+import { EmptyState } from "@/components/dashboard/super-admin/common/EmptyState";
 import { UsersClient } from "@/components/dashboard/users/UsersClient";
 
 interface UsersPageProps {

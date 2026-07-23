@@ -1,6 +1,6 @@
 import { getComplaints } from "@/actions/complaint/complaint";
-import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
-import { ComplaintTable } from "@/components/dashboard/complaints/ComplaintTable";
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
+import { ComplaintTable } from "@/components/dashboard/super-admin/complaints/ComplaintTable";
 
 interface Props {
     searchParams: Promise<{

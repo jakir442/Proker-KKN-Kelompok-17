@@ -1,6 +1,6 @@
-import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
-import { NewsDialog } from "@/components/dashboard/news/news-dialog";
-import { NewsTable } from "@/components/dashboard/news/news-table";
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
+import { NewsDialog } from "@/components/dashboard/super-admin/news/news-dialog";
+import { NewsTable } from "@/components/dashboard/super-admin/news/news-table";
 import { getAllNews } from "@/repositories/news.repository";
 
 export default async function NewsPage() {

@@ -1,7 +1,7 @@
 import { getPublishedGalleryAction } from "@/actions/gallery/get-published-gallery";
 
 import { Container } from "@/components/public/layout/Container";
-import { SectionHeader } from "@/components/dashboard/common/SectionHeader";
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
 
 import { GalleryGrid } from "@/components/public/gallery/GalleryGrid";
 
