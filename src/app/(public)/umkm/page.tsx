@@ -24,7 +24,7 @@ export default async function UMKMPage({ searchParams }: Props) {
         category: params.category,
         sort: params.sort,
         page: Number(params.page ?? 1),
-        limit: 1,
+        limit: 5,
     });
     const categoryResult = await getUMKMCategoriesAction();
     const umkm = result.success ? result.data.items : [];

@@ -6,9 +6,7 @@ interface EventLocationProps {
 
 export function EventLocation({ location }: EventLocationProps) {
     const encodedLocation = encodeURIComponent(location);
-
     const embedSrc = `https://www.google.com/maps?q=${encodedLocation}&z=16&output=embed`;
-
     const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`;
 
     return (

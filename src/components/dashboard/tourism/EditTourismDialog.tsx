@@ -19,7 +19,7 @@ export function EditTourismDialog({ open, onOpenChange, tourism }: Props) {
                     <DialogTitle>Edit Destinasi Wisata</DialogTitle>
                 </DialogHeader>
 
-                <TourismForm initialData={tourism} onSuccess={() => onOpenChange(false)} />
+                <TourismForm initialData={tourism && { ...tourism, latitude: tourism.latitude ?? undefined, longitude: tourism.longitude ?? undefined }} onSuccess={() => onOpenChange(false)} />
             </DialogContent>
         </Dialog>
     );

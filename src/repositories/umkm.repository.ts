@@ -3,6 +3,47 @@ import { UMKM } from "@/models/umkm";
 import { serializeDocument, serializeDocuments } from "@/lib/serialize";
 import type { IUMKM } from "@/types/umkm";
 
+function buildUMKMAggregate(filter: Record<string, unknown>) {
+    return [
+        {
+            $match: filter,
+        },
+        {
+            $lookup: {
+                from: "umkm_reviews",
+                localField: "_id",
+                foreignField: "umkmId",
+                as: "reviews",
+            },
+        },
+        {
+            $addFields: {
+                rating: {
+                    $round: [
+                        {
+                            $ifNull: [
+                                {
+                                    $avg: "$reviews.rating",
+                                },
+                                0,
+                            ],
+                        },
+                        1,
+                    ],
+                },
+                reviewCount: {
+                    $size: "$reviews",
+                },
+            },
+        },
+        {
+            $project: {
+                reviews: 0,
+            },
+        },
+    ];
+}
+
 export async function createUMKM(data: Partial<IUMKM>) {
     await connectDB();
 
@@ -120,11 +161,21 @@ export async function findAllUMKM({
 
     const total = await UMKM.countDocuments(filter);
 
-    const data = await UMKM.find(filter)
-        .sort(sortOption)
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .lean();
+    const data = await UMKM.aggregate([
+        ...buildUMKMAggregate(filter),
+
+        {
+            $sort: sortOption,
+        },
+
+        {
+            $skip: (page - 1) * limit,
+        },
+
+        {
+            $limit: limit,
+        },
+    ]);
 
     const serialized = serializeDocuments(data);
 
@@ -134,47 +185,6 @@ export async function findAllUMKM({
         totalPages: Math.ceil(total / limit),
         page,
     };
-}
-
-function buildUMKMAggregate(filter: Record<string, unknown>) {
-    return [
-        {
-            $match: filter,
-        },
-        {
-            $lookup: {
-                from: "umkm_reviews",
-                localField: "_id",
-                foreignField: "umkmId",
-                as: "reviews",
-            },
-        },
-        {
-            $addFields: {
-                rating: {
-                    $round: [
-                        {
-                            $ifNull: [
-                                {
-                                    $avg: "$reviews.rating",
-                                },
-                                0,
-                            ],
-                        },
-                        1,
-                    ],
-                },
-                reviewCount: {
-                    $size: "$reviews",
-                },
-            },
-        },
-        {
-            $project: {
-                reviews: 0,
-            },
-        },
-    ];
 }
 
 export async function searchUMKM(keyword: string) {
@@ -239,52 +249,15 @@ export async function findFeaturedUMKM(limit = 6) {
     await connectDB();
 
     const data = await UMKM.aggregate([
-        {
-            $match: {
-                isActive: true,
-                featured: true,
-            },
-        },
-        {
-            $lookup: {
-                from: "umkm_reviews",
-                localField: "_id",
-                foreignField: "umkmId",
-                as: "reviews",
-            },
-        },
-        {
-            $addFields: {
-                rating: {
-                    $round: [
-                        {
-                            $ifNull: [
-                                {
-                                    $avg: "$reviews.rating",
-                                },
-                                0,
-                            ],
-                        },
-                        1,
-                    ],
-                },
-                reviewCount: {
-                    $size: "$reviews",
-                },
-            },
-        },
-        {
-            $project: {
-                reviews: 0,
-            },
-        },
+        ...buildUMKMAggregate({
+            isActive: true,
+        }),
+
         {
             $sort: {
+                featured: -1,
                 createdAt: -1,
             },
-        },
-        {
-            $limit: limit,
         },
     ]);
 
