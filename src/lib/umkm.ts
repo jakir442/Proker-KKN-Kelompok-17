@@ -10,26 +10,36 @@
  */
 export function isUMKMOpen(openTime?: string, closeTime?: string) {
     if (!openTime || !closeTime) return false;
-
     const now = new Date();
 
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    // Ambil jam WIB
+    const formatter = new Intl.DateTimeFormat("id-ID", {
+        timeZone: "Asia/Jakarta",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    });
+
+    const parts = formatter.formatToParts(now);
+
+    const hour = Number(parts.find((p) => p.type === "hour")?.value ?? 0);
+    const minute = Number(parts.find((p) => p.type === "minute")?.value ?? 0);
+
+    const currentMinutes = hour * 60 + minute;
 
     const [openHour, openMinute] = openTime.split(":").map(Number);
-
     const [closeHour, closeMinute] = closeTime.split(":").map(Number);
 
     const openMinutes = openHour * 60 + openMinute;
-
     const closeMinutes = closeHour * 60 + closeMinute;
 
-    // Normal case
-    if (openMinutes < closeMinutes) {
-        return currentMinutes >= openMinutes && currentMinutes <= closeMinutes;
+    // Normal (08:00 - 17:00)
+    if (openMinutes <= closeMinutes) {
+        return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
     }
 
-    // Jika buka melewati tengah malam
-    return currentMinutes >= openMinutes || currentMinutes <= closeMinutes;
+    // Melewati tengah malam (18:00 - 02:00)
+    return currentMinutes >= openMinutes || currentMinutes < closeMinutes;
 }
 
 /**
