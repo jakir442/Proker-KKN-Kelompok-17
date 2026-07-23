@@ -26,20 +26,27 @@ export async function Tourism() {
             <Container>
                 <div className="space-y-14">
                     <Reveal>
-                        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-                            <SectionHeader
-                                badge="Wisata Desa"
-                                title="Jelajahi Destinasi Wisata Cintanagara"
-                                description="Temukan keindahan alam, udara yang sejuk, serta berbagai destinasi wisata unggulan yang menjadi kebanggaan Desa Cintanagara."
-                            />
+                        <div className="space-y-8">
+                            <div className="flex justify-center text-center">
+                                <SectionHeader
+                                    badge="Wisata Desa"
+                                    title="Jelajahi Destinasi Wisata Cintanagara"
+                                    description="Temukan keindahan alam, udara yang sejuk, serta berbagai destinasi wisata unggulan yang menjadi kebanggaan Desa Cintanagara."
+                                />
+                            </div>
 
                             {tourism.length > 0 && (
-                                <Button variant="outline" className="group w-full sm:w-auto">
-                                    <Link href="/wisata">
-                                        Lihat Semua
-                                        <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                                    </Link>
-                                </Button>
+                                <div className="flex justify-end">
+                                    <Button variant="outline" className="group w-full sm:w-auto">
+                                        <Link
+                                            href="/wisata"
+                                            className="inline-flex items-center gap-2"
+                                        >
+                                            Lihat Semua
+                                            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                                        </Link>
+                                    </Button>
+                                </div>
                             )}
                         </div>
                     </Reveal>
