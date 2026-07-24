@@ -1,15 +1,11 @@
 "use client";
 
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from "@/components/ui/dialog";
-import { UserListItem } from "@/types/user-list";
+import { Dialog } from "@/components/ui/dialog";
 import { UserCreateForm } from "./UserCreateForm";
 import { UserEditForm } from "./UserEditForm";
+
+import type { UserListItem } from "@/types/user-list";
+import { FormDialog } from "@/components/forms/FormDialog";
 
 interface UserDialogProps {
     mode: "create" | "edit";
@@ -21,16 +17,7 @@ interface UserDialogProps {
 export function UserDialog({ open, onOpenChange, mode, user }: UserDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle>{mode === "create" ? "Tambah User" : "Edit User"}</DialogTitle>
-                    <DialogDescription>
-                        {mode === "create"
-                            ? "Tambahkan akun pengguna baru."
-                            : "Perbarui informasi pengguna."}
-                    </DialogDescription>
-                </DialogHeader>
-
+            <FormDialog>
                 {mode === "create" ? (
                     <UserCreateForm
                         onSuccess={() => onOpenChange(false)}
@@ -43,7 +30,7 @@ export function UserDialog({ open, onOpenChange, mode, user }: UserDialogProps) 
                         onCancel={() => onOpenChange(false)}
                     />
                 )}
-            </DialogContent>
+            </FormDialog>
         </Dialog>
     );
 }
