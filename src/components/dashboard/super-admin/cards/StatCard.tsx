@@ -12,25 +12,41 @@ const colorVariants = {
         border: "hover:border-emerald-300 dark:hover:border-emerald-700",
         glow: "bg-emerald-500/10",
     },
+
     blue: {
         icon: "bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400",
         border: "hover:border-blue-300 dark:hover:border-blue-700",
         glow: "bg-blue-500/10",
     },
+
     amber: {
         icon: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400",
         border: "hover:border-amber-300 dark:hover:border-amber-700",
         glow: "bg-amber-500/10",
     },
+
     rose: {
         icon: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-400",
         border: "hover:border-rose-300 dark:hover:border-rose-700",
         glow: "bg-rose-500/10",
     },
+
     violet: {
         icon: "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400",
         border: "hover:border-violet-300 dark:hover:border-violet-700",
         glow: "bg-violet-500/10",
+    },
+
+    cyan: {
+        icon: "bg-cyan-100 text-cyan-700 dark:bg-cyan-500/15 dark:text-cyan-400",
+        border: "hover:border-cyan-300 dark:hover:border-cyan-700",
+        glow: "bg-cyan-500/10",
+    },
+
+    orange: {
+        icon: "bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-400",
+        border: "hover:border-orange-300 dark:hover:border-orange-700",
+        glow: "bg-orange-500/10",
     },
 } as const;
 
@@ -53,7 +69,7 @@ export function StatCard({
             className={cn(
                 "group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-card p-6",
                 "shadow-sm transition-all duration-300 ease-out",
-                "hover:-translate-y-1 hover:shadow-xl",
+                "hover:-translate-y-0.5 hover:shadow-lg",
                 styles.border,
             )}
         >
@@ -76,7 +92,7 @@ export function StatCard({
 
                     <div
                         className={cn(
-                            "flex h-12 w-12 items-center justify-center rounded-xl",
+                            "flex size-11 items-center justify-center rounded-xl sm:size-12",
                             "transition-all duration-300 group-hover:scale-110 group-hover:rotate-6",
                             styles.icon,
                         )}
@@ -117,11 +133,15 @@ export function StatCard({
                 )}
 
                 {/* Footer */}
-                <div className="mt-6 flex items-center justify-between border-t pt-4">
-                    <span className="text-xs text-muted-foreground">Diperbarui hari ini</span>
+                {href && (
+                    <div className="mt-6 flex items-center justify-between border-t pt-4">
+                        <span className="text-xs text-muted-foreground">
+                            Lihat detail pengguna
+                        </span>
 
-                    <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform duration-300 group-hover:translate-x-1" />
-                </div>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform duration-300 group-hover:translate-x-1" />
+                    </div>
+                )}
             </div>
         </div>
     );
