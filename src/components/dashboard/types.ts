@@ -31,7 +31,7 @@ export interface StatCardProps {
     /**
      * Warna aksen card
      */
-    color?: "emerald" | "blue" | "amber" | "rose" | "violet";
+    color?: "emerald" | "blue" | "amber" | "rose" | "violet" | "cyan" | "orange";
 
     /**
      * Klik card menuju halaman tertentu

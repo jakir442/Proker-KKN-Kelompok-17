@@ -13,11 +13,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface UserActionsProps {
-    onView?: () => void;
-    onEdit?: () => void;
-    onToggleStatus?: () => void;
-    onResetPassword?: () => void;
-    onDelete?: () => void;
+    onView: () => void;
+    onEdit: () => void;
+    onToggleStatus: () => void;
+    onResetPassword: () => void;
+    onDelete: () => void;
 }
 
 export function UserActions({
@@ -32,31 +32,31 @@ export function UserActions({
             <DropdownMenuTrigger
                 render={
                     <Button variant="ghost" size="icon" className="rounded-lg">
-                        <MoreHorizontal className="h-4 w-4" />
+                        <MoreHorizontal className="size-4" />
                     </Button>
                 }
             />
 
             <DropdownMenuContent align="end" className="w-52">
                 <DropdownMenuItem onClick={onView}>
-                    <Eye className="mr-2 h-4 w-4" />
+                    <Eye className="mr-2 size-4" />
                     Lihat Detail
                 </DropdownMenuItem>
 
                 <DropdownMenuItem onClick={onEdit}>
-                    <Pencil className="mr-2 h-4 w-4" />
+                    <Pencil className="mr-2 size-4" />
                     Edit
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem onClick={onToggleStatus}>
-                    <Power className="mr-2 h-4 w-4" />
+                    <Power className="mr-2 size-4" />
                     Ubah Status
                 </DropdownMenuItem>
 
                 <DropdownMenuItem onClick={onResetPassword}>
-                    <KeyRound className="mr-2 h-4 w-4" />
+                    <KeyRound className="mr-2 size-4" />
                     Reset Password
                 </DropdownMenuItem>
 
@@ -66,7 +66,7 @@ export function UserActions({
                     onClick={onDelete}
                     className="text-destructive focus:text-destructive"
                 >
-                    <Trash2 className="mr-2 h-4 w-4" />
+                    <Trash2 className="mr-2 size-4" />
                     Hapus
                 </DropdownMenuItem>
             </DropdownMenuContent>

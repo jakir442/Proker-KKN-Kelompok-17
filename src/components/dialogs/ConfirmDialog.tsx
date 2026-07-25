@@ -4,10 +4,9 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 
 import { deleteUserAction } from "@/actions/user/delete-user";
+import type { UserListItem } from "@/types/user-list";
 
 import { DeleteDialog } from "@/components/dialogs/DeleteDialog";
-
-import type { UserListItem } from "@/types/user-list";
 
 interface UserDeleteDialogProps {
     user?: UserListItem;
@@ -46,7 +45,6 @@ export function UserDeleteDialog({
             description="Pengguna yang dihapus akan kehilangan akses ke sistem dan tindakan ini tidak dapat dibatalkan."
             itemName={user?.fullName}
             confirmText="Hapus Pengguna"
-            cancelText="Batal"
             isPending={isPending}
             onConfirm={handleDelete}
         />

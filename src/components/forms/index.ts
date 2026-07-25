@@ -9,3 +9,5 @@ export * from "./FormInput";
 export * from "./FormPassword";
 export * from "./FormPhone";
 export * from "./FormTextarea";
+export * from "./FormUpload";
+export * from "./FormSwitch";
