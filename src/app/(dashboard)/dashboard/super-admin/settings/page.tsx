@@ -16,7 +16,7 @@ export default function SettingsPage() {
                     title="Informasi Desa"
                     description="Kelola identitas dan informasi utama desa."
                     icon={Building2}
-                    href="/dashboard/super-admin/settings/village"
+                    href="/dashboard/super-admin/settings/village-profile"
                 />
                 <SettingsCard
                     title="Website"

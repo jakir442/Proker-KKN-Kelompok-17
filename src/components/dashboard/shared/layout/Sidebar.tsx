@@ -28,7 +28,7 @@ export function Sidebar({ role, userName }: SidebarProps) {
                 : "UMKM";
 
     return (
-        <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r bg-background/95 backdrop-blur md:flex">
+        <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r bg-background/95 backdrop-blur lg:flex">
             {/* Branding */}
             <div className="flex items-center gap-3 border-b px-5 py-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-base font-bold text-primary-foreground shadow-sm">

@@ -1,9 +1,6 @@
-import { navigation } from "@/config/navigation";
-import { ROLES } from "@/constants/roles";
+import { adminNavigation } from "@/config/navigation-admin";
+import { ROLES, type UserRole } from "@/constants/roles";
 
-type NavigationItem = typeof navigation extends Array<infer Item> ? Item : typeof navigation[keyof typeof navigation];
-
-export function getNavigation(role: string) {
-    const navigationByRole = navigation as unknown as Record<string, NavigationItem>;
-    return navigationByRole[role] ?? navigationByRole[ROLES.SUPER_ADMIN];
+export function getNavigation(role: UserRole) {
+    return adminNavigation[role] ?? adminNavigation[ROLES.SUPER_ADMIN];
 }
