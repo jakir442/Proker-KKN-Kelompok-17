@@ -4,11 +4,12 @@ import { Menu } from "lucide-react";
 
 import { Breadcrumb } from "./Breadcrumb";
 import { UserDropdown } from "./UserDropdown";
+import { UserRole } from "@/constants/roles";
 
 interface HeaderProps {
     onMenuClick: () => void;
     userName?: string;
-    role?: string;
+    role: UserRole;
 }
 
 export function Header({ onMenuClick, userName, role }: HeaderProps) {
@@ -25,7 +26,7 @@ export function Header({ onMenuClick, userName, role }: HeaderProps) {
                         <Menu className="h-5 w-5" />
                     </button>
 
-                    <Breadcrumb />
+                    <Breadcrumb role={role} />
                 </div>
 
                 <UserDropdown name={userName} role={role} />

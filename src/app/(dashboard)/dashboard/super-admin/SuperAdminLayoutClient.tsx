@@ -30,7 +30,7 @@ export function SuperAdminLayoutClient({ children, userName, role }: Props) {
                 onClose={() => setSidebarOpen(false)}
             />
 
-            <div className="flex min-h-screen flex-col md:ml-64">
+            <div className="flex min-h-screen flex-col lg:ml-64">
                 <Header onMenuClick={() => setSidebarOpen(true)} userName={userName} role={role} />
 
                 <main className="flex-1 p-4 sm:p-6">{children}</main>

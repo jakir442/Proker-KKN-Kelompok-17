@@ -15,12 +15,7 @@ interface MobileSidebarProps {
     onClose: () => void;
 }
 
-export function MobileSidebar({
-    role,
-    userName,
-    open,
-    onClose,
-}: MobileSidebarProps) {
+export function MobileSidebar({ role, userName, open, onClose }: MobileSidebarProps) {
     const pathname = usePathname();
 
     const menus = adminNavigation[role] ?? [];
@@ -39,28 +34,22 @@ export function MobileSidebar({
             {open && (
                 <div
                     onClick={onClose}
-                    className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden"
+                    className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
                 />
             )}
 
             <aside
                 className={cn(
-                    "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r bg-background transition-transform duration-300 md:hidden",
-                    open
-                        ? "translate-x-0"
-                        : "-translate-x-full",
+                    "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r bg-background transition-transform duration-300 lg:hidden",
+                    open ? "translate-x-0" : "-translate-x-full",
                 )}
             >
                 {/* Header */}
                 <div className="flex items-center justify-between border-b px-5 py-4">
                     <div>
-                        <h1 className="text-sm font-semibold">
-                            Cintanagara
-                        </h1>
+                        <h1 className="text-sm font-semibold">Cintanagara</h1>
 
-                        <p className="text-xs text-muted-foreground">
-                            Smart Village
-                        </p>
+                        <p className="text-xs text-muted-foreground">Smart Village</p>
                     </div>
 
                     <button
@@ -72,7 +61,6 @@ export function MobileSidebar({
                     </button>
                 </div>
 
-
                 {/* Role */}
                 <div className="px-4 py-4">
                     <div className="flex items-center gap-2 rounded-lg bg-muted px-3 py-3 text-xs font-semibold text-muted-foreground">
@@ -82,7 +70,6 @@ export function MobileSidebar({
                     </div>
                 </div>
 
-
                 {/* Navigation */}
                 <nav className="flex-1 overflow-y-auto px-3">
                     <div className="space-y-1">
@@ -90,10 +77,7 @@ export function MobileSidebar({
                             const Icon = menu.icon;
 
                             const active =
-                                pathname === menu.href ||
-                                pathname.startsWith(
-                                    `${menu.href}/`,
-                                );
+                                pathname === menu.href || pathname.startsWith(`${menu.href}/`);
 
                             return (
                                 <Link
@@ -109,25 +93,18 @@ export function MobileSidebar({
                                 >
                                     <Icon className="h-5 w-5" />
 
-                                    <span>
-                                        {menu.title}
-                                    </span>
+                                    <span>{menu.title}</span>
                                 </Link>
                             );
                         })}
                     </div>
                 </nav>
 
-
                 {/* Account */}
                 <div className="border-t px-4 py-4">
-                    <p className="truncate text-sm font-medium">
-                        {userName ?? "User"}
-                    </p>
+                    <p className="truncate text-sm font-medium">{userName ?? "User"}</p>
 
-                    <p className="text-xs text-muted-foreground">
-                        {roleLabel}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{roleLabel}</p>
                 </div>
             </aside>
         </>
