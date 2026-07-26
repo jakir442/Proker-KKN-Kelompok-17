@@ -6,6 +6,8 @@ const eventSchema = new Schema(
             type: String,
             required: true,
             trim: true,
+            minlength: 5,
+            maxlength: 150,
         },
 
         slug: {
@@ -19,6 +21,7 @@ const eventSchema = new Schema(
         description: {
             type: String,
             required: true,
+            maxlength: 5000,
         },
 
         coverImage: {
@@ -30,6 +33,18 @@ const eventSchema = new Schema(
             type: String,
             required: true,
             trim: true,
+            maxlength: 200,
+            index: true,
+        },
+
+        latitude: {
+            type: Number,
+            required: true,
+        },
+
+        longitude: {
+            type: Number,
+            required: true,
         },
 
         startDate: {
@@ -42,16 +57,6 @@ const eventSchema = new Schema(
             type: Date,
             required: true,
             index: true,
-        },
-
-        startTime: {
-            type: String,
-            default: "",
-        },
-
-        endTime: {
-            type: String,
-            default: "",
         },
 
         organizer: {

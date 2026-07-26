@@ -26,7 +26,8 @@ export interface EventColumn {
     coverImage: string;
 
     location: string;
-
+    latitude: number;
+    longitude: number;
     startDate: string;
     endDate: string;
 
@@ -41,6 +42,12 @@ interface ColumnProps {
     onPublish: (event: EventColumn) => void;
 }
 
+const dateFormatter = new Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+});
+
 function getEventStatus(startDate: string, endDate: string) {
     const now = new Date();
 
@@ -49,20 +56,20 @@ function getEventStatus(startDate: string, endDate: string) {
 
     if (now < start) {
         return {
-            label: "Upcoming",
+            label: "Akan Datang",
             variant: "secondary" as const,
         };
     }
 
-    if (now >= start && now <= end) {
+    if (now <= end) {
         return {
-            label: "Ongoing",
+            label: "Berlangsung",
             variant: "default" as const,
         };
     }
 
     return {
-        label: "Completed",
+        label: "Selesai",
         variant: "outline" as const,
     };
 }
@@ -75,7 +82,7 @@ export const columns = ({ onEdit, onDelete, onPublish }: ColumnProps): ColumnDef
         cell: ({ row }) => (
             <div className="relative h-14 w-20 overflow-hidden rounded-md border">
                 <Image
-                    src={row.original.coverImage}
+                    src={row.original.coverImage || "/noise.png"}
                     alt={row.original.title}
                     fill
                     className="object-cover"
@@ -87,11 +94,13 @@ export const columns = ({ onEdit, onDelete, onPublish }: ColumnProps): ColumnDef
     {
         accessorKey: "title",
         header: "Judul",
-    },
+        cell: ({ row }) => (
+            <div className="min-w-0">
+                <p className="truncate font-medium">{row.original.title}</p>
 
-    {
-        accessorKey: "location",
-        header: "Lokasi",
+                <p className="truncate text-xs text-muted-foreground">{row.original.location}</p>
+            </div>
+        ),
     },
 
     {
@@ -113,7 +122,7 @@ export const columns = ({ onEdit, onDelete, onPublish }: ColumnProps): ColumnDef
 
         cell: ({ row }) => (
             <Badge variant={row.original.published ? "default" : "secondary"}>
-                {row.original.published ? "Published" : "Draft"}
+                {row.original.published ? "Dipublikasikan" : "Draft"}
             </Badge>
         ),
     },
@@ -123,13 +132,7 @@ export const columns = ({ onEdit, onDelete, onPublish }: ColumnProps): ColumnDef
 
         header: "Mulai",
 
-        cell: ({ row }) => {
-            return new Intl.DateTimeFormat("id-ID", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-            }).format(new Date(row.original.startDate));
-        },
+        cell: ({ row }) => dateFormatter.format(new Date(row.original.startDate)),
     },
 
     {
@@ -137,13 +140,7 @@ export const columns = ({ onEdit, onDelete, onPublish }: ColumnProps): ColumnDef
 
         header: "Selesai",
 
-        cell: ({ row }) => {
-            return new Intl.DateTimeFormat("id-ID", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-            }).format(new Date(row.original.endDate));
-        },
+        cell: ({ row }) => dateFormatter.format(new Date(row.original.endDate)),
     },
 
     {
@@ -156,28 +153,27 @@ export const columns = ({ onEdit, onDelete, onPublish }: ColumnProps): ColumnDef
                 <DropdownMenuTrigger
                     render={
                         <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
+                            <MoreHorizontal className="size-4" />
                         </Button>
                     }
                 />
 
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={() => onEdit(row.original)}>
-                        <Pencil className="mr-2 h-4 w-4" />
+                        <Pencil className="mr-2 size-4" />
                         Edit
                     </DropdownMenuItem>
 
                     <DropdownMenuItem onClick={() => onPublish(row.original)}>
-                        <Eye className="mr-2 h-4 w-4" />
-
-                        {row.original.published ? "Jadikan Draft" : "Publish"}
+                        <Eye className="mr-2 size-4" />
+                        {row.original.published ? "Jadikan Draft" : "Publikasikan"}
                     </DropdownMenuItem>
 
                     <DropdownMenuItem
-                        className="text-red-600"
+                        className="text-destructive focus:text-destructive"
                         onClick={() => onDelete(row.original)}
                     >
-                        <Trash2 className="mr-2 h-4 w-4" />
+                        <Trash2 className="mr-2 size-4" />
                         Hapus
                     </DropdownMenuItem>
                 </DropdownMenuContent>

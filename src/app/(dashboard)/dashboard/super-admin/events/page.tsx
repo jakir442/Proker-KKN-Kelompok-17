@@ -1,12 +1,32 @@
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
+import { EventClient } from "@/components/dashboard/super-admin/events/EventClient";
 import { findEvents } from "@/repositories/event.repository";
 
-import { EventDialog } from "@/components/dashboard/super-admin/events/event-dialog";
-import { EventTable } from "@/components/dashboard/super-admin/events/event-table";
+interface Props {
+    searchParams: Promise<{
+        page?: string;
+        limit?: string;
+        search?: string;
+        status?: string;
+    }>;
+}
 
-export default async function DashboardEventsPage() {
+export default async function DashboardEventsPage({ searchParams }: Props) {
+    const params = await searchParams;
+    const page = Number(params.page ?? 1);
+    const limit = Number(params.limit ?? 10);
+    const search = params.search ?? "";
+    const rawStatus = params.status;
+    const status: "all" | "published" | "draft" =
+        rawStatus === "published" || rawStatus === "draft" || rawStatus === "all"
+            ? rawStatus
+            : "all";
+
     const { events } = await findEvents({
-        page: 1,
-        limit: 100,
+        page,
+        limit,
+        search,
+        status,
     });
 
     const data = events.map((event) => ({
@@ -17,12 +37,17 @@ export default async function DashboardEventsPage() {
 
         description: event.description,
 
-        location: event.location,
-
         coverImage: event.coverImage,
+
+        location: event.location,
+        latitude: event.latitude,
+        longitude: event.longitude,
 
         startDate: event.startDate.toISOString(),
         endDate: event.endDate.toISOString(),
+
+        organizer: event.organizer,
+        contact: event.contact,
 
         published: event.published,
 
@@ -30,20 +55,13 @@ export default async function DashboardEventsPage() {
     }));
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Agenda Desa</h1>
+        <div className="space-y-8">
+            <SectionHeader
+                title="Manajemen Agenda Desa"
+                description="Kelola agenda dan kegiatan Desa Cintanagara."
+            />
 
-                    <p className="text-muted-foreground">
-                        Kelola agenda dan kegiatan Desa Cintanagara.
-                    </p>
-                </div>
-
-                <EventDialog mode="create" />
-            </div>
-
-            <EventTable data={data} />
+            <EventClient events={data} search={search} status={status} />
         </div>
     );
 }
