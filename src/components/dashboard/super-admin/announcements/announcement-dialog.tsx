@@ -1,17 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
 
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 
 import { AnnouncementForm } from "./announcement-form";
 import { AnnouncementTableData } from "@/types/announcement";
@@ -26,8 +23,6 @@ interface Props {
 export function AnnouncementDialog({ mode = "create", open, onOpenChange, announcement }: Props) {
     const router = useRouter();
 
-    const [createOpen, setCreateOpen] = useState(false);
-
     const title = mode === "create" ? "Tambah Pengumuman" : "Edit Pengumuman";
 
     const description =
@@ -35,54 +30,25 @@ export function AnnouncementDialog({ mode = "create", open, onOpenChange, announ
             ? "Tambahkan pengumuman baru untuk masyarakat."
             : "Perbarui informasi pengumuman.";
 
-    if (mode === "create") {
-        return (
-            <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-                <DialogTrigger
-                    render={
-                        <Button>
-                            <Plus className="mr-2 h-4 w-4" />
-                            Tambah Pengumuman
-                        </Button>
-                    }
-                />
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="w-[calc(100vw-2rem)] flex max-w-5xl max-h-[90vh] p-0 gap-0">
+                <DialogHeader className="border-b px-6 py-5">
+                    <DialogTitle>{title}</DialogTitle>
 
-                <DialogContent className="max-w-3xl">
-                    <DialogHeader>
-                        <DialogTitle>{title}</DialogTitle>
-                    </DialogHeader>
+                    <DialogDescription>{description}</DialogDescription>
+                </DialogHeader>
 
-                    <p className="text-sm text-muted-foreground">{description}</p>
-
+                <div className="flex-1 overflow-y-auto px-6 py-6">
                     <AnnouncementForm
-                        mode="create"
+                        mode={mode}
+                        announcement={announcement}
                         onSuccess={() => {
-                            setCreateOpen(false);
+                            onOpenChange?.(false);
                             router.refresh();
                         }}
                     />
-                </DialogContent>
-            </Dialog>
-        );
-    }
-
-    return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-3xl">
-                <DialogHeader>
-                    <DialogTitle>{title}</DialogTitle>
-                </DialogHeader>
-
-                <p className="text-sm text-muted-foreground">{description}</p>
-
-                <AnnouncementForm
-                    mode="edit"
-                    announcement={announcement}
-                    onSuccess={() => {
-                        onOpenChange?.(false);
-                        router.refresh();
-                    }}
-                />
+                </div>
             </DialogContent>
         </Dialog>
     );

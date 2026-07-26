@@ -1,10 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { columns, UMKMColumn } from "./columns";
-import { toggleUMKMActiveAction } from "@/actions/umkm/toggle-active";
-import { toggleUMKMFeaturedAction } from "@/actions/umkm/toggle-featured";
 import { DeleteUMKMDialog } from "./DeleteUMKMDialog";
 import { EditUMKMDialog } from "./EditUMKMDialog";
 import {
@@ -79,8 +76,6 @@ export function UMKMTable({
     onFeatured,
     onActive,
 }: Props) {
-    const router = useRouter();
-
     const [selected, setSelected] = useState<UMKMColumn | null>(null);
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
@@ -98,29 +93,11 @@ export function UMKMTable({
                     setDeleteOpen(true);
                 },
 
-                onFeatured: async (umkm) => {
-                    const result = await toggleUMKMFeaturedAction(umkm.id);
+                onFeatured,
 
-                    if (!result.success) {
-                        alert(result.message);
-                        return;
-                    }
-
-                    router.refresh();
-                },
-
-                onActive: async (umkm) => {
-                    const result = await toggleUMKMActiveAction(umkm.id);
-
-                    if (!result.success) {
-                        alert(result.message);
-                        return;
-                    }
-
-                    router.refresh();
-                },
+                onActive,
             }),
-        [router],
+        [onFeatured, onActive],
     );
 
     return (
