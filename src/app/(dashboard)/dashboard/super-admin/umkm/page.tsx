@@ -1,5 +1,7 @@
 import { Store, Star, CheckCircle, XCircle } from "lucide-react";
+
 import { getUMKMsAction } from "@/actions/umkm/get-umkm";
+
 import { UMKMClient } from "@/components/dashboard/super-admin/umkm/UMKMClient";
 import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
 import { StatCard } from "@/components/dashboard/super-admin/cards/StatCard";
@@ -16,6 +18,7 @@ interface UMKMPageProps {
 
 export default async function UMKMPage({ searchParams }: UMKMPageProps) {
     const params = await searchParams;
+
     const status =
         params.status === "ACTIVE" || params.status === "INACTIVE" ? params.status : undefined;
 
@@ -37,31 +40,28 @@ export default async function UMKMPage({ searchParams }: UMKMPageProps) {
             />
 
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                {" "}
                 <StatCard
                     title="Total UMKM"
-                    value={result.total}
+                    value={result.success ? result.total : 0}
                     description="Seluruh UMKM"
                     icon={Store}
-                />{" "}
+                />
+
                 <StatCard
                     title="UMKM Unggulan"
                     value="-"
                     description="Segera tersedia"
                     icon={Star}
-                />{" "}
+                />
+
                 <StatCard
                     title="Aktif"
                     value="-"
                     description="Segera tersedia"
                     icon={CheckCircle}
-                />{" "}
-                <StatCard
-                    title="Nonaktif"
-                    value="-"
-                    description="Segera tersedia"
-                    icon={XCircle}
-                />{" "}
+                />
+
+                <StatCard title="Nonaktif" value="-" description="Segera tersedia" icon={XCircle} />
             </div>
 
             <UMKMClient

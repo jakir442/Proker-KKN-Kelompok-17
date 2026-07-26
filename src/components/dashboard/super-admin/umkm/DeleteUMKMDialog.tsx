@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { toast } from "sonner";
 
 import {
     AlertDialog,
@@ -22,16 +23,18 @@ interface Props {
 }
 
 export function DeleteUMKMDialog({ open, onOpenChange, id }: Props) {
-    const [pending, startTransition] = useTransition();
+    const [isPending, startTransition] = useTransition();
 
     function handleDelete() {
         startTransition(async () => {
             const result = await deleteUMKMAction(id);
 
             if (!result.success) {
-                alert(result.message);
+                toast.error(result.message);
                 return;
             }
+
+            toast.success(result.message);
 
             onOpenChange(false);
         });
@@ -39,20 +42,25 @@ export function DeleteUMKMDialog({ open, onOpenChange, id }: Props) {
 
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
-            <AlertDialogContent>
+            <AlertDialogContent className="sm:max-w-md">
                 <AlertDialogHeader>
                     <AlertDialogTitle>Hapus UMKM?</AlertDialogTitle>
 
                     <AlertDialogDescription>
-                        Tindakan ini tidak dapat dibatalkan. Data UMKM akan dihapus secara permanen.
+                        Tindakan ini tidak dapat dibatalkan. Seluruh data UMKM akan dihapus secara
+                        permanen.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
 
                 <AlertDialogFooter>
-                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                    <AlertDialogCancel disabled={isPending}>Batal</AlertDialogCancel>
 
-                    <AlertDialogAction onClick={handleDelete} disabled={pending}>
-                        {pending ? "Menghapus..." : "Hapus"}
+                    <AlertDialogAction
+                        onClick={handleDelete}
+                        disabled={isPending}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                        {isPending ? "Menghapus..." : "Hapus UMKM"}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

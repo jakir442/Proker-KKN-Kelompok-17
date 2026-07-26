@@ -23,6 +23,8 @@ import { RoleBadge } from "./RoleBadge";
 import { StatusBadge } from "./StatusBadge";
 import { UserActions } from "./UserActions";
 import { ROLES } from "@/constants/roles";
+import { columns } from "./columns";
+import { useMemo } from "react";
 
 import type { UserListItem } from "@/types/user-list";
 
@@ -63,8 +65,22 @@ export function UserTable({
     onResetPassword,
     onDelete,
 }: UserTableProps) {
+    const tableColumns = useMemo(
+        () =>
+            columns({
+                onView,
+                onEdit,
+                onToggleStatus,
+                onResetPassword,
+                onDelete,
+            }),
+        [onView, onEdit, onToggleStatus, onResetPassword, onDelete],
+    );
+
     return (
         <DataTable
+            columns={tableColumns}
+            data={users}
             toolbar={
                 <TableToolbar>
                     <TableToolbarLeft>
@@ -133,54 +149,6 @@ export function UserTable({
                     </TableToolbarRight>
                 </TableToolbar>
             }
-        >
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Nama</TableHead>
-                        <TableHead>Username</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Dibuat</TableHead>
-                        <TableHead className="text-right">Aksi</TableHead>
-                    </TableRow>
-                </TableHeader>
-
-                <TableBody>
-                    {users.map((user) => (
-                        <TableRow key={user.id}>
-                            <TableCell className="font-medium">{user.fullName}</TableCell>
-
-                            <TableCell>{user.username}</TableCell>
-
-                            <TableCell>{user.email}</TableCell>
-
-                            <TableCell>
-                                <RoleBadge role={user.role} />
-                            </TableCell>
-
-                            <TableCell>
-                                <StatusBadge isActive={user.isActive} />
-                            </TableCell>
-
-                            <TableCell>
-                                {new Date(user.createdAt).toLocaleDateString("id-ID")}
-                            </TableCell>
-
-                            <TableCell className="text-right">
-                                <UserActions
-                                    onView={() => onView(user)}
-                                    onEdit={() => onEdit(user)}
-                                    onToggleStatus={() => onToggleStatus(user)}
-                                    onResetPassword={() => onResetPassword(user)}
-                                    onDelete={() => onDelete(user)}
-                                />
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </DataTable>
+        />
     );
 }

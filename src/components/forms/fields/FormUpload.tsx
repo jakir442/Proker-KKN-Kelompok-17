@@ -5,9 +5,9 @@ import { ImagePlus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { FormField } from "./FormField";
-import { UploadDropzone } from "./UploadDropzone";
-import { UploadPreview } from "./UploadPreview";
+import { FormField } from "../FormField";
+import { UploadDropzone } from "../upload/UploadDropzone";
+import { UploadPreview } from "../upload/UploadPreview";
 
 interface FormUploadProps {
     id: string;
@@ -37,7 +37,7 @@ export function FormUpload({
     const inputRef = useRef<HTMLInputElement>(null);
 
     const [preview, setPreview] = useState<string | null>(
-        value ? URL.createObjectURL(value) : null
+        value ? URL.createObjectURL(value) : null,
     );
 
     function handleFile(file: File | null) {

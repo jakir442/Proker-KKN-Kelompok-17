@@ -1,7 +1,8 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
+import { FormDialog } from "@/components/forms";
 import { UMKMForm } from "./UMKMForm";
 
 interface Props {
@@ -12,13 +13,15 @@ interface Props {
 export function CreateUMKMDialog({ open, onOpenChange }: Props) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl">
-                <DialogHeader>
+            <FormDialog size="4xl">
+                <DialogHeader className="border-b px-6 py-5">
                     <DialogTitle>Tambah UMKM</DialogTitle>
                 </DialogHeader>
 
-                <UMKMForm onSuccess={() => onOpenChange(false)} />
-            </DialogContent>
+                <div className="flex-1 overflow-y-auto px-6 py-6">
+                    <UMKMForm onSuccess={() => onOpenChange(false)} />
+                </div>
+            </FormDialog>
         </Dialog>
     );
 }

@@ -6,14 +6,17 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+import { MoreHorizontal, Pencil, Trash2, Star, Store, CheckCircle2, CircleOff } from "lucide-react";
+
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuGroup,
     DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import { MoreHorizontal, Pencil, Trash2, Star, Store } from "lucide-react";
 
 export interface UMKMColumn {
     id: string;
@@ -109,42 +112,57 @@ export const columns = ({
 
     {
         id: "actions",
-        header: "Aksi",
+        header: () => <div className="text-right">Aksi</div>,
+        enableSorting: false,
+
         cell: ({ row }) => (
-            <DropdownMenu>
-                <DropdownMenuTrigger
-                    render={
-                        <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    }
-                />
-
-                <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => onEdit(row.original)}>
-                        <Pencil className="mr-2 h-4 w-4" />
-                        Edit
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem onClick={() => onFeatured(row.original)}>
-                        <Star className="mr-2 h-4 w-4" />
-
-                        {row.original.featured ? "Hapus Unggulan" : "Jadikan Unggulan"}
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem onClick={() => onActive(row.original)}>
-                        {row.original.isActive ? "Nonaktifkan" : "Aktifkan"}
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem
-                        className="text-red-600"
-                        onClick={() => onDelete(row.original)}
-                    >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Hapus
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex justify-end">
+                <DropdownMenu>
+                    <DropdownMenuTrigger
+                        render={
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        }
+                    />
+                    <DropdownMenuContent align="end" className="w-56">
+                        <DropdownMenuGroup>
+                            <DropdownMenuLabel>Aksi</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => onEdit(row.original)}>
+                                <Pencil className="mr-2 h-4 w-4" />
+                                Edit UMKM
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => onFeatured(row.original)}>
+                                <Star className="mr-2 h-4 w-4" />
+                                {row.original.featured ? "Hapus dari Unggulan" : "Jadikan Unggulan"}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => onActive(row.original)}>
+                                {row.original.isActive ? (
+                                    <>
+                                        <CircleOff className="mr-2 h-4 w-4" />
+                                        Nonaktifkan
+                                    </>
+                                ) : (
+                                    <>
+                                        <CheckCircle2 className="mr-2 h-4 w-4" />
+                                        Aktifkan
+                                    </>
+                                )}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                className="text-destructive focus:text-destructive"
+                                onClick={() => onDelete(row.original)}
+                            >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Hapus UMKM
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
         ),
     },
 ];

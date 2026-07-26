@@ -1,15 +1,15 @@
 "use client";
 
 import { forwardRef } from "react";
-import { Phone } from "lucide-react";
+import { AlignLeft } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
-import { FormField } from "./FormField";
+import { Textarea } from "@/components/ui/textarea";
+import { FormField } from "../FormField";
 import { cn } from "@/lib/utils";
 
-type InputProps = React.ComponentProps<typeof Input>;
+type TextareaProps = React.ComponentProps<typeof Textarea>;
 
-interface FormPhoneProps extends Omit<InputProps, "type"> {
+interface FormTextareaProps extends TextareaProps {
     label: string;
     helperText?: string;
     error?: string;
@@ -17,7 +17,7 @@ interface FormPhoneProps extends Omit<InputProps, "type"> {
     containerClassName?: string;
 }
 
-export const FormPhone = forwardRef<HTMLInputElement, FormPhoneProps>(
+export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
     ({ label, helperText, error, required, className, containerClassName, ...props }, ref) => {
         return (
             <FormField
@@ -29,16 +29,16 @@ export const FormPhone = forwardRef<HTMLInputElement, FormPhoneProps>(
                 className={containerClassName}
             >
                 <div className="relative">
-                    <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted-foreground">
-                        <Phone className="size-4" />
+                    <div className="pointer-events-none absolute left-3 top-3 text-muted-foreground">
+                        <AlignLeft className="size-4" />
                     </div>
 
-                    <Input
+                    <Textarea
                         ref={ref}
-                        type="tel"
-                        autoComplete="tel"
-                        inputMode="tel"
-                        className={cn("h-11 pl-10 transition-all duration-200", className)}
+                        className={cn(
+                            "min-h-28 resize-y pl-10 transition-all duration-200",
+                            className,
+                        )}
                         {...props}
                     />
                 </div>
@@ -47,4 +47,4 @@ export const FormPhone = forwardRef<HTMLInputElement, FormPhoneProps>(
     },
 );
 
-FormPhone.displayName = "FormPhone";
+FormTextarea.displayName = "FormTextarea";
