@@ -4,45 +4,35 @@ import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-
 import { AnnouncementFormValues, announcementSchema } from "@/validations/announcement.schema";
-
 import {
     createAnnouncementAction,
     updateAnnouncementAction,
 } from "@/actions/announcements/announcements";
-
 import { ANNOUNCEMENT_CATEGORIES } from "@/constants/announcements";
-
 import { ImageUpload } from "@/components/upload/image-upload";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-
 import { AnnouncementTableData } from "@/types/announcement";
+import {
+    FormActions,
+    FormGrid,
+    FormHeader,
+    FormInput,
+    FormSection,
+    FormSelect,
+    FormSwitch,
+    FormTextarea,
+} from "@/components/forms";
+import { Megaphone, Tag, Type, Image as ImageIcon, Eye, FileText } from "lucide-react";
 
 interface Props {
     mode: "create" | "edit";
-
     announcement?: AnnouncementTableData;
-
     onSuccess?: () => void;
 }
 
 export function AnnouncementForm({ mode, announcement, onSuccess }: Props) {
     const form = useForm<AnnouncementFormValues>({
         resolver: zodResolver(announcementSchema),
-
         defaultValues: {
             title: "",
             excerpt: "",
@@ -52,6 +42,10 @@ export function AnnouncementForm({ mode, announcement, onSuccess }: Props) {
             published: false,
         },
     });
+
+    const {
+        formState: { errors },
+    } = form;
 
     useEffect(() => {
         if (announcement) {
@@ -103,97 +97,119 @@ export function AnnouncementForm({ mode, announcement, onSuccess }: Props) {
 
     return (
         <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-            <div>
-                <label className="mb-2 block text-sm font-medium">Judul</label>
+            <FormHeader
+                icon={Megaphone}
+                title={mode === "edit" ? "Edit Pengumuman" : "Tambah Pengumuman"}
+                description={
+                    mode === "edit"
+                        ? "Perbarui informasi pengumuman yang akan ditampilkan kepada masyarakat."
+                        : "Buat pengumuman baru yang akan dipublikasikan melalui website desa."
+                }
+            />
+            <FormSection
+                title="Informasi Dasar"
+                description="Data utama pengumuman."
+                icon={Megaphone}
+            >
+                <FormGrid>
+                    <FormInput
+                        id="title"
+                        label="Judul"
+                        required
+                        icon={Type}
+                        placeholder="Masukkan judul pengumuman"
+                        error={errors.title?.message}
+                        {...form.register("title")}
+                    />
 
-                <Input placeholder="Masukkan judul..." {...form.register("title")} />
-            </div>
+                    <FormSelect
+                        id="category"
+                        label="Kategori"
+                        icon={Tag}
+                        value={form.watch("category")}
+                        error={errors.category?.message}
+                        onValueChange={(value) =>
+                            form.setValue("category", value as AnnouncementFormValues["category"], {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                            })
+                        }
+                        options={ANNOUNCEMENT_CATEGORIES.map((item) => ({
+                            label: item,
+                            value: item,
+                        }))}
+                    />
 
-            <div>
-                <label className="mb-2 block text-sm font-medium">Kategori</label>
+                    <FormTextarea
+                        id="excerpt"
+                        label="Ringkasan"
+                        containerClassName="md:col-span-2"
+                        className="min-h-28"
+                        placeholder="Ringkasan singkat pengumuman..."
+                        error={errors.excerpt?.message}
+                        {...form.register("excerpt")}
+                    />
+                </FormGrid>
+            </FormSection>
 
-                <Select
-                    value={form.watch("category")}
-                    onValueChange={(value) =>
-                        form.setValue("category", value as AnnouncementFormValues["category"], {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                        })
-                    }
-                >
-                    <SelectTrigger>
-                        <SelectValue placeholder="Pilih kategori" />
-                    </SelectTrigger>
+            <FormSection title="Media" description="Gambar cover pengumuman." icon={ImageIcon}>
+                <FormGrid>
+                    <div className="md:col-span-2">
+                        <label className="mb-2 block text-sm font-medium">Cover Pengumuman</label>
 
-                    <SelectContent>
-                        {ANNOUNCEMENT_CATEGORIES.map((category) => (
-                            <SelectItem key={category} value={category}>
-                                {category}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
+                        <ImageUpload
+                            value={form.watch("coverImage")}
+                            onChange={(url) =>
+                                form.setValue("coverImage", url, {
+                                    shouldDirty: true,
+                                    shouldValidate: true,
+                                })
+                            }
+                        />
+                    </div>
+                </FormGrid>
+            </FormSection>
 
-            <div>
-                <label className="mb-2 block text-sm font-medium">Cover</label>
+            <FormSection
+                title="Isi Pengumuman"
+                description="Konten lengkap yang akan ditampilkan kepada masyarakat."
+                icon={FileText}
+            >
+                <FormGrid>
+                    <FormTextarea
+                        id="content"
+                        label="Isi"
+                        containerClassName="md:col-span-2"
+                        className="min-h-72"
+                        placeholder="Tulis isi pengumuman..."
+                        error={errors.content?.message}
+                        {...form.register("content")}
+                    />
+                </FormGrid>
+            </FormSection>
 
-                <ImageUpload
-                    value={form.watch("coverImage")}
-                    onChange={(url: string) =>
-                        form.setValue("coverImage", url, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                        })
-                    }
-                />
-            </div>
+            <FormSection
+                title="Publikasi"
+                description="Pengaturan visibilitas pengumuman."
+                icon={Eye}
+            >
+                <FormGrid>
+                    <FormSwitch
+                        id="published"
+                        label="Publikasikan"
+                        description="Pengumuman akan langsung tampil di website publik."
+                        checked={form.watch("published")}
+                        onCheckedChange={(checked) => form.setValue("published", checked)}
+                    />
+                </FormGrid>
+            </FormSection>
 
-            <div>
-                <label className="mb-2 block text-sm font-medium">Ringkasan</label>
-
-                <Textarea
-                    rows={4}
-                    placeholder="Ringkasan pengumuman..."
-                    {...form.register("excerpt")}
-                />
-            </div>
-
-            <div>
-                <label className="mb-2 block text-sm font-medium">Isi Pengumuman</label>
-
-                <Textarea rows={10} placeholder="Isi pengumuman..." {...form.register("content")} />
-            </div>
-
-            <div className="flex items-center justify-between rounded-lg border p-4">
-                <div>
-                    <p className="font-medium">Publish</p>
-
-                    <p className="text-sm text-muted-foreground">
-                        Pengumuman akan tampil di halaman publik.
-                    </p>
-                </div>
-
-                <Switch
-                    checked={form.watch("published")}
-                    onCheckedChange={(checked) =>
-                        form.setValue("published", checked, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                        })
-                    }
-                />
-            </div>
-
-            <div className="flex justify-end">
-                <Button type="submit" disabled={form.formState.isSubmitting}>
-                    {form.formState.isSubmitting
-                        ? "Menyimpan..."
-                        : mode === "create"
-                          ? "Simpan Pengumuman"
-                          : "Perbarui Pengumuman"}
-                </Button>
-            </div>
+            <FormActions
+                isPending={form.formState.isSubmitting}
+                onCancel={onSuccess}
+                submitText={mode === "edit" ? "Simpan Perubahan" : "Simpan Pengumuman"}
+                pendingText="Menyimpan..."
+            />
         </form>
     );
 }

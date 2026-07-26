@@ -185,25 +185,35 @@ export function UserForm({ mode, user, onSuccess, onCancel }: UserFormProps) {
                 delay={0.05}
             >
                 <FormGrid>
-                    <FormSelect label="Role" required error={errors.role?.message}>
-                        <Select
-                            value={form.watch("role")}
-                            onValueChange={(value) =>
-                                form.setValue("role", value as CreateUserInput["role"])
-                            }
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="Pilih role" />
-                            </SelectTrigger>
-
-                            <SelectContent>
-                                <SelectItem value={ROLES.SUPER_ADMIN}>Super Admin</SelectItem>
-                                <SelectItem value={ROLES.ADMIN}>Admin</SelectItem>
-                                <SelectItem value={ROLES.PETUGAS}>Petugas</SelectItem>
-                                <SelectItem value={ROLES.UMKM}>UMKM</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </FormSelect>
+                    <FormSelect
+                        id="role"
+                        label="Role"
+                        required
+                        icon={ShieldCheck}
+                        value={form.watch("role")}
+                        error={errors.role?.message}
+                        onValueChange={(value) =>
+                            form.setValue("role", value as CreateUserInput["role"])
+                        }
+                        options={[
+                            {
+                                label: "Super Admin",
+                                value: ROLES.SUPER_ADMIN,
+                            },
+                            {
+                                label: "Admin",
+                                value: ROLES.ADMIN,
+                            },
+                            {
+                                label: "Petugas",
+                                value: ROLES.PETUGAS,
+                            },
+                            {
+                                label: "UMKM",
+                                value: ROLES.UMKM,
+                            },
+                        ]}
+                    />
 
                     {isCreate && (
                         <FormSwitch
