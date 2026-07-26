@@ -5,6 +5,7 @@ interface FindAllEventsOptions {
     page?: number;
     limit?: number;
     search?: string;
+    status?: "all" | "published" | "draft";
     published?: boolean;
     startDate?: Date;
     endDate?: Date;
@@ -49,7 +50,7 @@ export async function findEvents({
     page = 1,
     limit = 10,
     search = "",
-    published,
+    status = "all",
     startDate,
     endDate,
 }: FindAllEventsOptions) {
@@ -80,8 +81,12 @@ export async function findEvents({
         ];
     }
 
-    if (published !== undefined) {
-        query.published = published;
+    if (status === "published") {
+        query.published = true;
+    }
+
+    if (status === "draft") {
+        query.published = false;
     }
 
     if (startDate || endDate) {

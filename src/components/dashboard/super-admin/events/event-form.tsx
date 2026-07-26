@@ -13,6 +13,16 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { EventColumn } from "./event-columns";
 import { EventFormValues, eventSchema } from "@/validations/event.schema";
+import {
+    FormActions,
+    FormGrid,
+    FormHeader,
+    FormInput,
+    FormSection,
+    FormSwitch,
+    FormTextarea,
+} from "@/components/forms";
+import { CalendarDays, Clock3, MapPinned, Type, Image as ImageIcon, Eye } from "lucide-react";
 
 interface Props {
     mode: "create" | "edit";
@@ -29,16 +39,17 @@ export function EventForm({ mode, event, onSuccess }: Props) {
             description: "",
             location: "",
             coverImage: "",
-
             startDate: "",
             startTime: "",
-
             endDate: "",
             endTime: "",
-
             published: false,
         },
     });
+
+    const {
+        formState: { errors },
+    } = form;
 
     useEffect(() => {
         if (event) {
@@ -111,98 +122,133 @@ export function EventForm({ mode, event, onSuccess }: Props) {
 
     return (
         <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-            <div>
-                <label className="mb-2 block text-sm font-medium">Judul Agenda</label>
+            <FormHeader
+                icon={CalendarDays}
+                title={event ? "Edit Agenda" : "Tambah Agenda"}
+                description={
+                    event
+                        ? "Perbarui informasi agenda yang akan ditampilkan kepada masyarakat."
+                        : "Lengkapi informasi agenda yang akan dipublikasikan di website desa."
+                }
+            />
+            <FormSection
+                title="Informasi Dasar"
+                description="Data utama mengenai agenda."
+                icon={CalendarDays}
+            >
+                <FormGrid>
+                    <FormInput
+                        id="title"
+                        label="Judul Agenda"
+                        required
+                        icon={Type}
+                        placeholder="Masukkan judul agenda"
+                        error={errors.title?.message}
+                        {...form.register("title")}
+                    />
 
-                <Input placeholder="Masukkan judul agenda..." {...form.register("title")} />
-            </div>
+                    <FormInput
+                        id="location"
+                        label="Lokasi"
+                        required
+                        icon={MapPinned}
+                        placeholder="Contoh: Aula Desa Cintanagara"
+                        error={errors.location?.message}
+                        {...form.register("location")}
+                    />
 
-            <div>
-                <label className="mb-2 block text-sm font-medium">Lokasi</label>
+                    <FormTextarea
+                        id="description"
+                        label="Deskripsi"
+                        containerClassName="md:col-span-2"
+                        className="min-h-36"
+                        placeholder="Tuliskan deskripsi agenda..."
+                        error={errors.description?.message}
+                        {...form.register("description")}
+                    />
+                </FormGrid>
+            </FormSection>
 
-                <Input placeholder="Masukkan lokasi kegiatan..." {...form.register("location")} />
-            </div>
+            <FormSection title="Media" description="Cover agenda." icon={ImageIcon}>
+                <FormGrid>
+                    <div className="md:col-span-2">
+                        <label className="mb-2 block text-sm font-medium">Cover Agenda</label>
+                        <ImageUpload
+                            value={form.watch("coverImage")}
+                            onChange={(url: string) =>
+                                form.setValue("coverImage", url, {
+                                    shouldDirty: true,
+                                    shouldValidate: true,
+                                })
+                            }
+                        />
+                    </div>
+                </FormGrid>
+            </FormSection>
 
-            <div>
-                <label className="mb-2 block text-sm font-medium">Cover Agenda</label>
+            <FormSection
+                title="Jadwal"
+                description="Tanggal dan waktu pelaksanaan agenda."
+                icon={Clock3}
+            >
+                <FormGrid>
+                    <FormInput
+                        id="startDate"
+                        type="date"
+                        label="Tanggal Mulai"
+                        required
+                        error={errors.startDate?.message}
+                        {...form.register("startDate")}
+                    />
 
-                <ImageUpload
-                    value={form.watch("coverImage")}
-                    onChange={(url: string) =>
-                        form.setValue("coverImage", url, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                        })
-                    }
-                />
-            </div>
+                    <FormInput
+                        id="startTime"
+                        type="time"
+                        label="Jam Mulai"
+                        required
+                        error={errors.startTime?.message}
+                        {...form.register("startTime")}
+                    />
 
-            <div className="grid gap-6 md:grid-cols-2">
-                <div>
-                    <label className="mb-2 block text-sm font-medium">Tanggal Mulai</label>
+                    <FormInput
+                        id="endDate"
+                        type="date"
+                        label="Tanggal Selesai"
+                        required
+                        error={errors.endDate?.message}
+                        {...form.register("endDate")}
+                    />
 
-                    <Input type="date" {...form.register("startDate")} />
-                </div>
+                    <FormInput
+                        id="endTime"
+                        type="time"
+                        label="Jam Selesai"
+                        required
+                        error={errors.endTime?.message}
+                        {...form.register("endTime")}
+                    />
+                </FormGrid>
+            </FormSection>
 
-                <div>
-                    <label className="mb-2 block text-sm font-medium">Jam Mulai</label>
-
-                    <Input type="time" {...form.register("startTime")} />
-                </div>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-                <div>
-                    <label className="mb-2 block text-sm font-medium">Tanggal Selesai</label>
-
-                    <Input type="date" {...form.register("endDate")} />
-                </div>
-
-                <div>
-                    <label className="mb-2 block text-sm font-medium">Jam Selesai</label>
-
-                    <Input type="time" {...form.register("endTime")} />
-                </div>
-            </div>
-
-            <div>
-                <label className="mb-2 block text-sm font-medium">Deskripsi</label>
-
-                <Textarea
-                    rows={8}
-                    placeholder="Tuliskan deskripsi agenda..."
-                    {...form.register("description")}
-                />
-            </div>
-
-            <div className="flex items-center justify-between rounded-lg border p-4">
-                <div>
-                    <p className="font-medium">Publish</p>
-
-                    <p className="text-sm text-muted-foreground">
-                        Agenda akan ditampilkan pada halaman publik.
-                    </p>
-                </div>
-
-                <Switch
-                    checked={form.watch("published")}
-                    onCheckedChange={(checked) =>
-                        form.setValue("published", checked, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                        })
-                    }
-                />
-            </div>
+            <FormSection title="Publikasi" description="Pengaturan visibilitas agenda." icon={Eye}>
+                <FormGrid>
+                    <FormSwitch
+                        id="published"
+                        label="Publikasikan"
+                        description="Agenda akan tampil pada halaman publik."
+                        checked={form.watch("published")}
+                        onCheckedChange={(checked) => form.setValue("published", checked)}
+                    />
+                </FormGrid>
+            </FormSection>
 
             <div className="flex justify-end">
-                <Button type="submit" disabled={form.formState.isSubmitting}>
-                    {form.formState.isSubmitting
-                        ? "Menyimpan..."
-                        : mode === "create"
-                          ? "Simpan Agenda"
-                          : "Perbarui Agenda"}
-                </Button>
+                <FormActions
+                    isPending={form.formState.isSubmitting}
+                    onCancel={onSuccess}
+                    submitText={event ? "Simpan Perubahan" : "Simpan Agenda"}
+                    pendingText="Menyimpan..."
+                />
             </div>
         </form>
     );

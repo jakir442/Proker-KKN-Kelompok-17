@@ -1,22 +1,49 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Eye, EyeOff, Plus } from "lucide-react";
+import { toast } from "sonner";
 
-import { DataTable } from "@/components/data-table";
+import {
+    DataTable,
+    TableToolbar,
+    TableSearch,
+    TableSelectFilter,
+} from "@/components/data-display/table";
+
+import { Button } from "@/components/ui/button";
 
 import { columns, EventColumn } from "./event-columns";
-import { EventDialog } from "./event-dialog";
-import { toggleEventPublishAction } from "@/actions/events/events";
 import { DeleteEventDialog } from "./delete-event-dialog";
+import { EditEventDialog } from "./EditEventDialog";
 
 interface Props {
     data: EventColumn[];
+
+    search: string;
+    status: string;
+
+    onSearchChange: (value: string) => void;
+    onStatusChange: (value: string) => void;
+    onSearchClear: () => void;
+
+    onCreate: () => void;
+
+    onPublish: (event: EventColumn) => Promise<void>;
 }
 
-export function EventTable({ data }: Props) {
-    const router = useRouter();
-    const [selectedEvent, setSelectedEvent] = useState<EventColumn | null>(null);
+export function EventTable({
+    data,
+    search,
+    status,
+    onSearchChange,
+    onStatusChange,
+    onSearchClear,
+    onCreate,
+    onPublish,
+}: Props) {
+    const [selected, setSelected] = useState<EventColumn | null>(null);
+
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -24,43 +51,75 @@ export function EventTable({ data }: Props) {
         () =>
             columns({
                 onEdit: (event) => {
-                    setSelectedEvent(event);
+                    setSelected(event);
                     setEditOpen(true);
                 },
+
                 onDelete: (event) => {
-                    setSelectedEvent(event);
+                    setSelected(event);
                     setDeleteOpen(true);
                 },
-                onPublish: async (event) => {
-                    const result = await toggleEventPublishAction(event.id, !event.published);
-                    if (!result.success) {
-                        alert(result.message);
-                        return;
-                    }
-                    router.refresh();
-                },
+
+                onPublish,
             }),
-        [router],
+        [onPublish],
     );
 
     return (
         <>
-            <DataTable columns={tableColumns} data={data} />
+            <DataTable
+                columns={tableColumns}
+                data={data}
+                toolbar={
+                    <TableToolbar className="flex flex-col gap-4 xl:flex-row xl:items-center">
+                        <div className="flex flex-1 flex-col gap-3 md:flex-row">
+                            <div className="w-full lg:flex-1">
+                                <TableSearch
+                                    value={search}
+                                    onValueChange={onSearchChange}
+                                    onClear={onSearchClear}
+                                    placeholder="Cari agenda..."
+                                />
+                            </div>
 
-            {selectedEvent && (
-                <EventDialog
-                    mode="edit"
-                    open={editOpen}
-                    onOpenChange={setEditOpen}
-                    event={selectedEvent}
-                />
+                            <div className="w-full sm:w-auto">
+                                <TableSelectFilter
+                                    value={status}
+                                    onValueChange={onStatusChange}
+                                    placeholder="Semua Status"
+                                    items={[
+                                        {
+                                            label: "Dipublikasikan",
+                                            value: "published",
+                                            icon: Eye,
+                                        },
+                                        {
+                                            label: "Draft",
+                                            value: "draft",
+                                            icon: EyeOff,
+                                        },
+                                    ]}
+                                />
+                            </div>
+                        </div>
+
+                        <Button onClick={onCreate} className="w-full sm:w-auto">
+                            <Plus className="mr-2 size-4" />
+                            Tambah Agenda
+                        </Button>
+                    </TableToolbar>
+                }
+            />
+
+            {selected && (
+                <EditEventDialog open={editOpen} onOpenChange={setEditOpen} event={selected} />
             )}
 
-            {selectedEvent && (
+            {selected && (
                 <DeleteEventDialog
                     open={deleteOpen}
                     onOpenChange={setDeleteOpen}
-                    id={selectedEvent.id}
+                    id={selected.id}
                 />
             )}
         </>
