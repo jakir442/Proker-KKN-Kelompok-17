@@ -1,6 +1,8 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
+
+import { FormDialog } from "@/components/forms";
 
 import { UMKMColumn } from "./columns";
 import { UMKMForm } from "./UMKMForm";
@@ -14,16 +16,13 @@ interface Props {
 export function EditUMKMDialog({ open, onOpenChange, umkm }: Props) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl">
-                <DialogHeader>
-                    <DialogTitle>Edit UMKM</DialogTitle>
-                </DialogHeader>
-
-                <UMKMForm
-                    initialData={umkm}
-                    onSuccess={() => onOpenChange(false)}
-                />
-            </DialogContent>
+            <FormDialog size="4xl">
+                <div className="flex h-full min-h-0 flex-col">
+                    <div className="min-h-0 flex-1 overflow-y-auto">
+                        <UMKMForm initialData={umkm} onSuccess={() => onOpenChange(false)} />
+                    </div>
+                </div>
+            </FormDialog>
         </Dialog>
     );
 }

@@ -5,7 +5,7 @@ import { UserCreateForm } from "./UserCreateForm";
 import { UserEditForm } from "./UserEditForm";
 
 import type { UserListItem } from "@/types/user-list";
-import { FormDialog } from "@/components/forms/FormDialog";
+import { FormDialog } from "@/components/forms/layout/FormDialog";
 
 interface UserDialogProps {
     mode: "create" | "edit";

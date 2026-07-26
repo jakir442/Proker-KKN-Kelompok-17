@@ -67,7 +67,7 @@ export function VillageStatisticSection({
                 </div>
 
                 <div className="space-y-2">
-                    <Label>Jumlah KK</Label>
+                    <Label>Jumlah KK (Kepala Keluarga)</Label>
 
                     <Input
                         type="number"

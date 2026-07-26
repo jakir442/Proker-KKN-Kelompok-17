@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
@@ -13,8 +12,21 @@ import { ImageUpload } from "@/components/upload/image-upload";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-
 import { umkmSchema } from "@/validations/umkm.schema";
+import { useEffect, useTransition } from "react";
+import { toast } from "sonner";
+import { Store, User, Tag, MapPinned, Clock3, Star, Image as ImageIcon } from "lucide-react";
+import {
+    FormActions,
+    FormGrid,
+    FormHeader,
+    FormSection,
+    FormInput,
+    FormPhone,
+    FormSwitch,
+    FormTextarea,
+    FormTimePicker,
+} from "@/components/forms";
 
 type UMKMFormValues = z.infer<typeof umkmSchema>;
 
@@ -26,6 +38,7 @@ interface UMKMFormProps {
 }
 
 export function UMKMForm({ initialData, onSuccess }: UMKMFormProps) {
+    const [isPending, startTransition] = useTransition();
     const form = useForm<UMKMFormValues>({
         resolver: zodResolver(umkmSchema),
 
@@ -47,6 +60,10 @@ export function UMKMForm({ initialData, onSuccess }: UMKMFormProps) {
         },
     });
 
+    const {
+        formState: { errors },
+    } = form;
+
     useEffect(() => {
         if (initialData) {
             form.reset(initialData);
@@ -55,141 +72,203 @@ export function UMKMForm({ initialData, onSuccess }: UMKMFormProps) {
         }
     }, [initialData, form]);
 
-    const onSubmit: SubmitHandler<UMKMFormValues> = async (values) => {
-        const result = initialData
-            ? await updateUMKMAction(initialData.id, values)
-            : await createUMKMAction(values);
+    function onSubmit(values: UMKMFormValues) {
+        startTransition(async () => {
+            const result = initialData
+                ? await updateUMKMAction(initialData.id, values)
+                : await createUMKMAction(values);
 
-        if (!result.success) {
-            alert(result.message);
-            return;
-        }
+            if (!result.success) {
+                toast.error(result.message);
+                return;
+            }
 
-        if (!initialData) {
-            form.reset();
-        }
+            toast.success(result.message);
 
-        onSuccess?.();
-    };
+            if (!initialData) {
+                form.reset();
+            }
+
+            onSuccess?.();
+        });
+    }
 
     return (
         <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                    <label className="mb-2 block text-sm font-medium">Nama UMKM</label>
+            <FormHeader
+                icon={Store}
+                title={initialData ? "Edit UMKM" : "Tambah UMKM"}
+                description={
+                    initialData
+                        ? "Perbarui informasi UMKM yang ditampilkan kepada masyarakat."
+                        : "Lengkapi informasi UMKM yang akan dipublikasikan di website desa."
+                }
+            />
+            <FormSection
+                title="Informasi Dasar"
+                description="Data utama mengenai UMKM."
+                icon={Store}
+                delay={0}
+            >
+                <FormGrid>
+                    <FormInput
+                        id="name"
+                        label="Nama UMKM"
+                        required
+                        icon={Store}
+                        placeholder="Masukkan nama UMKM"
+                        error={errors.name?.message}
+                        {...form.register("name")}
+                    />
 
-                    <Input placeholder="Nama UMKM" {...form.register("name")} />
-                </div>
+                    <FormInput
+                        id="category"
+                        label="Kategori"
+                        required
+                        icon={Tag}
+                        placeholder="Contoh: Kuliner"
+                        error={errors.category?.message}
+                        {...form.register("category")}
+                    />
 
-                <div>
-                    <label className="mb-2 block text-sm font-medium">Kategori</label>
+                    <FormInput
+                        id="owner"
+                        label="Pemilik"
+                        required
+                        icon={User}
+                        placeholder="Nama pemilik"
+                        error={errors.owner?.message}
+                        {...form.register("owner")}
+                    />
 
-                    <Input placeholder="Kuliner" {...form.register("category")} />
-                </div>
+                    <FormPhone
+                        id="whatsapp"
+                        label="WhatsApp"
+                        placeholder="08123456789"
+                        error={errors.whatsapp?.message}
+                        {...form.register("whatsapp")}
+                    />
+                </FormGrid>
+            </FormSection>
 
-                <div>
-                    <label className="mb-2 block text-sm font-medium">Pemilik</label>
+            <FormSection
+                title="Lokasi"
+                description="Alamat dan koordinat lokasi usaha."
+                icon={MapPinned}
+                delay={0.05}
+            >
+                <FormGrid>
+                    <FormTextarea
+                        id="address"
+                        label="Alamat"
+                        className="min-h-28"
+                        containerClassName="md:col-span-2"
+                        placeholder="Masukkan alamat lengkap"
+                        error={errors.address?.message}
+                        {...form.register("address")}
+                    />
 
-                    <Input placeholder="Nama Pemilik" {...form.register("owner")} />
-                </div>
-
-                <div>
-                    <label className="mb-2 block text-sm font-medium">WhatsApp</label>
-
-                    <Input placeholder="08xxxxxxxxxx" {...form.register("whatsapp")} />
-                </div>
-
-                <div className="md:col-span-2">
-                    <label className="mb-2 block text-sm font-medium">Alamat</label>
-
-                    <Textarea rows={3} {...form.register("address")} />
-                </div>
-
-                <div>
-                    <label className="mb-2 block text-sm font-medium">Jam Buka</label>
-
-                    <Input type="time" {...form.register("openTime")} />
-                </div>
-
-                <div>
-                    <label className="mb-2 block text-sm font-medium">Jam Tutup</label>
-
-                    <Input type="time" {...form.register("closeTime")} />
-                </div>
-
-                <div>
-                    <label className="mb-2 block text-sm font-medium">Latitude</label>
-
-                    <Input
+                    <FormInput
+                        id="latitude"
                         type="number"
                         step="any"
+                        label="Latitude"
+                        icon={MapPinned}
+                        error={errors.latitude?.message}
                         {...form.register("latitude", {
                             valueAsNumber: true,
                         })}
                     />
-                </div>
 
-                <div>
-                    <label className="mb-2 block text-sm font-medium">Longitude</label>
-
-                    <Input
+                    <FormInput
+                        id="longitude"
                         type="number"
                         step="any"
+                        label="Longitude"
+                        icon={MapPinned}
+                        error={errors.longitude?.message}
                         {...form.register("longitude", {
                             valueAsNumber: true,
                         })}
                     />
-                </div>
-            </div>
+                </FormGrid>
+            </FormSection>
 
-            <div>
-                <label className="mb-2 block text-sm font-medium">Logo</label>
+            <FormSection
+                title="Jam Operasional"
+                description="Jam operasional UMKM."
+                icon={Clock3}
+                delay={0.1}
+            >
+                <FormGrid>
+                    <FormTimePicker
+                        id="openTime"
+                        label="Jam Buka"
+                        required
+                        error={errors.openTime?.message}
+                        {...form.register("openTime")}
+                    />
 
-                <ImageUpload
-                    value={form.watch("logo")}
-                    onChange={(url: string) =>
-                        form.setValue("logo", url, {
-                            shouldValidate: true,
-                            shouldDirty: true,
-                        })
-                    }
-                />
-            </div>
+                    <FormTimePicker
+                        id="closeTime"
+                        label="Jam Tutup"
+                        required
+                        error={errors.closeTime?.message}
+                        {...form.register("closeTime")}
+                    />
+                </FormGrid>
+            </FormSection>
 
-            <div>
-                <label className="mb-2 block text-sm font-medium">Deskripsi</label>
+            <FormSection
+                title="Media"
+                description="Logo dan deskripsi UMKM."
+                icon={ImageIcon}
+                delay={0.2}
+            >
+                <FormGrid>
+                    <label className="mb-2 block text-sm font-medium">Logo</label>
 
-                <Textarea rows={6} {...form.register("description")} />
-            </div>
+                    <ImageUpload
+                        value={form.watch("logo")}
+                        onChange={(url: string) =>
+                            form.setValue("logo", url, {
+                                shouldValidate: true,
+                                shouldDirty: true,
+                            })
+                        }
+                    />
 
-            <div className="flex gap-8">
-                <div className="flex items-center gap-2">
-                    <Checkbox
+                    <label className="mb-2 block text-sm font-medium">Deskripsi</label>
+                    <Textarea rows={6} {...form.register("description")} />
+                </FormGrid>
+            </FormSection>
+
+            <FormSection title="Publikasi" description="Pengaturan tampilan UMKM." icon={Star}>
+                <FormGrid>
+                    <FormSwitch
+                        id="featured"
+                        label="UMKM Unggulan"
+                        description="Tampilkan UMKM pada bagian unggulan di halaman publik."
                         checked={form.watch("featured")}
-                        onCheckedChange={(checked) => form.setValue("featured", !!checked)}
+                        onCheckedChange={(checked) => form.setValue("featured", checked)}
                     />
 
-                    <span>UMKM Unggulan</span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                    <Checkbox
+                    <FormSwitch
+                        id="isActive"
+                        label="Status Aktif"
+                        description="Menentukan apakah UMKM ditampilkan kepada masyarakat."
                         checked={form.watch("isActive")}
-                        onCheckedChange={(checked) => form.setValue("isActive", !!checked)}
+                        onCheckedChange={(checked) => form.setValue("isActive", checked)}
                     />
+                </FormGrid>
+            </FormSection>
 
-                    <span>Aktif</span>
-                </div>
-            </div>
-
-            <div className="flex justify-end">
-                <button
-                    type="submit"
-                    className="rounded-md bg-primary px-5 py-2 text-primary-foreground"
-                >
-                    {initialData ? "Perbarui UMKM" : "Simpan"}
-                </button>
-            </div>
+            <FormActions
+                isPending={isPending}
+                onCancel={onSuccess}
+                submitText={initialData ? "Simpan Perubahan" : "Simpan UMKM"}
+                pendingText="Menyimpan..."
+            />
         </form>
     );
 }

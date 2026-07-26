@@ -1,7 +1,7 @@
 "use client";
 
 import { Switch } from "@/components/ui/switch";
-import { FormField } from "./FormField";
+import { FormField } from "../FormField";
 import { cn } from "@/lib/utils";
 
 interface FormSwitchProps {

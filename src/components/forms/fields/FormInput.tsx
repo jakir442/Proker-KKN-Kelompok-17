@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { LucideIcon } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
-import { FormField } from "./FormField";
+import { FormField } from "../FormField";
 import { cn } from "@/lib/utils";
 
 type InputProps = React.ComponentProps<typeof Input>;

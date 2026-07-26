@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-import { FormField } from "./FormField";
+import { FormField } from "../FormField";
 
 interface FormSelectProps {
     children: ReactNode;
