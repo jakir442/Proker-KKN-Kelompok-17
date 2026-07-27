@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 
+import { ROLES } from "@/constants/roles";
 import { createUser, findUserByUsername } from "@/repositories/user.repository";
 
 import type { RegisterSchema } from "@/validations/register.schema";
@@ -20,7 +21,7 @@ export async function registerUser(data: RegisterSchema) {
         password: hashedPassword,
         phoneNumber: data.phoneNumber,
         address: data.address,
-        role: "user",
+        role: ROLES.UMKM,
         isActive: true,
     });
 }
