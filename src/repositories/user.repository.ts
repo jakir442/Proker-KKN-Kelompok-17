@@ -1,62 +1,23 @@
-import { User } from "@/models/user";
+import { UserRole } from "@/constants/roles";
 import { connectDB } from "@/lib/mongodb";
+import { User } from "@/models/user";
 
 export async function findUserByUsername(username: string) {
     await connectDB();
-    return User.findOne({
-        username,
-    });
+
+    return User.findOne({ username });
 }
 
 export async function findUserById(id: string) {
     await connectDB();
+
     return User.findById(id);
 }
 
 export async function findUserByEmail(email: string) {
     await connectDB();
 
-    return User.findOne({
-        email,
-    });
-}
-
-interface CreateUserRepositoryInput {
-    fullName: string;
-    username: string;
-    email: string;
-    password: string;
-    phoneNumber?: string;
-    address?: string;
-    avatar?: string;
-    role: string;
-    isActive: boolean;
-}
-
-export async function createUser(data: CreateUserRepositoryInput) {
-    await connectDB();
-
-    return User.create(data);
-}
-
-interface UpdateUserRepositoryInput {
-    fullName: string;
-    username: string;
-    email: string;
-    password?: string;
-    phoneNumber?: string;
-    address?: string;
-    role: string;
-    isActive: boolean;
-}
-
-export async function updateUser(id: string, data: UpdateUserRepositoryInput) {
-    await connectDB();
-
-    return User.findByIdAndUpdate(id, data, {
-        new: true,
-        runValidators: true,
-    });
+    return User.findOne({ email });
 }
 
 export async function findUserByEmailExceptId(email: string, id: string) {
@@ -79,26 +40,68 @@ export async function findUserByUsernameExceptId(username: string, id: string) {
 
 export async function findUserForLogin(username: string) {
     await connectDB();
+
     return User.findOne({
         username,
         isActive: true,
     });
 }
 
+interface CreateUserRepositoryInput {
+    fullName: string;
+    username: string;
+    email: string;
+    password: string;
+    phoneNumber?: string;
+    address?: string;
+    avatar?: string;
+    role: UserRole;
+    isActive: boolean;
+}
+
+export async function createUser(data: CreateUserRepositoryInput) {
+    await connectDB();
+
+    return User.create(data);
+}
+
+interface UpdateUserRepositoryInput {
+    fullName: string;
+    username: string;
+    email: string;
+    password?: string;
+    phoneNumber?: string;
+    address?: string;
+    avatar?: string;
+    role: UserRole;
+    isActive: boolean;
+}
+
+export async function updateUser(id: string, data: UpdateUserRepositoryInput) {
+    await connectDB();
+
+    return User.findByIdAndUpdate(id, data, {
+        new: true,
+        runValidators: true,
+    });
+}
+
 interface GetUsersParams {
     search?: string;
-    role?: string;
-    status?: string;
+    role?: UserRole | "all";
+    status?: "all" | "active" | "inactive";
     page?: number;
     limit?: number;
+    allowedRoles?: UserRole[];
 }
 
 export async function getUsers({
     search = "",
-    role = "ALL",
-    status = "ALL",
+    role = "all",
+    status = "all",
     page = 1,
     limit = 10,
+    allowedRoles,
 }: GetUsersParams) {
     await connectDB();
 
@@ -127,12 +130,26 @@ export async function getUsers({
         ];
     }
 
-    if (role !== "ALL") {
-        filter.role = role;
+    // Permission filter
+    if (allowedRoles?.length) {
+        filter.role = {
+            $in: allowedRoles,
+        };
     }
 
-    if (status !== "ALL") {
-        filter.isActive = status === "ACTIVE";
+    // Filter role dari UI
+    if (allowedRoles?.length) {
+        if (role === "all") {
+            filter.role = {
+                $in: allowedRoles,
+            };
+        } else if (allowedRoles.includes(role as UserRole)) {
+            filter.role = role;
+        } else {
+            filter.role = {
+                $in: [],
+            };
+        }
     }
 
     const skip = (page - 1) * limit;
@@ -173,21 +190,26 @@ export async function countUsers() {
     return User.countDocuments();
 }
 
-interface UpdateUserRepositoryInput {
-    fullName: string;
-    username: string;
-    email: string;
-    phoneNumber?: string;
-    address?: string;
-    role: string;
-    isActive: boolean;
-}
-
-export async function updateUserById(id: string, data: UpdateUserRepositoryInput) {
+export async function updateUserStatus(id: string, isActive: boolean) {
     await connectDB();
 
-    return User.findByIdAndUpdate(id, data, {
-        new: true,
-        runValidators: true,
-    });
+    return User.findByIdAndUpdate(
+        id,
+        { isActive },
+        {
+            new: true,
+        },
+    );
+}
+
+export async function resetUserPassword(id: string, password: string) {
+    await connectDB();
+
+    return User.findByIdAndUpdate(
+        id,
+        { password },
+        {
+            new: true,
+        },
+    );
 }

@@ -2,7 +2,9 @@
 
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
+
 import { createUser, findUserByEmail, findUserByUsername } from "@/repositories/user.repository";
+import { canCreateUser, getCurrentUserRole } from "@/lib/permissions";
 import { createUserSchema } from "@/validations/user.schema";
 
 export async function createUserAction(values: unknown) {
@@ -17,6 +19,15 @@ export async function createUserAction(values: unknown) {
         }
 
         const data = validated.data;
+
+        const currentRole = await getCurrentUserRole();
+
+        if (!canCreateUser(currentRole, data.role)) {
+            return {
+                success: false,
+                message: "Anda tidak memiliki izin membuat role tersebut.",
+            };
+        }
 
         const existingUsername = await findUserByUsername(data.username);
 
