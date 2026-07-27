@@ -1,7 +1,9 @@
 import {
+    Building2,
     CalendarDays,
     ChartBar,
     FileText,
+    Globe,
     Images,
     Landmark,
     LayoutDashboard,
@@ -13,6 +15,7 @@ import {
     Package,
     Settings,
     ShieldAlert,
+    ShieldCheck,
     Store,
     UserCircle,
     Users,
@@ -172,20 +175,20 @@ export const adminNavigation: Record<UserRole, AdminNavigationItem[]> = {
         },
 
         {
+            title: "Pengguna",
+            breadcrumb: "Pengguna",
+            description: "Kelola administrator, petugas, dan akun UMKM.",
+            href: "/dashboard/admin/users",
+            icon: Users,
+            parent: "/dashboard/admin",
+        },
+
+        {
             title: "Layanan Desa",
             breadcrumb: "Layanan Desa",
             description: "Kelola layanan administrasi desa.",
             href: "/dashboard/admin/services",
             icon: FileText,
-            parent: "/dashboard/admin",
-        },
-
-        {
-            title: "Konten Desa",
-            breadcrumb: "Konten Desa",
-            description: "Kelola seluruh konten publik desa.",
-            href: "/dashboard/admin/content",
-            icon: Newspaper,
             parent: "/dashboard/admin",
         },
 
@@ -244,9 +247,27 @@ export const adminNavigation: Record<UserRole, AdminNavigationItem[]> = {
         },
 
         {
+            title: "APBDes",
+            breadcrumb: "APBDes",
+            description: "Kelola transparansi APBDes desa.",
+            href: "/dashboard/admin/apbdes",
+            icon: Wallet,
+            parent: "/dashboard/admin",
+        },
+
+        {
+            title: "Pemerintahan Desa",
+            breadcrumb: "Pemerintahan",
+            description: "Kelola perangkat dan struktur pemerintahan desa.",
+            href: "/dashboard/admin/government",
+            icon: Landmark,
+            parent: "/dashboard/admin",
+        },
+
+        {
             title: "Pengaduan Warga",
             breadcrumb: "Pengaduan",
-            description: "Kelola laporan masyarakat.",
+            description: "Kelola laporan dan pengaduan masyarakat.",
             href: "/dashboard/admin/complaints",
             icon: MessageSquareWarning,
             parent: "/dashboard/admin",
@@ -255,32 +276,38 @@ export const adminNavigation: Record<UserRole, AdminNavigationItem[]> = {
         {
             title: "Pengaturan",
             breadcrumb: "Pengaturan",
-            description: "Konfigurasi aplikasi.",
+            description: "Konfigurasi website dan aplikasi desa.",
             href: "/dashboard/admin/settings",
             icon: Settings,
             parent: "/dashboard/admin",
         },
 
-        // Submenu Pengaturan
+        // ===== Submenu Pengaturan =====
+
         {
             title: "Profil Desa",
             breadcrumb: "Profil Desa",
+            description: "Kelola informasi profil Desa Cintanagara.",
             href: "/dashboard/admin/settings/village-profile",
-            icon: Settings,
+            icon: Building2,
             parent: "/dashboard/admin/settings",
         },
+
         {
             title: "Website",
             breadcrumb: "Website",
+            description: "Kelola identitas dan tampilan website.",
             href: "/dashboard/admin/settings/website",
-            icon: Settings,
+            icon: Globe,
             parent: "/dashboard/admin/settings",
         },
+
         {
             title: "Keamanan",
             breadcrumb: "Keamanan",
+            description: "Kelola keamanan dan autentikasi sistem.",
             href: "/dashboard/admin/settings/security",
-            icon: Settings,
+            icon: ShieldCheck,
             parent: "/dashboard/admin/settings",
         },
     ],

@@ -3,8 +3,9 @@
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 
-import { connectDB } from "@/lib/mongodb";
-import { User } from "@/models/user";
+import { canEditUser, getCurrentUserRole } from "@/lib/permissions";
+
+import { findUserById, resetUserPassword } from "@/repositories/user.repository";
 
 interface ResetPasswordInput {
     id: string;
@@ -13,33 +14,41 @@ interface ResetPasswordInput {
 
 export async function resetUserPasswordAction(values: ResetPasswordInput) {
     try {
-        await connectDB();
+        const currentRole = await getCurrentUserRole();
 
-        const hashedPassword = await bcrypt.hash(values.password, 10);
+        const targetUser = await findUserById(values.id);
 
-        const user = await User.findByIdAndUpdate(values.id, {
-            password: hashedPassword,
-        });
-
-        if (!user) {
+        if (!targetUser) {
             return {
                 success: false,
-                message: "User tidak ditemukan",
+                message: "User tidak ditemukan.",
             };
         }
 
+        if (!canEditUser(currentRole, targetUser.role)) {
+            return {
+                success: false,
+                message: "Anda tidak memiliki izin mengubah password user ini.",
+            };
+        }
+
+        const hashedPassword = await bcrypt.hash(values.password, 10);
+
+        await resetUserPassword(values.id, hashedPassword);
+
         revalidatePath("/dashboard/super-admin/users");
+        revalidatePath("/dashboard/admin/users");
 
         return {
             success: true,
-            message: "Password user berhasil diperbarui",
+            message: "Password user berhasil diperbarui.",
         };
     } catch (error) {
-        console.error("RESET PASSWORD ERROR:", error);
+        console.error("RESET USER PASSWORD ERROR:", error);
 
         return {
             success: false,
-            message: "Gagal mengubah password user",
+            message: "Gagal mengubah password user.",
         };
     }
 }

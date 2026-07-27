@@ -27,34 +27,33 @@ export function Navbar() {
             <Container>
                 <div
                     className={cn(
-                        "flex items-center justify-between transition-all duration-300",
+                        "flex items-center justify-between",
+                        "transition-all duration-300",
                         scrolled ? "h-[68px]" : "h-[76px]",
                     )}
                 >
-                    <div className="transition-transform duration-300 hover:scale-[1.02]">
+                    <div className="shrink-0 transition-transform duration-300 hover:scale-[1.02]">
                         <Logo />
                     </div>
 
-                    <nav
-                        aria-label="Main Navigation"
-                        className="hidden items-center gap-4 xl:gap-5 lg:flex"
-                    >
+                    <nav aria-label="Main Navigation" className="hidden items-center gap-5 xl:flex">
                         <NavLinks />
                     </nav>
 
-                    <div className="hidden items-center gap-3 lg:flex">
+                    <div className="hidden items-center gap-3 xl:flex">
                         <Button
                             size="lg"
                             className="group rounded-full px-6 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md"
                         >
-                            <Link href="/login" className="flex items-center gap-2">
+                            <Link href="/login">
                                 <span>Login Admin</span>
+
                                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                             </Link>
                         </Button>
                     </div>
 
-                    <div className="lg:hidden">
+                    <div className="flex xl:hidden">
                         <MobileMenu />
                     </div>
                 </div>
