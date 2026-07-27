@@ -16,13 +16,15 @@ interface UsersPageProps {
     }>;
 }
 
+type UserRole = (typeof ROLES)[keyof typeof ROLES];
+
 export default async function UsersPage({ searchParams }: UsersPageProps) {
     const params = await searchParams;
 
     const result = await getUsersAction({
         search: params.search,
-        role: params.role,
-        status: params.status,
+        role: params.role as UserRole | undefined,
+        status: params.status as "all" | "active" | "inactive" | undefined,
         page: Number(params.page) || 1,
         limit: Number(params.limit) || 10,
     });
