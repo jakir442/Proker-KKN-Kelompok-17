@@ -3,7 +3,8 @@
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 
-import { canEditUser, getCurrentUserRole } from "@/lib/permissions";
+import { canEditUser } from "@/lib/permissions";
+import { getCurrentUserRole } from "@/lib/auth-permissions";
 
 import { findUserById, resetUserPassword } from "@/repositories/user.repository";
 

@@ -1,10 +1,10 @@
-import { Users, ShieldCheck, UserCog, UserRoundCog, Store, UserCheck } from "lucide-react";
+import { ShieldCheck, UserCog, UserRoundCog, Store, UserCheck, Users } from "lucide-react";
 import { getUsersAction } from "@/actions/user/get-users";
 import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
-import { StatCard } from "@/components/dashboard/super-admin/cards/StatCard";
 import { EmptyState } from "@/components/dashboard/super-admin/common/EmptyState";
+import { StatCard } from "@/components/dashboard/super-admin/cards/StatCard";
 import { UsersClient } from "@/components/dashboard/users/UsersClient";
-import { ROLES } from "@/constants/roles";
+import { ROLES, type UserRole } from "@/constants/roles";
 import { auth } from "@/auth";
 
 interface UsersPageProps {
@@ -17,48 +17,58 @@ interface UsersPageProps {
     }>;
 }
 
-type UserRole = (typeof ROLES)[keyof typeof ROLES];
-
-export default async function UsersPage({ searchParams }: UsersPageProps) {
+export default async function AdminUsersPage({ searchParams }: UsersPageProps) {
     const params = await searchParams;
     const session = await auth();
-
     if (!session?.user?.role) {
         throw new Error("Unauthorized");
     }
 
     const currentRole = session.user.role;
+    const role =
+        params.role && Object.values(ROLES).includes(params.role as UserRole)
+            ? (params.role as UserRole)
+            : "all";
+
+    const status =
+        params.status === "active" || params.status === "inactive" ? params.status : "all";
 
     const result = await getUsersAction({
         search: params.search,
-        role: params.role as UserRole | undefined,
-        status: params.status as "all" | "active" | "inactive" | undefined,
+        role,
+        status,
         page: Number(params.page) || 1,
         limit: Number(params.limit) || 10,
     });
 
     const users = result.success ? result.data : [];
-    const totalUsers = result.total;
+
+    const totalUsers = result.total ?? 0;
     const currentPage = result.page ?? 1;
     const totalPages = result.totalPages ?? 1;
-    const superAdminCount = users.filter((user) => user.role === ROLES.SUPER_ADMIN).length;
+
     const adminCount = users.filter((user) => user.role === ROLES.ADMIN).length;
+
     const petugasCount = users.filter((user) => user.role === ROLES.PETUGAS).length;
+
     const umkmCount = users.filter((user) => user.role === ROLES.UMKM).length;
+
     const activeUserCount = users.filter((user) => user.isActive).length;
+
+    const superAdminCount = users.filter((user) => user.role === ROLES.SUPER_ADMIN).length;
 
     return (
         <div className="space-y-6">
             <SectionHeader
-                title="User Management"
-                description="Kelola seluruh akun pengguna dalam sistem."
+                title="Manajemen Pengguna"
+                description="Kelola akun administrator, petugas, dan UMKM."
             />
 
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
                 <StatCard
                     title="Total User"
                     value={totalUsers}
-                    description="Seluruh pengguna terdaftar"
+                    description="Seluruh pengguna"
                     icon={Users}
                     color="emerald"
                 />
@@ -74,7 +84,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                 <StatCard
                     title="Admin"
                     value={adminCount}
-                    description="Pengelola sistem desa"
+                    description="Administrator desa"
                     icon={UserCog}
                     color="blue"
                 />
@@ -82,7 +92,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                 <StatCard
                     title="Petugas"
                     value={petugasCount}
-                    description="Petugas operasional desa"
+                    description="Petugas operasional"
                     icon={UserRoundCog}
                     color="cyan"
                 />
@@ -90,7 +100,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                 <StatCard
                     title="UMKM"
                     value={umkmCount}
-                    description="Pengelola usaha desa"
+                    description="Pelaku usaha"
                     icon={Store}
                     color="orange"
                 />
@@ -98,7 +108,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                 <StatCard
                     title="User Aktif"
                     value={activeUserCount}
-                    description="Akun yang dapat login"
+                    description="Dapat login"
                     icon={UserCheck}
                     color="emerald"
                 />
@@ -107,14 +117,14 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
             {users.length === 0 ? (
                 <EmptyState
                     title="Belum ada pengguna"
-                    description="Data pengguna akan muncul di sini."
+                    description="Belum ada pengguna yang dapat dikelola."
                 />
             ) : (
                 <UsersClient
                     users={users}
                     search={params.search ?? ""}
-                    role={params.role ?? "all"}
-                    status={params.status ?? "all"}
+                    role={role}
+                    status={status}
                     page={currentPage}
                     totalPages={totalPages}
                     currentRole={currentRole}
