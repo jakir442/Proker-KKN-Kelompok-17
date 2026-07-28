@@ -1,32 +1,23 @@
 "use client";
 
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
+import { useMemo } from "react";
+import { Shield, ShieldCheck, UserCog, Store, CheckCircle2, XCircle } from "lucide-react";
+
+import { ROLES } from "@/constants/roles";
+import type { UserListItem } from "@/types/user-list";
+
+import { Button } from "@/components/ui/button";
 
 import {
     DataTable,
     TableSearch,
+    TableSelectFilter,
     TableToolbar,
     TableToolbarLeft,
     TableToolbarRight,
-    TableSelectFilter,
 } from "@/components/data-display/table";
-import { ShieldCheck, Shield, UserCog, Store, CheckCircle2, XCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { RoleBadge } from "./RoleBadge";
-import { StatusBadge } from "./StatusBadge";
-import { UserActions } from "./UserActions";
-import { ROLES } from "@/constants/roles";
-import { columns } from "./columns";
-import { useMemo } from "react";
 
-import type { UserListItem } from "@/types/user-list";
+import { columns } from "./columns";
 
 interface UserTableProps {
     users: UserListItem[];

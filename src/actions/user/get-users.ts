@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 
 import { getAllowedUserRoles } from "@/lib/permissions";
+import { getCurrentUserRole } from "@/lib/auth-permissions";
 import {
     getUsers,
     createUser,
@@ -14,7 +15,7 @@ import type { UserRole } from "@/constants/roles";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 
-import { canCreateUser, getCurrentUserRole } from "@/lib/permissions";
+import { canCreateUser } from "@/lib/permissions";
 import { createUserSchema } from "@/validations/user.schema";
 
 interface GetUsersActionParams {

@@ -4,7 +4,8 @@ import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 
 import { createUser, findUserByEmail, findUserByUsername } from "@/repositories/user.repository";
-import { canCreateUser, getCurrentUserRole } from "@/lib/permissions";
+import { canCreateUser } from "@/lib/permissions";
+import { getCurrentUserRole } from "@/lib/auth-permissions";
 import { createUserSchema } from "@/validations/user.schema";
 
 export async function createUserAction(values: unknown) {

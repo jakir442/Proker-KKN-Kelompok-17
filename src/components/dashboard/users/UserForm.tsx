@@ -12,9 +12,7 @@ import { updateUserAction } from "@/actions/user/update-user";
 
 import { ROLES } from "@/constants/roles";
 import type { UserListItem } from "@/types/user-list";
-
 import { createUserSchema, type CreateUserInput } from "@/validations/user.schema";
-
 import { updateUserSchema, type UpdateUserInput } from "@/validations/update-user.schema";
 
 import {
@@ -29,6 +27,7 @@ import {
     FormSwitch,
     FormTextarea,
 } from "@/components/forms";
+import { getCreatableUserRoles } from "@/lib/permissions";
 
 import {
     Select,
@@ -40,17 +39,48 @@ import {
 
 import { focusFirstError } from "@/lib/forms/focus-first-error";
 
+import type { UserRole } from "@/constants/roles";
+
 interface UserFormProps {
     mode: "create" | "edit";
     user?: UserListItem;
+    currentRole: UserRole;
     onSuccess?: () => void;
     onCancel?: () => void;
 }
 
-export function UserForm({ mode, user, onSuccess, onCancel }: UserFormProps) {
+export function UserForm({ mode, user, currentRole, onSuccess, onCancel }: UserFormProps) {
     const [isPending, startTransition] = useTransition();
 
     const isCreate = mode === "create";
+
+    const roleOptions = getCreatableUserRoles(currentRole).map((role) => {
+        switch (role) {
+            case ROLES.SUPER_ADMIN:
+                return {
+                    label: "Super Admin",
+                    value: ROLES.SUPER_ADMIN,
+                };
+
+            case ROLES.ADMIN:
+                return {
+                    label: "Admin",
+                    value: ROLES.ADMIN,
+                };
+
+            case ROLES.PETUGAS:
+                return {
+                    label: "Petugas",
+                    value: ROLES.PETUGAS,
+                };
+
+            case ROLES.UMKM:
+                return {
+                    label: "UMKM",
+                    value: ROLES.UMKM,
+                };
+        }
+    });
 
     const form = useForm<CreateUserInput | UpdateUserInput>({
         resolver: zodResolver(isCreate ? createUserSchema : updateUserSchema),
@@ -195,24 +225,7 @@ export function UserForm({ mode, user, onSuccess, onCancel }: UserFormProps) {
                         onValueChange={(value) =>
                             form.setValue("role", value as CreateUserInput["role"])
                         }
-                        options={[
-                            {
-                                label: "Super Admin",
-                                value: ROLES.SUPER_ADMIN,
-                            },
-                            {
-                                label: "Admin",
-                                value: ROLES.ADMIN,
-                            },
-                            {
-                                label: "Petugas",
-                                value: ROLES.PETUGAS,
-                            },
-                            {
-                                label: "UMKM",
-                                value: ROLES.UMKM,
-                            },
-                        ]}
+                        options={roleOptions}
                     />
 
                     {isCreate && (

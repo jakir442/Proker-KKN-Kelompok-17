@@ -11,6 +11,7 @@ import { UserDeleteDialog } from "./UserDeleteDialog";
 import { UserDetailDrawer } from "./UserDetailDrawer";
 import { UserStatusDialog } from "./UserStatusDialog";
 import { ResetPasswordDialog } from "./ResetPasswordDialog";
+import { UserRole } from "@/constants/roles";
 
 interface UsersClientProps {
     users: UserListItem[];
@@ -19,6 +20,7 @@ interface UsersClientProps {
     status: string;
     page: number;
     totalPages: number;
+    currentRole: UserRole;
 }
 
 type UserTableItem = Pick<
@@ -33,6 +35,7 @@ export function UsersClient({
     status: initialStatus,
     page,
     totalPages,
+    currentRole,
 }: UsersClientProps) {
     const [search, setSearch] = useState(initialSearch);
     const [role, setRole] = useState(initialRole);
@@ -118,7 +121,13 @@ export function UsersClient({
 
             <UserPagination page={page} totalPages={totalPages} />
 
-            <UserDialog open={open} onOpenChange={setOpen} mode={mode} user={selectedUser} />
+            <UserDialog
+                open={open}
+                onOpenChange={setOpen}
+                mode={mode}
+                user={selectedUser}
+                currentRole={currentRole}
+            />
 
             <UserDeleteDialog
                 user={selectedDeleteUser}

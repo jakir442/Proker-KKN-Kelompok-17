@@ -1,16 +1,4 @@
-import { ROLES, UserRole } from "@/constants/roles";
-
-import { auth } from "@/auth";
-
-export async function getCurrentUserRole(): Promise<UserRole> {
-    const session = await auth();
-
-    if (!session?.user?.role) {
-        throw new Error("Unauthorized");
-    }
-
-    return session.user.role;
-}
+import { ROLES, type UserRole } from "@/constants/roles";
 
 export type PermissionAction = "view" | "create" | "edit" | "delete";
 
@@ -46,31 +34,22 @@ export const USER_PERMISSIONS: Record<UserRole, Permission> = {
     },
 };
 
-/**
- * Mengecek apakah actor memiliki izin terhadap target role.
- */
-export function hasUserPermission(
-    actor: UserRole,
-    action: PermissionAction,
-    target: UserRole,
-): boolean {
+export function hasUserPermission(actor: UserRole, action: PermissionAction, target: UserRole) {
     return USER_PERMISSIONS[actor][action].includes(target);
 }
 
-/**
- * Mengembalikan daftar role yang boleh diakses actor
- * berdasarkan action tertentu.
- */
-export function getAllowedUserRoles(
-    actor: UserRole,
-    action: PermissionAction = "create",
-): UserRole[] {
+export function getAllowedUserRoles(actor: UserRole, action: PermissionAction): UserRole[] {
     return USER_PERMISSIONS[actor][action];
 }
 
-/**
- * Shortcut helper
- */
+export function getCreatableUserRoles(actor: UserRole): UserRole[] {
+    return USER_PERMISSIONS[actor].create;
+}
+
+export function getViewableUserRoles(actor: UserRole): UserRole[] {
+    return USER_PERMISSIONS[actor].view;
+}
+
 export const canViewUser = (actor: UserRole, target: UserRole) =>
     hasUserPermission(actor, "view", target);
 

@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 
-import { canDeleteUser, getCurrentUserRole } from "@/lib/permissions";
+import { canDeleteUser } from "@/lib/permissions";
+import { getCurrentUserRole } from "@/lib/auth-permissions";
 
 import { findUserById } from "@/repositories/user.repository";
 
