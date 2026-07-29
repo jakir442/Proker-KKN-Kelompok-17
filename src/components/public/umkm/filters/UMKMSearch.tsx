@@ -14,9 +14,20 @@ export function UMKMSearch() {
     const [isPending, startTransition] = useTransition();
     const [keyword, setKeyword] = useState(searchParams.get("search") ?? "");
 
+    const searchQuery = searchParams.get("search") ?? "";
+
+    // Sinkronkan input jika URL berubah dari luar
+    useEffect(() => {
+        if (keyword !== searchQuery) {
+            startTransition(() => {
+                setKeyword(searchQuery);
+            });
+        }
+    }, [keyword, searchQuery, startTransition]);
+
     useEffect(() => {
         const timeout = setTimeout(() => {
-            const params = new URLSearchParams(searchParams.toString());
+            const params = new URLSearchParams(window.location.search);
 
             if (keyword.trim()) {
                 params.set("search", keyword.trim());
@@ -24,6 +35,7 @@ export function UMKMSearch() {
                 params.delete("search");
             }
 
+            // Saat search berubah, kembali ke halaman pertama
             params.delete("page");
 
             startTransition(() => {
@@ -34,7 +46,7 @@ export function UMKMSearch() {
         }, 400);
 
         return () => clearTimeout(timeout);
-    }, [keyword, pathname, router, searchParams]);
+    }, [keyword, pathname, router]);
 
     function clearSearch() {
         setKeyword("");
