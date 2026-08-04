@@ -1,132 +1,252 @@
 import { model, models, Schema } from "mongoose";
 
 export interface IVillageProfile {
-    _id?: string;
+  _id?: string;
 
-    about: string;
-    history: string;
+  // Basic Information
+  villageName: string;
+  address: string;
+  district: string;
+  regency: string;
+  province: string;
+  postalCode: string;
 
-    vision: string;
+  email: string;
+  phone: string;
+  website?: string;
 
-    mission: string[];
+  officeHours?: string;
 
-    headmanName: string;
-    headmanPhoto?: string;
-    headmanGreeting: string;
+  logo?: string;
+  officePhoto?: string;
 
+  // About
+  about: string;
+  history: string;
+
+  // Vision Mission
+  vision: string;
+  mission: string[];
+
+  // Headman
+  headman: {
+    name: string;
+    position: string;
+    photo?: string;
+    greeting: string;
+  };
+
+  // Statistics
+  statistics: {
     area: number;
-
     population: number;
-
     households: number;
-
     rt: number;
-
     rw: number;
-
     hamlets: number;
+  };
 
+  // Location
+  location: {
     latitude: number;
     longitude: number;
+    googleMaps?: string;
+  };
 
-    createdAt?: Date;
-    updatedAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const villageProfileSchema = new Schema<IVillageProfile>(
-    {
-        about: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-
-        history: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-
-        vision: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-
-        mission: [
-            {
-                type: String,
-                required: true,
-                trim: true,
-            },
-        ],
-
-        headmanName: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-
-        headmanPhoto: {
-            type: String,
-            default: "",
-        },
-
-        headmanGreeting: {
-            type: String,
-            required: true,
-        },
-
-        area: {
-            type: Number,
-            required: true,
-            min: 0,
-        },
-
-        population: {
-            type: Number,
-            required: true,
-            min: 0,
-        },
-
-        households: {
-            type: Number,
-            required: true,
-            min: 0,
-        },
-
-        rt: {
-            type: Number,
-            required: true,
-            min: 0,
-        },
-
-        rw: {
-            type: Number,
-            required: true,
-            min: 0,
-        },
-
-        hamlets: {
-            type: Number,
-            required: true,
-            min: 0,
-        },
-
-        latitude: {
-            type: Number,
-            required: true,
-        },
-
-        longitude: {
-            type: Number,
-            required: true,
-        },
+  {
+    // Basic Information
+    villageName: {
+      type: String,
+      required: true,
+      trim: true,
+      default: "Desa Cintanagara",
     },
-    {
-        timestamps: true,
+
+    address: {
+      type: String,
+      required: true,
+      trim: true,
+      default: "",
     },
+
+    district: {
+      type: String,
+      required: true,
+      trim: true,
+      default: "",
+    },
+
+    regency: {
+      type: String,
+      required: true,
+      trim: true,
+      default: "",
+    },
+
+    province: {
+      type: String,
+      required: true,
+      trim: true,
+      default: "",
+    },
+
+    postalCode: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    email: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    phone: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    website: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    officeHours: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    logo: {
+      type: String,
+      default: "",
+    },
+
+    officePhoto: {
+      type: String,
+      default: "",
+    },
+
+    // Content
+    about: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    history: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    vision: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    mission: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
+
+    // Headman
+    headman: {
+      name: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+
+      position: {
+        type: String,
+        default: "Kepala Desa",
+      },
+
+      photo: {
+        type: String,
+        default: "",
+      },
+
+      greeting: {
+        type: String,
+        required: true,
+      },
+    },
+
+    // Statistics
+    statistics: {
+      area: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+
+      population: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+
+      households: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+
+      rt: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+
+      rw: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+
+      hamlets: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+    },
+
+    // Maps
+    location: {
+      latitude: {
+        type: Number,
+        default: -7.0,
+      },
+
+      longitude: {
+        type: Number,
+        default: 107.0,
+      },
+
+      googleMaps: {
+        type: String,
+        default: "",
+      },
+    },
+  },
+  {
+    timestamps: true,
+  },
 );
 
 export const VillageProfile =
-    models.VillageProfile || model<IVillageProfile>("VillageProfile", villageProfileSchema);
+  models.VillageProfile ??
+  model<IVillageProfile>("VillageProfile", villageProfileSchema);

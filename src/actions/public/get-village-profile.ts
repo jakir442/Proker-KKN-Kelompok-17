@@ -1,39 +1,17 @@
 "use server";
 
-import { getProfile } from "@/repositories/village-profile.repository";
+import { findVillageProfile } from "@/repositories/village-profile.repository";
 
 export async function getVillageProfilePublicAction() {
     try {
-        const profile = await getProfile();
+        const profile = await findVillageProfile();
 
         return {
             success: true,
-            data: profile
-                ? {
-                      about: profile.about,
-                      history: profile.history,
-                      vision: profile.vision,
-                      mission: profile.mission,
-
-                      headmanName: profile.headmanName,
-                      headmanPhoto: profile.headmanPhoto,
-                      headmanGreeting: profile.headmanGreeting,
-
-                      area: profile.area,
-                      population: profile.population,
-                      households: profile.households,
-
-                      rt: profile.rt,
-                      rw: profile.rw,
-                      hamlets: profile.hamlets,
-
-                      latitude: profile.latitude,
-                      longitude: profile.longitude,
-                  }
-                : null,
+            data: profile,
         };
     } catch (error) {
-        console.error(error);
+        console.error("[Public Village Profile] Get:", error);
 
         return {
             success: false,

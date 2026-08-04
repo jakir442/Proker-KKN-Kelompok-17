@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/mongodb";
 import { VillageProfile, IVillageProfile } from "@/models/village-profile";
+
 import type { FlattenMaps } from "mongoose";
 
 function serializeVillageProfile(
@@ -13,7 +14,7 @@ function serializeVillageProfile(
     };
 }
 
-export async function getProfile(): Promise<IVillageProfile | null> {
+export async function findVillageProfile(): Promise<IVillageProfile | null> {
     await connectDB();
 
     const profile = await VillageProfile.findOne().lean();
@@ -21,7 +22,9 @@ export async function getProfile(): Promise<IVillageProfile | null> {
     return serializeVillageProfile(profile);
 }
 
-export async function upsertProfile(data: Partial<IVillageProfile>): Promise<IVillageProfile> {
+export async function updateVillageProfile(
+    data: Omit<IVillageProfile, "_id" | "createdAt" | "updatedAt">,
+): Promise<IVillageProfile> {
     await connectDB();
 
     const profile = await VillageProfile.findOneAndUpdate({}, data, {

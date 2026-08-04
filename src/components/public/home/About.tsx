@@ -14,10 +14,16 @@ export async function About() {
 
     const summary = about.length > 260 ? `${about.substring(0, 260)}...` : about;
 
+    const aboutProfile = profile
+        ? ({
+              headmanPhoto: (profile as { headmanPhoto?: string | null }).headmanPhoto ?? null,
+          } satisfies { headmanPhoto?: string | null })
+        : null;
+
     return (
         <section className="relative overflow-hidden py-24 lg:py-32">
             <Container>
-                <AboutContent profile={profile} summary={summary} />
+                <AboutContent profile={aboutProfile} summary={summary} />
             </Container>
         </section>
     );

@@ -1,18 +1,19 @@
-import { getVillageProfileAction } from "@/actions/village-profile/get-village-profile";
-import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
-import { VillageProfileForm } from "@/components/dashboard/super-admin/village-profile/VillageProfileForm";
+import { findVillageProfile } from "@/repositories/village-profile.repository";
 
-export default async function VillageProfilePage() {
-    const result = await getVillageProfileAction();
+import { SectionHeader } from "@/components/dashboard/super-admin/common/SectionHeader";
+import { VillageProfileClient } from "@/components/dashboard/admin/village-profile/VillageProfileClient";
+
+export default async function SuperAdminVillageProfilePage() {
+    const profile = await findVillageProfile();
 
     return (
         <div className="space-y-6">
             <SectionHeader
                 title="Profil Desa"
-                description="Kelola informasi resmi Desa Cintanagara."
+                description="Kelola informasi profil Desa Cintanagara."
             />
 
-            <VillageProfileForm initialData={result.success ? result.data : undefined} />
+            <VillageProfileClient profile={profile} />
         </div>
     );
 }

@@ -1,16 +1,14 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import { ImagePlus } from "lucide-react";
-
-import { cn } from "@/lib/utils";
 
 import { FormField } from "../FormField";
 import { UploadDropzone } from "../upload/UploadDropzone";
 import { UploadPreview } from "../upload/UploadPreview";
 
 interface FormUploadProps {
-    id: string;
+    id?: string;
     label: string;
     value?: File | null;
     onChange: (file: File | null) => void;
@@ -36,21 +34,26 @@ export function FormUpload({
 }: FormUploadProps) {
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const [preview, setPreview] = useState<string | null>(
-        value ? URL.createObjectURL(value) : null,
-    );
+    const preview = useMemo(() => {
+        if (!value) {
+            return null;
+        }
+
+        if (typeof value === "string") {
+            return value;
+        }
+
+        return URL.createObjectURL(value);
+    }, [value]);
 
     function handleFile(file: File | null) {
         if (!file) return;
 
         onChange(file);
-
-        setPreview(URL.createObjectURL(file));
     }
 
     function removeImage() {
         onChange(null);
-        setPreview(null);
 
         if (inputRef.current) {
             inputRef.current.value = "";

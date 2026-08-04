@@ -3,6 +3,9 @@
 @import "shadcn/tailwind.css";
 @import "leaflet/dist/leaflet.css";
 
+@import "leaflet/dist/leaflet.css";
+@import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
+
 @custom-variant dark (&:is(.dark *));
 
 @import "./styles/theme.css";
@@ -96,6 +99,14 @@ body {
 
 .leaflet-popup-content {
     margin: 14px 16px;
+}
+
+.scrollbar-none {
+    scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
 }
 
 /* ===========================

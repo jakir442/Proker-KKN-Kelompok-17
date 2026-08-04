@@ -288,9 +288,9 @@ export const adminNavigation: Record<UserRole, AdminNavigationItem[]> = {
             title: "Profil Desa",
             breadcrumb: "Profil Desa",
             description: "Kelola informasi profil Desa Cintanagara.",
-            href: "/dashboard/admin/settings/village-profile",
+            href: "/dashboard/admin/profile-desa",
             icon: Building2,
-            parent: "/dashboard/admin/settings",
+            parent: "/dashboard/admin",
         },
 
         {

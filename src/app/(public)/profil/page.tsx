@@ -48,25 +48,28 @@ export default async function VillageProfilePage() {
 
                 <Reveal className="scroll-mt-24">
                     <HeadmanSection
-                        name={profile.headmanName}
-                        photo={profile.headmanPhoto}
-                        greeting={profile.headmanGreeting}
+                        name={profile.headman.name}
+                        photo={profile.headman.photo}
+                        greeting={profile.headman.greeting}
                     />
                 </Reveal>
 
                 <Reveal className="scroll-mt-24">
                     <VillageStats
-                        area={profile.area}
-                        population={profile.population}
-                        households={profile.households}
-                        rt={profile.rt}
-                        rw={profile.rw}
-                        hamlets={profile.hamlets}
+                        area={profile.statistics.area}
+                        population={profile.statistics.population}
+                        households={profile.statistics.households}
+                        rt={profile.statistics.rt}
+                        rw={profile.statistics.rw}
+                        hamlets={profile.statistics.hamlets}
                     />
                 </Reveal>
 
                 <Reveal className="scroll-mt-24 pb-8">
-                    <VillageMap latitude={profile.latitude} longitude={profile.longitude} />
+                    <VillageMap
+                        latitude={profile.location.latitude}
+                        longitude={profile.location.longitude}
+                    />
                 </Reveal>
             </div>
         </Container>
