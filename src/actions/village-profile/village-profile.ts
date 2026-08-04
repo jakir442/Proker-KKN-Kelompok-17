@@ -2,15 +2,36 @@
 
 import { revalidatePath } from "next/cache";
 
-import { getProfile, upsertProfile } from "@/repositories/village-profile.repository";
+import {
+    findVillageProfile,
+    updateVillageProfile,
+} from "@/repositories/village-profile.repository";
 
-import { villageProfileSchema, VillageProfileValues } from "@/validations/village-profile.schema";
+import {
+    villageProfileSchema,
+    type VillageProfileValues,
+} from "@/validations/village-profile.schema";
 
-export async function getVillageProfile() {
-    return await getProfile();
+export async function getVillageProfileAction() {
+    try {
+        const profile = await findVillageProfile();
+
+        return {
+            success: true,
+            data: profile,
+        };
+    } catch (error) {
+        console.error("[Village Profile] Get:", error);
+
+        return {
+            success: false,
+            message: "Gagal mengambil profil desa.",
+            data: null,
+        };
+    }
 }
 
-export async function saveVillageProfile(values: VillageProfileValues) {
+export async function updateVillageProfileAction(values: VillageProfileValues) {
     const validated = villageProfileSchema.safeParse(values);
 
     if (!validated.success) {
@@ -22,18 +43,36 @@ export async function saveVillageProfile(values: VillageProfileValues) {
     }
 
     try {
-        const profile = await upsertProfile(validated.data);
+        const payload = {
+            ...validated.data,
 
-        revalidatePath("/dashboard/village-profile");
+            postalCode: validated.data.postalCode ?? "",
+            phone: validated.data.phone ?? "",
+
+            logo: typeof validated.data.logo === "string" ? validated.data.logo : "",
+
+            officePhoto:
+                typeof validated.data.officePhoto === "string" ? validated.data.officePhoto : "",
+
+            mission: validated.data.mission.map((item) =>
+                typeof item === "string" ? item : item.value,
+            ),
+
+            vision: validated.data.vision,
+        };
+
+        const profile = await updateVillageProfile(payload);
+
+        revalidatePath("/dashboard/admin/profile-desa");
         revalidatePath("/profil");
 
         return {
             success: true,
-            message: "Profil desa berhasil disimpan.",
+            message: "Profil desa berhasil diperbarui.",
             data: profile,
         };
     } catch (error) {
-        console.error("Save village profile:", error);
+        console.error("[Village Profile] Update:", error);
 
         return {
             success: false,

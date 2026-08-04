@@ -31,6 +31,7 @@
         "framer-motion": "^12.42.2",
         "input-otp": "^1.4.2",
         "leaflet": "^1.9.4",
+        "leaflet-defaulticon-compatibility": "^0.1.2",
         "lucide-react": "^1.23.0",
         "mongodb": "^7.4.0",
         "mongoose": "^9.7.3",
