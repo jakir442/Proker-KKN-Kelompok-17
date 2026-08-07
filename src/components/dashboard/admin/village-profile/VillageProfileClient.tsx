@@ -73,7 +73,12 @@ export function VillageProfileClient({ profile }: Props) {
                 name: profile?.headman?.name ?? "",
                 position: profile?.headman?.position ?? "Kepala Desa",
                 greeting: profile?.headman?.greeting ?? "",
-                photo: profile?.headman?.photo ?? "",
+
+                // File yang dipilih user
+                photo: undefined,
+
+                // URL foto yang sudah tersimpan di database
+                photoUrl: profile?.headman?.photo ?? "",
             },
 
             statistics: {

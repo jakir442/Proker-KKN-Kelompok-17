@@ -1,10 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+
 import { CalendarDays, ChevronRight, Clock3, Home, Newspaper } from "lucide-react";
 
 import { FadeIn } from "@/components/animations/FadeIn";
 import { Reveal } from "@/components/animations/Reveal";
 import { Badge } from "@/components/ui/badge";
+
 import { Container } from "../layout/Container";
 
 interface NewsDetailHeroProps {
@@ -25,89 +27,84 @@ export function NewsDetailHero({
     readingTime = "5 menit membaca",
 }: NewsDetailHeroProps) {
     return (
-        <header className="relative overflow-hidden">
-            <div className="relative h-[420px] sm:h-[520px] lg:h-[640px]">
-                <Image
-                    src={image}
-                    alt={title}
-                    fill
-                    priority
-                    sizes="100vw"
-                    className="animate-[kenburns_20s_ease-out_forwards] object-cover"
-                />
-
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/65 to-black/15" />
-
-                <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
-
-                {/* Decorations */}
-                <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-primary/20 blur-[120px]" />
-
-                <div className="absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-sky-400/20 blur-[120px]" />
-
-                <div className="absolute -right-20 top-20 h-72 w-72 rounded-full bg-emerald-400/20 blur-[120px]" />
-
-                <Container className="relative flex h-full items-end pb-12 sm:pb-16 lg:pb-20">
-                    <div className="max-w-5xl text-white">
-                        <FadeIn>
-                            <nav
-                                aria-label="Breadcrumb"
-                                className="mb-8 flex flex-wrap items-center gap-2 text-sm text-white/80"
+        <header className="border-b bg-gradient-to-b from-muted/30 via-background to-background">
+            <Container className="py-12 lg:py-16">
+                <div className="mx-auto max-w-4xl">
+                    <FadeIn>
+                        <nav
+                            className="mb-6 flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
+                            aria-label="Breadcrumb"
+                        >
+                            <Link
+                                href="/"
+                                className="flex items-center gap-2 transition-colors hover:text-primary"
                             >
-                                <Link href="/" className="transition hover:text-white">
-                                    <Home className="h-4 w-4" />
-                                </Link>
+                                <Home className="size-4" />
+                                Beranda
+                            </Link>
 
-                                <ChevronRight className="h-4 w-4 opacity-60" />
+                            <ChevronRight className="size-4" />
 
-                                <Link href="/berita" className="transition hover:text-white">
-                                    Berita
-                                </Link>
+                            <Link href="/berita" className="transition-colors hover:text-primary">
+                                Berita
+                            </Link>
+                        </nav>
+                    </FadeIn>
 
-                                <ChevronRight className="h-4 w-4 opacity-60" />
+                    <Reveal>
+                        <Badge variant="secondary" className="rounded-full px-4 py-1.5">
+                            <Newspaper className="mr-2 size-4" />
+                            {category}
+                        </Badge>
+                    </Reveal>
 
-                                <span className="line-clamp-1 text-white">{title}</span>
-                            </nav>
-                        </FadeIn>
+                    <Reveal>
+                        <h1 className="mt-6 text-balance text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+                            {title}
+                        </h1>
+                    </Reveal>
 
-                        <Reveal>
-                            <Badge className="rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-white backdrop-blur-md">
-                                <Newspaper className="mr-2 h-4 w-4" />
-                                {category}
-                            </Badge>
-                        </Reveal>
+                    <Reveal>
+                        <p
+                            className="mt-6 max-w-3xl text-lg leading-8 text-muted-foreground"
+                            style={{ textAlign: "justify" }}
+                        >
+                            {excerpt}
+                        </p>
+                    </Reveal>
 
-                        <Reveal>
-                            <h1 className="mt-6 max-w-4xl text-balance text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
-                                {title}
-                            </h1>
-                        </Reveal>
-
-                        <Reveal>
-                            <p className="mt-6 max-w-3xl text-base leading-8 text-white/90 sm:text-lg lg:text-xl">
-                                {excerpt}
-                            </p>
-                        </Reveal>
-
-                        <Reveal>
-                            <div className="mt-10 inline-flex flex-wrap items-center gap-4 rounded-2xl border border-white/15 bg-white/10 px-5 py-4 backdrop-blur-xl">
-                                <div className="flex items-center gap-2 text-sm">
-                                    <CalendarDays className="h-4 w-4 text-primary-foreground" />
-                                    <span>{date}</span>
-                                </div>
-
-                                <div className="hidden h-5 w-px bg-white/20 sm:block" />
-
-                                <div className="flex items-center gap-2 text-sm">
-                                    <Clock3 className="h-4 w-4 text-primary-foreground" />
-                                    <span>{readingTime}</span>
-                                </div>
+                    <Reveal>
+                        <div className="mt-8 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-2">
+                                <CalendarDays className="size-4" />
+                                <span>{date}</span>
                             </div>
-                        </Reveal>
-                    </div>
-                </Container>
-            </div>
+
+                            <div className="hidden h-4 w-px bg-border sm:block" />
+
+                            <div className="flex items-center gap-2">
+                                <Clock3 className="size-4" />
+                                <span>{readingTime}</span>
+                            </div>
+                        </div>
+                    </Reveal>
+
+                    <Reveal>
+                        <div className="mt-10 overflow-hidden rounded-3xl border bg-muted shadow-xl">
+                            <div className="relative aspect-[16/9]">
+                                <Image
+                                    src={image}
+                                    alt={title}
+                                    fill
+                                    priority
+                                    sizes="(max-width:768px) 100vw, 900px"
+                                    className="object-cover transition-transform duration-700 hover:scale-[1.02]"
+                                />
+                            </div>
+                        </div>
+                    </Reveal>
+                </div>
+            </Container>
         </header>
     );
 }

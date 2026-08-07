@@ -67,7 +67,16 @@ export async function updateVillageProfileAction(
 
             mission: validated.data.mission.map((item) => item.value),
 
-            headman: validated.data.headman,
+            headman: {
+                name: validated.data.headman.name,
+                position: validated.data.headman.position,
+                greeting: validated.data.headman.greeting,
+
+                photo:
+                    typeof validated.data.headman.photo === "string"
+                        ? validated.data.headman.photo
+                        : (validated.data.headman.photoUrl ?? ""),
+            },
 
             statistics: validated.data.statistics,
 

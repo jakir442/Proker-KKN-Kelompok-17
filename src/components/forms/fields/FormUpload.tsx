@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { ImagePlus } from "lucide-react";
 
 import { FormField } from "../FormField";
@@ -10,7 +10,7 @@ import { UploadPreview } from "../upload/UploadPreview";
 interface FormUploadProps {
     id?: string;
     label: string;
-    value?: File | null;
+    value?: File | string | null;
     onChange: (file: File | null) => void;
     error?: string;
     helperText?: string;
@@ -35,16 +35,18 @@ export function FormUpload({
     const inputRef = useRef<HTMLInputElement>(null);
 
     const preview = useMemo(() => {
-        if (!value) {
-            return null;
-        }
+        if (!value) return null;
 
-        if (typeof value === "string") {
-            return value;
-        }
-
-        return URL.createObjectURL(value);
+        return typeof value === "string" ? value : URL.createObjectURL(value);
     }, [value]);
+
+    useEffect(() => {
+        return () => {
+            if (preview && preview.startsWith("blob:")) {
+                URL.revokeObjectURL(preview);
+            }
+        };
+    }, [preview]);
 
     function handleFile(file: File | null) {
         if (!file) return;

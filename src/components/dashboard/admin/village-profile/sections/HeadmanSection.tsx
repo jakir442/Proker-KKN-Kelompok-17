@@ -1,11 +1,14 @@
 "use client";
 
-import { FormInput, FormSection, FormTextarea } from "@/components/forms";
+import { Controller } from "react-hook-form";
+
+import { FormInput, FormSection, FormTextarea, FormUpload } from "@/components/forms";
 
 import type { VillageProfileSectionProps } from "../section-props";
 
 export function HeadmanSection({ form, loading }: VillageProfileSectionProps) {
     const {
+        control,
         register,
         formState: { errors },
     } = form;
@@ -35,6 +38,28 @@ export function HeadmanSection({ form, loading }: VillageProfileSectionProps) {
                         error={errors.headman?.position?.message}
                     />
                 </div>
+
+                <Controller
+                    control={form.control}
+                    name="headman.photo"
+                    render={({ field }) => (
+                        <FormUpload
+                            id="headman-photo"
+                            label="Foto Kepala Desa"
+                            value={field.value ?? form.watch("headman.photoUrl")}
+                            onChange={(file) => {
+                                field.onChange(file);
+
+                                if (file) {
+                                    form.setValue("headman.photoUrl", "", {
+                                        shouldDirty: true,
+                                    });
+                                }
+                            }}
+                            error={errors.headman?.photo?.message}
+                        />
+                    )}
+                />
 
                 <FormTextarea
                     id="headman-greeting"

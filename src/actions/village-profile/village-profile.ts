@@ -44,21 +44,71 @@ export async function updateVillageProfileAction(values: VillageProfileValues) {
 
     try {
         const payload = {
-            ...validated.data,
+            villageName: validated.data.villageName,
+
+            address: validated.data.address,
+
+            district: validated.data.district,
+
+            regency: validated.data.regency,
+
+            province: validated.data.province,
 
             postalCode: validated.data.postalCode ?? "",
+
+            email: validated.data.email,
+
             phone: validated.data.phone ?? "",
 
-            logo: typeof validated.data.logo === "string" ? validated.data.logo : "",
+            website: validated.data.website ?? "",
 
-            officePhoto:
-                typeof validated.data.officePhoto === "string" ? validated.data.officePhoto : "",
+            officeHours: validated.data.officeHours ?? "",
 
-            mission: validated.data.mission.map((item) =>
-                typeof item === "string" ? item : item.value,
-            ),
+            about: validated.data.about,
+
+            history: validated.data.history,
 
             vision: validated.data.vision,
+
+            mission: validated.data.mission.map((item) => item.value),
+
+            headman: {
+                name: validated.data.headman.name,
+
+                position: validated.data.headman.position,
+
+                greeting: validated.data.headman.greeting,
+
+                photo:
+                    typeof validated.data.headman.photo === "string"
+                        ? validated.data.headman.photo
+                        : (validated.data.headman.photoUrl ?? ""),
+            },
+
+            statistics: {
+                area: validated.data.statistics.area,
+                population: validated.data.statistics.population,
+                households: validated.data.statistics.households,
+                rt: validated.data.statistics.rt,
+                rw: validated.data.statistics.rw,
+                hamlets: validated.data.statistics.hamlets,
+            },
+
+            location: {
+                latitude: validated.data.location.latitude,
+                longitude: validated.data.location.longitude,
+                googleMaps: validated.data.location.googleMaps ?? "",
+            },
+
+            logo:
+                typeof validated.data.logo === "string"
+                    ? validated.data.logo
+                    : (validated.data.logoUrl ?? ""),
+
+            officePhoto:
+                typeof validated.data.officePhoto === "string"
+                    ? validated.data.officePhoto
+                    : (validated.data.officePhotoUrl ?? ""),
         };
 
         const profile = await updateVillageProfile(payload);
