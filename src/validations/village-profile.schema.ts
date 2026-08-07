@@ -47,7 +47,9 @@ export const villageProfileSchema = z.object({
 
         position: z.string().min(3, "Jabatan wajib diisi"),
 
-        photo: optionalUrl.optional(),
+        photo: z.instanceof(File).nullable().optional(),
+
+        photoUrl: optionalUrl.optional(),
 
         greeting: z.string().min(10, "Sambutan minimal 10 karakter"),
     }),

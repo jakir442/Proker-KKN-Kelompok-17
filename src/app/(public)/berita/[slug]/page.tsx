@@ -12,6 +12,10 @@ import { NewsDetailHero } from "@/components/public/news/NewsDetailHero";
 import { NewsNavigation } from "@/components/public/news/NewsNavigation";
 import { NewsShare } from "@/components/public/news/NewsShare";
 import { NewsRelated } from "@/components/public/news/NewsRelated";
+import { NewsBreadcrumb } from "@/components/public/news/NewsBreadcrumb";
+import { NewsReadingInfo } from "@/components/public/news/NewsReadingInfo";
+import { NewsAuthorCard } from "@/components/public/news/NewsAuthorCard";
+import { BackToTop } from "@/components/public/news/BackToTop";
 
 interface Props {
     params: Promise<{
@@ -76,7 +80,7 @@ export default async function NewsDetailPage({ params }: Props) {
     return (
         <>
             <ReadingProgress />
-
+            <NewsBreadcrumb title={news.title} />
             <NewsDetailHero
                 title={news.title}
                 excerpt={news.excerpt}
@@ -90,30 +94,52 @@ export default async function NewsDetailPage({ params }: Props) {
                 readingTime={calculateReadingTime(news.content)}
             />
 
-            <Container className="py-16">
-                <NewsContent content={news.content} />
+            <Container className="py-20">
+                <article className="mx-auto max-w-3xl">
+                    <NewsReadingInfo
+                        category={news.category}
+                        date={new Intl.DateTimeFormat("id-ID", {
+                            day: "2-digit",
+                            month: "long",
+                            year: "numeric",
+                        }).format(new Date(news.createdAt))}
+                        readingTime={calculateReadingTime(news.content)}
+                    />
 
-                <div className="mt-12">
+                    <NewsContent content={news.content} />
+
+                    <NewsAuthorCard />
+
+                    <div className="my-16 border-t" />
+
                     <NewsShare title={news.title} url={url} />
-                </div>
 
-                <NewsNavigation
-                    previous={
-                        navigation.previous && {
-                            slug: navigation.previous.slug,
-                            title: navigation.previous.title,
-                        }
-                    }
-                    next={
-                        navigation.next && {
-                            slug: navigation.next.slug,
-                            title: navigation.next.title,
-                        }
-                    }
-                />
+                    <div className="mt-16">
+                        <NewsNavigation
+                            previous={
+                                navigation.previous && {
+                                    slug: navigation.previous.slug,
+                                    title: navigation.previous.title,
+                                }
+                            }
+                            next={
+                                navigation.next && {
+                                    slug: navigation.next.slug,
+                                    title: navigation.next.title,
+                                }
+                            }
+                        />
+                    </div>
+                </article>
             </Container>
 
-            <NewsRelated news={relatedNews} />
+            <section className="bg-muted/20 py-20">
+                <Container>
+                    <NewsRelated news={relatedNews} />
+                </Container>
+            </section>
+
+            <BackToTop />
         </>
     );
 }

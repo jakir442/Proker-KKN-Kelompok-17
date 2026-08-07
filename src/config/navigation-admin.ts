@@ -184,6 +184,15 @@ export const adminNavigation: Record<UserRole, AdminNavigationItem[]> = {
         },
 
         {
+            title: "Profil Desa",
+            breadcrumb: "Profil Desa",
+            description: "Kelola informasi profil Desa Cintanagara.",
+            href: "/dashboard/admin/profile-desa",
+            icon: Building2,
+            parent: "/dashboard/admin",
+        },
+
+        {
             title: "Layanan Desa",
             breadcrumb: "Layanan Desa",
             description: "Kelola layanan administrasi desa.",
@@ -283,15 +292,6 @@ export const adminNavigation: Record<UserRole, AdminNavigationItem[]> = {
         },
 
         // ===== Submenu Pengaturan =====
-
-        {
-            title: "Profil Desa",
-            breadcrumb: "Profil Desa",
-            description: "Kelola informasi profil Desa Cintanagara.",
-            href: "/dashboard/admin/profile-desa",
-            icon: Building2,
-            parent: "/dashboard/admin",
-        },
 
         {
             title: "Website",
