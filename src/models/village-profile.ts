@@ -259,17 +259,18 @@ const villageProfileSchema = new Schema<IVillageProfile>(
         location: {
             latitude: {
                 type: Number,
-                default: -7.0,
+                default: -7.2945319358058,
             },
 
             longitude: {
                 type: Number,
-                default: 107.0,
+                default: 107.81471817152,
             },
 
             googleMaps: {
                 type: String,
                 default: "",
+                trim: true,
             },
         },
     },

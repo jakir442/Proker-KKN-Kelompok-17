@@ -17,7 +17,7 @@ interface ProfileHeroProps {
 export function ProfileHero({
     title,
     description,
-    image = "/images/about-desa.jpg",
+    image = "/images/about-desa.png",
 }: ProfileHeroProps) {
     return (
         <section className="relative overflow-hidden rounded-[2rem] border bg-muted shadow-xl">
