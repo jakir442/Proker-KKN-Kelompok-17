@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { MapPin, Quote, Sparkles } from "lucide-react";
+import { MapPin, Quote, ShieldCheck, Sparkles } from "lucide-react";
 
 import { SectionHeading } from "@/components/public/common/SectionHeading";
 
@@ -43,43 +43,40 @@ export function HeadmanSection({ name, position, photo, greeting, photoSettings 
                     {/* =====================================================
                         PROFILE CARD
                     ====================================================== */}
-                    <div className="mx-auto w-full max-w-[320px] md:max-w-[280px] lg:mx-0 lg:max-w-[280px] xl:max-w-[300px]">
-                        <div className="overflow-hidden rounded-[1.75rem] border bg-card shadow-sm">
-                            {/* PHOTO */}
-                            <div className="relative aspect-[4/5] overflow-hidden bg-muted">
-                                <Image
-                                    src={imageSrc}
-                                    alt={`Foto ${name}`}
-                                    fill
-                                    sizes="
-                                        (max-width: 767px) 320px,
-                                        (max-width: 1023px) 280px,
-                                        (max-width: 1279px) 280px,
-                                        300px
-                                    "
-                                    className="object-cover"
-                                    style={{
-                                        objectPosition: `${positionX}% ${positionY}%`,
-                                        transform: `scale(${zoom})`,
-                                    }}
-                                />
+                    <div className="group relative overflow-hidden rounded-[2rem] border bg-muted shadow-xl">
+                        <div className="relative aspect-[4/5] w-full overflow-hidden">
+                            <Image
+                                src={imageSrc}
+                                alt={`Foto ${name}`}
+                                fill
+                                sizes="(max-width: 1024px) 100vw, 380px"
+                                className="object-cover"
+                                style={{
+                                    objectPosition: `${positionX}% ${positionY}%`,
+                                    transform: `scale(${zoom})`,
+                                    transformOrigin: "center center",
+                                }}
+                            />
 
-                                {/* Subtle bottom gradient */}
-                                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 to-transparent" />
+                            {/* Overlay */}
+                            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+
+                            {/* Position Badge */}
+                            <div className="absolute left-5 top-5">
+                                <div className="inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-foreground shadow-sm backdrop-blur">
+                                    <ShieldCheck className="h-4 w-4 text-primary" />
+                                    {position}
+                                </div>
                             </div>
 
-                            {/* PROFILE INFO */}
-                            <div className="p-5 sm:p-6">
-                                <div className="space-y-1">
-                                    <h3 className="text-lg font-bold tracking-tight sm:text-xl">
-                                        {name}
-                                    </h3>
+                            {/* Name */}
+                            <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+                                <h3 className="text-2xl font-bold tracking-tight">{name}</h3>
 
-                                    <p className="text-sm font-medium text-primary">{position}</p>
-                                </div>
+                                <p className="mt-1 text-sm text-white/80">{position}</p>
 
-                                <div className="mt-4 flex items-start gap-2.5 border-t pt-4 text-xs leading-5 text-muted-foreground sm:text-sm">
-                                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary/80" />
+                                <div className="mt-4 flex items-center gap-2 text-sm text-white/70">
+                                    <MapPin className="h-4 w-4 shrink-0" />
 
                                     <span>Kecamatan Cigedug, Kabupaten Garut</span>
                                 </div>
