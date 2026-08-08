@@ -74,10 +74,10 @@ export function VillageProfileClient({ profile }: Props) {
                 position: profile?.headman?.position ?? "Kepala Desa",
                 greeting: profile?.headman?.greeting ?? "",
 
-                // File yang dipilih user
+                // File baru
                 photo: undefined,
 
-                // URL foto yang sudah tersimpan di database
+                // URL foto yang sudah tersimpan
                 photoUrl: profile?.headman?.photo ?? "",
             },
 

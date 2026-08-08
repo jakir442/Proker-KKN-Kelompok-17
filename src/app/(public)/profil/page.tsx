@@ -10,32 +10,34 @@ import { VillageMap } from "@/components/public/profile/VillageMap";
 import { VillageStats } from "@/components/public/profile/VillageStats";
 import { VisionMissionSection } from "@/components/public/profile/VisionMissionSection";
 
+const PROFILE_DESCRIPTION =
+    "Mengenal lebih dekat Desa Cintanagara, Kecamatan Cigedug, Kabupaten Garut. Jelajahi sejarah, visi misi, pemerintahan desa, statistik, dan berbagai informasi resmi dalam satu halaman.";
+
 export default async function VillageProfilePage() {
     const result = await getVillageProfilePublicAction();
 
     if (!result.success || !result.data) {
         return (
             <Container className="py-16">
-                <ProfileHero
-                    title="Profil Desa Cintanagara"
-                    description="Mengenal lebih dekat Desa Cintanagara, Kecamatan Cigedug, Kabupaten Garut. Jelajahi sejarah, visi misi, pemerintahan desa, statistik, dan berbagai informasi resmi dalam satu halaman."
-                />
+                <ProfileHero title="Profil Desa Cintanagara" description={PROFILE_DESCRIPTION} />
             </Container>
         );
     }
 
     const profile = result.data;
+    // console.log("HEADMAN PHOTO:", profile.headman.photo);
+    // console.log("HEADMAN DATA:", profile.headman);
 
     return (
         <Container className="py-8 lg:py-10">
             <div className="space-y-24">
                 <ProfileHero
-                    title="Profil Desa Cintanagara"
-                    description="Mengenal lebih dekat Desa Cintanagara, Kecamatan Cigedug, Kabupaten Garut. Jelajahi sejarah, visi misi, pemerintahan desa, statistik, dan berbagai informasi resmi dalam satu halaman."
+                    title={`Profil ${profile.villageName || "Desa Cintanagara"}`}
+                    description={PROFILE_DESCRIPTION}
                 />
 
                 <Reveal className="scroll-mt-24">
-                    <AboutSection about={profile.about} />
+                    <AboutSection about={profile.about} officePhoto={profile.officePhoto} />
                 </Reveal>
 
                 <Reveal className="scroll-mt-24">
@@ -49,6 +51,7 @@ export default async function VillageProfilePage() {
                 <Reveal className="scroll-mt-24">
                     <HeadmanSection
                         name={profile.headman.name}
+                        position={profile.headman.position}
                         photo={profile.headman.photo}
                         greeting={profile.headman.greeting}
                     />

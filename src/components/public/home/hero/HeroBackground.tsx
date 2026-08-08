@@ -21,7 +21,7 @@ export function HeroBackground() {
                 }}
             >
                 <Image
-                    src="/images/hero-desa.jpg"
+                    src="/images/hero-desa.png"
                     alt="Desa Cintanagara"
                     fill
                     priority
