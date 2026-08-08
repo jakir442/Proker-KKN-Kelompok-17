@@ -45,7 +45,7 @@ export const VILLAGE_PROFILE_SECTIONS = [
     },
     {
         id: "headman",
-        label: "Kepala Desa",
+        label: "Kepala Desa Cintanagara",
         description: "Kelola informasi kepala desa dan sambutan resmi.",
         icon: UserRound,
         component: HeadmanSection,

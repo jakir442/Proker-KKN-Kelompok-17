@@ -1,14 +1,14 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-
+import type { FieldErrors, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import type { FieldErrors } from "react-hook-form";
 
 import type { IVillageProfile } from "@/models/village-profile";
 
@@ -16,8 +16,10 @@ import {
     villageProfileSchema,
     type VillageProfileValues,
 } from "@/validations/village-profile.schema";
+
 import { VILLAGE_PROFILE_SECTIONS } from "@/config/village-profile";
 import type { VillageProfileSection } from "@/types/village-profile";
+
 import { TopNavigation } from "./TopNavigation";
 import { updateVillageProfileAction } from "@/actions/village-profile/update-village-profile";
 
@@ -27,33 +29,56 @@ interface Props {
 
 export function VillageProfileClient({ profile }: Props) {
     const [activeSection, setActiveSection] = useState<VillageProfileSection>("basic");
+
     const [loading, startTransition] = useTransition();
+
     const SECTION_NAME: Record<VillageProfileSection, string> = {
         basic: "Informasi Dasar",
         about: "Tentang Desa",
         vision: "Visi & Misi",
-        headman: "Kepala Desa",
+        headman: "Kepala Desa Cintanagara",
         statistics: "Statistik Desa",
         location: "Lokasi Desa",
     };
+
+    /**
+     * =========================================================
+     * FORM
+     * =========================================================
+     *
+     * Generic VillageProfileValues sengaja diberikan secara
+     * eksplisit agar UseFormReturn yang dihasilkan sama dengan
+     * tipe yang digunakan oleh seluruh Section.
+     */
     const form = useForm<VillageProfileValues>({
         resolver: zodResolver(villageProfileSchema),
+
         defaultValues: {
             villageName: profile?.villageName ?? "",
             address: profile?.address ?? "",
             district: profile?.district ?? "",
             regency: profile?.regency ?? "",
             province: profile?.province ?? "",
+
             postalCode: profile?.postalCode ?? "",
             email: profile?.email ?? "",
             phone: profile?.phone ?? "",
             website: profile?.website ?? "",
             officeHours: profile?.officeHours ?? "",
 
+            // =================================================
+            // FILE
+            // =================================================
+
             logo: undefined,
             officePhoto: undefined,
+
             logoUrl: profile?.logo ?? "",
             officePhotoUrl: profile?.officePhoto ?? "",
+
+            // =================================================
+            // CONTENT
+            // =================================================
 
             about: profile?.about ?? "",
             history: profile?.history ?? "",
@@ -69,6 +94,10 @@ export function VillageProfileClient({ profile }: Props) {
                       },
                   ],
 
+            // =================================================
+            // HEADMAN
+            // =================================================
+
             headman: {
                 name: profile?.headman?.name ?? "",
                 position: profile?.headman?.position ?? "Kepala Desa",
@@ -77,9 +106,22 @@ export function VillageProfileClient({ profile }: Props) {
                 // File baru
                 photo: undefined,
 
-                // URL foto yang sudah tersimpan
+                // Foto yang sudah tersimpan
                 photoUrl: profile?.headman?.photo ?? "",
+
+                // Pengaturan foto tersimpan
+                photoSettings: profile?.headman?.photoSettings
+                    ? {
+                          zoom: profile.headman.photoSettings.zoom,
+                          positionX: profile.headman.photoSettings.positionX,
+                          positionY: profile.headman.photoSettings.positionY,
+                      }
+                    : undefined,
             },
+
+            // =================================================
+            // STATISTICS
+            // =================================================
 
             statistics: {
                 area: profile?.statistics?.area ?? 0,
@@ -90,6 +132,10 @@ export function VillageProfileClient({ profile }: Props) {
                 hamlets: profile?.statistics?.hamlets ?? 0,
             },
 
+            // =================================================
+            // LOCATION
+            // =================================================
+
             location: {
                 latitude: profile?.location?.latitude ?? -7.218,
                 longitude: profile?.location?.longitude ?? 107.903,
@@ -97,6 +143,12 @@ export function VillageProfileClient({ profile }: Props) {
             },
         },
     });
+
+    /**
+     * =========================================================
+     * ACTIVE SECTION
+     * =========================================================
+     */
 
     const section = useMemo(
         () => VILLAGE_PROFILE_SECTIONS.find((item) => item.id === activeSection),
@@ -108,6 +160,12 @@ export function VillageProfileClient({ profile }: Props) {
     }
 
     const ActiveSection = section.component;
+
+    /**
+     * =========================================================
+     * SECTION FIELDS
+     * =========================================================
+     */
 
     const SECTION_FIELDS: Record<VillageProfileSection, (keyof VillageProfileValues)[]> = {
         basic: [
@@ -126,12 +184,23 @@ export function VillageProfileClient({ profile }: Props) {
             "logoUrl",
             "officePhotoUrl",
         ],
+
         about: ["about", "history"],
+
         vision: ["vision", "mission"],
+
         headman: ["headman"],
+
         statistics: ["statistics"],
+
         location: ["location"],
     };
+
+    /**
+     * =========================================================
+     * FIND SECTION WITH ERROR
+     * =========================================================
+     */
 
     function getErrorSection(errors: FieldErrors<VillageProfileValues>): VillageProfileSection {
         for (const [section, fields] of Object.entries(SECTION_FIELDS) as [
@@ -145,6 +214,12 @@ export function VillageProfileClient({ profile }: Props) {
 
         return "basic";
     }
+
+    /**
+     * =========================================================
+     * FOCUS FIRST ERROR
+     * =========================================================
+     */
 
     function focusFirstError(section: VillageProfileSection) {
         switch (section) {
@@ -174,7 +249,13 @@ export function VillageProfileClient({ profile }: Props) {
         }
     }
 
-    async function onSubmit(values: VillageProfileValues) {
+    /**
+     * =========================================================
+     * SUBMIT
+     * =========================================================
+     */
+
+    const onSubmit: SubmitHandler<VillageProfileValues> = async (values) => {
         console.log("SUBMIT");
         console.log(values);
 
@@ -189,25 +270,47 @@ export function VillageProfileClient({ profile }: Props) {
             }
 
             toast.success(result.message);
+
             form.reset(values);
         });
-    }
+    };
+
+    /**
+     * =========================================================
+     * RENDER
+     * =========================================================
+     */
 
     return (
         <form
             className="space-y-6"
             onSubmit={form.handleSubmit(onSubmit, (errors) => {
-                const section = getErrorSection(errors);
+                const errorSection = getErrorSection(errors);
 
-                setActiveSection(section);
-                focusFirstError(section);
+                setActiveSection(errorSection);
+
+                /**
+                 * Delay sedikit supaya section baru sudah
+                 * ter-render sebelum setFocus dijalankan.
+                 */
+                requestAnimationFrame(() => {
+                    focusFirstError(errorSection);
+                });
 
                 toast.error("Data belum lengkap", {
-                    description: `Silakan lengkapi bagian "${SECTION_NAME[section]}".`,
+                    description: `Silakan lengkapi bagian "${SECTION_NAME[errorSection]}".`,
                 });
             })}
         >
+            {/* =================================================
+                TOP NAVIGATION
+            ================================================= */}
+
             <TopNavigation value={activeSection} onChange={setActiveSection} />
+
+            {/* =================================================
+                ACTIVE SECTION
+            ================================================= */}
 
             <Card className="overflow-hidden rounded-3xl border shadow-sm">
                 <div className="p-5 sm:p-6 lg:p-8">
@@ -215,9 +318,13 @@ export function VillageProfileClient({ profile }: Props) {
                 </div>
             </Card>
 
+            {/* =================================================
+                SAVE BAR
+            ================================================= */}
+
             <div className="sticky bottom-4 z-30 flex justify-end">
-                <Card className="flex w-full max-w-md items-center justify-between rounded-2xl border p-4 shadow-xl backdrop-blur">
-                    <div>
+                <Card className="flex w-full max-w-md items-center justify-between gap-4 rounded-2xl border p-4 shadow-xl backdrop-blur">
+                    <div className="min-w-0">
                         <p className="text-sm font-semibold">Simpan Perubahan</p>
 
                         <p className="text-xs text-muted-foreground">

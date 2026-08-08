@@ -16,18 +16,18 @@ export function LocationSection({ form, loading }: VillageProfileSectionProps) {
         formState: { errors },
     } = form;
 
-    const locationValue = watch("location") as
-        | { latitude?: number; longitude?: number }
-        | undefined;
+    const locationValue = watch("location");
+
     const latitude = locationValue?.latitude;
     const longitude = locationValue?.longitude;
 
     return (
         <FormSection
             title="Lokasi Desa"
-            description="Kelola lokasi kantor desa melalui peta interaktif."
+            description="Kelola lokasi kantor Desa Cintanagara melalui peta interaktif."
         >
             <div className="space-y-6">
+                {/* ================= MAP ================= */}
                 <Controller
                     control={control}
                     name="location.latitude"
@@ -38,16 +38,19 @@ export function LocationSection({ form, loading }: VillageProfileSectionProps) {
                             onChange={(lat, lng) => {
                                 setValue("location.latitude", lat, {
                                     shouldDirty: true,
+                                    shouldValidate: true,
                                 });
 
                                 setValue("location.longitude", lng, {
                                     shouldDirty: true,
+                                    shouldValidate: true,
                                 });
                             }}
                         />
                     )}
                 />
 
+                {/* ================= COORDINATES ================= */}
                 <div className="grid gap-5 md:grid-cols-2">
                     <FormInput
                         id="latitude"
@@ -59,6 +62,7 @@ export function LocationSection({ form, loading }: VillageProfileSectionProps) {
                             valueAsNumber: true,
                         })}
                         error={errors.location?.latitude?.message}
+                        helperText="Koordinat lintang kantor desa."
                     />
 
                     <FormInput
@@ -71,18 +75,27 @@ export function LocationSection({ form, loading }: VillageProfileSectionProps) {
                             valueAsNumber: true,
                         })}
                         error={errors.location?.longitude?.message}
+                        helperText="Koordinat bujur kantor desa."
                     />
                 </div>
 
-                <FormInput
-                    id="googleMaps"
-                    label="Link Google Maps"
-                    placeholder="https://maps.google.com/..."
-                    disabled={loading}
-                    {...register("location.googleMaps")}
-                    error={errors.location?.googleMaps?.message}
-                    helperText="Opsional. Digunakan untuk tombol navigasi di website publik."
-                />
+                {/* ================= ROUTE INFO ================= */}
+                <div className="rounded-xl border bg-muted/30 p-4">
+                    <div className="space-y-1">
+                        <p className="text-sm font-medium">Navigasi ke Kantor Desa</p>
+
+                        <p className="text-xs leading-relaxed text-muted-foreground">
+                            Tombol rute pada website publik akan otomatis mengarahkan pengunjung ke
+                            koordinat kantor Desa Cintanagara menggunakan Google Maps.
+                        </p>
+
+                        {typeof latitude === "number" && typeof longitude === "number" && (
+                            <p className="pt-2 text-xs font-medium text-foreground">
+                                Tujuan: {latitude.toFixed(6)}, {longitude.toFixed(6)}
+                            </p>
+                        )}
+                    </div>
+                </div>
             </div>
         </FormSection>
     );
