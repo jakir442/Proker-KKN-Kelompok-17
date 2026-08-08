@@ -69,13 +69,20 @@ export async function updateVillageProfileAction(
 
             headman: {
                 name: validated.data.headman.name,
+
                 position: validated.data.headman.position,
+
                 greeting: validated.data.headman.greeting,
 
-                photo:
-                    typeof validated.data.headman.photo === "string"
-                        ? validated.data.headman.photo
-                        : (validated.data.headman.photoUrl ?? ""),
+                photo: validated.data.headman.photoUrl ?? "",
+
+                photoSettings: {
+                    zoom: validated.data.headman.photoSettings?.zoom ?? 1,
+
+                    positionX: validated.data.headman.photoSettings?.positionX ?? 50,
+
+                    positionY: validated.data.headman.photoSettings?.positionY ?? 50,
+                },
             },
 
             statistics: validated.data.statistics,

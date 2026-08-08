@@ -33,11 +33,13 @@ export interface IVillageProfile {
         name: string;
         position: string;
         photo?: string;
+
         photoSettings?: {
             zoom: number;
             positionX: number;
             positionY: number;
         };
+
         greeting: string;
     };
 
