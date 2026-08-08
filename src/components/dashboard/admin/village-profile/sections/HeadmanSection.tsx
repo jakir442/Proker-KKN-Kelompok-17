@@ -10,8 +10,12 @@ export function HeadmanSection({ form, loading }: VillageProfileSectionProps) {
     const {
         control,
         register,
+        watch,
+        setValue,
         formState: { errors },
     } = form;
+
+    const photoUrl = watch("headman.photoUrl");
 
     return (
         <FormSection
@@ -40,24 +44,37 @@ export function HeadmanSection({ form, loading }: VillageProfileSectionProps) {
                 </div>
 
                 <Controller
-                    control={form.control}
+                    control={control}
                     name="headman.photo"
                     render={({ field }) => (
-                        <FormUpload
-                            id="headman-photo"
-                            label="Foto Kepala Desa"
-                            value={field.value ?? form.watch("headman.photoUrl")}
-                            onChange={(file) => {
-                                field.onChange(file);
+                        <div className="max-w-md">
+                            <FormUpload
+                                id="headman-photo"
+                                label="Foto Kepala Desa"
+                                value={field.value ?? null}
+                                previewUrl={photoUrl}
+                                folder="village/headman"
+                                onChange={(file) => {
+                                    field.onChange(file);
 
-                                if (file) {
-                                    form.setValue("headman.photoUrl", "", {
+                                    if (!file) {
+                                        setValue("headman.photoUrl", "", {
+                                            shouldDirty: true,
+                                        });
+                                    }
+                                }}
+                                onUploaded={(url) => {
+                                    setValue("headman.photoUrl", url, {
                                         shouldDirty: true,
+                                        shouldValidate: true,
                                     });
-                                }
-                            }}
-                            error={errors.headman?.photo?.message}
-                        />
+                                }}
+                                error={errors.headman?.photo?.message}
+                                disabled={loading}
+                                accept="image/jpeg,image/png,image/webp"
+                                aspectRatio="4/5"
+                            />
+                        </div>
                     )}
                 />
 

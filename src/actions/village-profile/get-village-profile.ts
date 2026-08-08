@@ -50,30 +50,60 @@ export async function updateVillageProfileAction(values: VillageProfileValues) {
             regency: validated.data.regency,
             province: validated.data.province,
             postalCode: validated.data.postalCode ?? "",
+
             email: validated.data.email,
             phone: validated.data.phone ?? "",
             website: validated.data.website ?? "",
             officeHours: validated.data.officeHours ?? "",
+
             about: validated.data.about,
             history: validated.data.history,
             vision: validated.data.vision,
+
             mission: validated.data.mission.map((item) => item.value),
+
+            // =========================================
+            // HEADMAN
+            // =========================================
             headman: {
                 name: validated.data.headman.name,
                 position: validated.data.headman.position,
-                greeting: validated.data.headman.greeting,
 
                 photo:
                     typeof validated.data.headman.photo === "string"
                         ? validated.data.headman.photo
                         : (validated.data.headman.photoUrl ?? ""),
+
+                photoSettings: {
+                    zoom: validated.data.headman.photoSettings?.zoom ?? 1,
+                    positionX: validated.data.headman.photoSettings?.positionX ?? 50,
+                    positionY: validated.data.headman.photoSettings?.positionY ?? 50,
+                },
+
+                greeting: validated.data.headman.greeting,
             },
+
+            // =========================================
+            // STATISTICS
+            // =========================================
             statistics: validated.data.statistics,
+
+            // =========================================
+            // LOCATION
+            // =========================================
             location: validated.data.location,
+
+            // =========================================
+            // LOGO
+            // =========================================
             logo:
                 typeof validated.data.logo === "string"
                     ? validated.data.logo
                     : (validated.data.logoUrl ?? ""),
+
+            // =========================================
+            // OFFICE PHOTO
+            // =========================================
             officePhoto:
                 typeof validated.data.officePhoto === "string"
                     ? validated.data.officePhoto
@@ -81,8 +111,10 @@ export async function updateVillageProfileAction(values: VillageProfileValues) {
         };
 
         const profile = await updateVillageProfile(payload);
+
         revalidatePath("/dashboard/admin/profile-desa");
         revalidatePath("/profil");
+
         return {
             success: true,
             message: "Profil desa berhasil diperbarui.",

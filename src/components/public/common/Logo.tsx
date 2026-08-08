@@ -1,13 +1,18 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Landmark } from "lucide-react";
 import { SITE } from "@/constants/site";
 
 export function Logo() {
     return (
-        <Link href="/" className="flex items-center gap-2">
-            <div className="rounded-lg bg-emerald-600 p-2 text-white">
-                <Landmark className="h-5 w-5" />
-            </div>
+        <Link href="/" className="flex items-center gap-3">
+            <Image
+                src="/logo/icon-website.png"
+                alt="Logo Desa Cintanagara"
+                width={40}
+                height={40}
+                className="h-10 w-10 object-contain"
+                priority
+            />
 
             <div className="leading-tight">
                 <h1 className="font-bold text-slate-900">{SITE.name}</h1>
