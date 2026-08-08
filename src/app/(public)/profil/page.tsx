@@ -53,6 +53,7 @@ export default async function VillageProfilePage() {
                         name={profile.headman.name}
                         position={profile.headman.position}
                         photo={profile.headman.photo}
+                        photoSettings={profile.headman.photoSettings}
                         greeting={profile.headman.greeting}
                     />
                 </Reveal>

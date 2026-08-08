@@ -10,6 +10,7 @@ interface Props {
     position: string;
     photo?: string;
     greeting: string;
+
     photoSettings?: {
         zoom: number;
         positionX: number;

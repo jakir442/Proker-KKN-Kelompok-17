@@ -5,6 +5,7 @@ import { ImagePlus, Loader2, Pencil, RotateCcw, Trash2, Upload } from "lucide-re
 
 import { FormField } from "../FormField";
 import { UploadDropzone } from "../upload/UploadDropzone";
+import type { PhotoSettings } from "@/validations/village-profile.schema";
 
 interface FormUploadProps {
     id?: string;
@@ -13,8 +14,11 @@ interface FormUploadProps {
     value?: File | null;
     previewUrl?: string;
 
+    photoSettings?: PhotoSettings;
+
     onChange: (file: File | null) => void;
     onUploaded?: (url: string) => void;
+    onPhotoSettingsChange?: (settings: PhotoSettings) => void;
 
     folder?: string;
 
@@ -33,8 +37,10 @@ export function FormUpload({
     label,
     value,
     previewUrl,
+    photoSettings,
     onChange,
     onUploaded,
+    onPhotoSettingsChange,
     folder,
     error,
     helperText,
@@ -49,9 +55,9 @@ export function FormUpload({
     const [editing, setEditing] = useState(false);
     const [uploading, setUploading] = useState(false);
 
-    const [zoom, setZoom] = useState(1);
-    const [positionX, setPositionX] = useState(50);
-    const [positionY, setPositionY] = useState(50);
+    const [zoom, setZoom] = useState(photoSettings?.zoom ?? 1);
+    const [positionX, setPositionX] = useState(photoSettings?.positionX ?? 50);
+    const [positionY, setPositionY] = useState(photoSettings?.positionY ?? 50);
 
     /**
      * Object URL hanya dibuat untuk File baru.
@@ -65,7 +71,7 @@ export function FormUpload({
     }, [value]);
 
     /**
-     * Bersihkan object URL agar tidak terjadi memory leak.
+     * Bersihkan Object URL.
      */
     useEffect(() => {
         return () => {
@@ -76,7 +82,7 @@ export function FormUpload({
     }, [objectUrl]);
 
     /**
-     * Prioritas:
+     * Prioritas preview:
      *
      * 1. File baru
      * 2. URL Cloudinary dari database
@@ -90,10 +96,28 @@ export function FormUpload({
     }[aspectRatio];
 
     /**
-     * Upload file ke Cloudinary.
+     * Update pengaturan foto.
+     */
+    function updatePhotoSettings(settings: Partial<PhotoSettings>) {
+        const nextSettings: PhotoSettings = {
+            zoom: settings.zoom ?? zoom,
+            positionX: settings.positionX ?? positionX,
+            positionY: settings.positionY ?? positionY,
+        };
+
+        setZoom(nextSettings.zoom);
+        setPositionX(nextSettings.positionX);
+        setPositionY(nextSettings.positionY);
+
+        onPhotoSettingsChange?.(nextSettings);
+    }
+
+    /**
+     * Upload ke Cloudinary.
      */
     async function uploadToCloudinary(file: File) {
         const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+
         const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
         if (!cloudName || !uploadPreset) {
@@ -105,13 +129,6 @@ export function FormUpload({
         formData.append("file", file);
         formData.append("upload_preset", uploadPreset);
 
-        /**
-         * Folder bersifat optional.
-         *
-         * Karena unsigned upload Cloudinary membutuhkan
-         * konfigurasi folder pada upload preset jika ingin
-         * folder digunakan.
-         */
         if (folder) {
             formData.append("folder", folder);
         }
@@ -146,16 +163,19 @@ export function FormUpload({
             setUploading(true);
 
             /**
-             * Tampilkan file secara lokal terlebih dahulu.
+             * Tampilkan file secara lokal.
              */
             onChange(file);
 
             /**
-             * Reset adjustment.
+             * Foto baru menggunakan
+             * posisi default.
              */
-            setZoom(1);
-            setPositionX(50);
-            setPositionY(50);
+            updatePhotoSettings({
+                zoom: 1,
+                positionX: 50,
+                positionY: 50,
+            });
 
             /**
              * Upload ke Cloudinary.
@@ -163,16 +183,12 @@ export function FormUpload({
             const url = await uploadToCloudinary(file);
 
             /**
-             * Kirim URL Cloudinary ke React Hook Form.
+             * Simpan URL ke React Hook Form.
              */
             onUploaded?.(url);
         } catch (error) {
             console.error("[FormUpload] Upload:", error);
 
-            /**
-             * Jika upload gagal,
-             * hapus file dari form.
-             */
             onChange(null);
 
             alert(error instanceof Error ? error.message : "Gagal mengunggah gambar.");
@@ -181,6 +197,9 @@ export function FormUpload({
         }
     }
 
+    /**
+     * Hapus foto.
+     */
     function removeImage() {
         if (uploading) {
             return;
@@ -188,18 +207,13 @@ export function FormUpload({
 
         onChange(null);
 
-        /**
-         * URL lama juga harus dikosongkan.
-         *
-         * FormUpload tidak mengetahui nama field,
-         * sehingga HeadmanSection akan menangani
-         * pengosongan photoUrl.
-         */
-        setEditing(false);
+        updatePhotoSettings({
+            zoom: 1,
+            positionX: 50,
+            positionY: 50,
+        });
 
-        setZoom(1);
-        setPositionX(50);
-        setPositionY(50);
+        setEditing(false);
 
         if (inputRef.current) {
             inputRef.current.value = "";
@@ -215,9 +229,11 @@ export function FormUpload({
     }
 
     function resetAdjustment() {
-        setZoom(1);
-        setPositionX(50);
-        setPositionY(50);
+        updatePhotoSettings({
+            zoom: 1,
+            positionX: 50,
+            positionY: 50,
+        });
     }
 
     return (
@@ -240,8 +256,8 @@ export function FormUpload({
                     void handleFile(event.target.files?.[0] ?? null);
 
                     /**
-                     * Supaya file yang sama tetap bisa dipilih
-                     * kembali setelah dihapus.
+                     * Supaya file yang sama
+                     * bisa dipilih kembali.
                      */
                     event.target.value = "";
                 }}
@@ -249,7 +265,7 @@ export function FormUpload({
 
             {preview ? (
                 <div className="w-full max-w-[360px] space-y-3">
-                    {/* ================= PREVIEW ================= */}
+                    {/* Preview */}
                     <div
                         className={`relative w-full overflow-hidden rounded-2xl border bg-muted ${aspectClass}`}
                     >
@@ -263,7 +279,7 @@ export function FormUpload({
                             }}
                         />
 
-                        {/* Loading overlay */}
+                        {/* Loading */}
                         {uploading && (
                             <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 backdrop-blur-sm">
                                 <div className="flex flex-col items-center gap-2 text-white">
@@ -274,7 +290,7 @@ export function FormUpload({
                             </div>
                         )}
 
-                        {/* Gradient */}
+                        {/* Bottom action */}
                         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-3 pt-14">
                             <button
                                 type="button"
@@ -299,7 +315,7 @@ export function FormUpload({
                         </button>
                     </div>
 
-                    {/* ================= EDITOR ================= */}
+                    {/* Editor */}
                     {editing && (
                         <div className="space-y-5 rounded-2xl border bg-card p-4 shadow-sm">
                             <div className="flex items-center justify-between gap-3">
@@ -362,7 +378,11 @@ export function FormUpload({
                                         max="2"
                                         step="0.05"
                                         value={zoom}
-                                        onChange={(event) => setZoom(Number(event.target.value))}
+                                        onChange={(event) =>
+                                            updatePhotoSettings({
+                                                zoom: Number(event.target.value),
+                                            })
+                                        }
                                         className="w-full"
                                     />
                                 </div>
@@ -390,7 +410,9 @@ export function FormUpload({
                                         step="1"
                                         value={positionX}
                                         onChange={(event) =>
-                                            setPositionX(Number(event.target.value))
+                                            updatePhotoSettings({
+                                                positionX: Number(event.target.value),
+                                            })
                                         }
                                         className="w-full"
                                     />
@@ -419,13 +441,16 @@ export function FormUpload({
                                         step="1"
                                         value={positionY}
                                         onChange={(event) =>
-                                            setPositionY(Number(event.target.value))
+                                            updatePhotoSettings({
+                                                positionY: Number(event.target.value),
+                                            })
                                         }
                                         className="w-full"
                                     />
                                 </div>
                             </div>
 
+                            {/* Done */}
                             <div className="flex justify-end">
                                 <button
                                     type="button"

@@ -16,6 +16,7 @@ export function HeadmanSection({ form, loading }: VillageProfileSectionProps) {
     } = form;
 
     const photoUrl = watch("headman.photoUrl");
+    const photoSettings = watch("headman.photoSettings");
 
     return (
         <FormSection
@@ -23,6 +24,10 @@ export function HeadmanSection({ form, loading }: VillageProfileSectionProps) {
             description="Kelola informasi kepala desa dan sambutan resmi."
         >
             <div className="space-y-6">
+                {/* ============================================
+                    INFORMASI KEPALA DESA
+                ============================================ */}
+
                 <div className="grid gap-5 md:grid-cols-2">
                     <FormInput
                         id="headman-name"
@@ -43,40 +48,67 @@ export function HeadmanSection({ form, loading }: VillageProfileSectionProps) {
                     />
                 </div>
 
+                {/* ============================================
+                    FOTO KEPALA DESA
+                ============================================ */}
+
                 <Controller
                     control={control}
                     name="headman.photo"
                     render={({ field }) => (
-                        <div className="max-w-md">
-                            <FormUpload
-                                id="headman-photo"
-                                label="Foto Kepala Desa"
-                                value={field.value ?? null}
-                                previewUrl={photoUrl}
-                                folder="village/headman"
-                                onChange={(file) => {
-                                    field.onChange(file);
+                        <FormUpload
+                            id="headman-photo"
+                            label="Foto Kepala Desa"
+                            value={field.value ?? null}
+                            previewUrl={photoUrl}
+                            photoSettings={photoSettings}
+                            folder="village/headman"
+                            onChange={(file) => {
+                                field.onChange(file);
 
-                                    if (!file) {
-                                        setValue("headman.photoUrl", "", {
-                                            shouldDirty: true,
-                                        });
-                                    }
-                                }}
-                                onUploaded={(url) => {
-                                    setValue("headman.photoUrl", url, {
+                                if (!file) {
+                                    setValue("headman.photoUrl", "", {
                                         shouldDirty: true,
                                         shouldValidate: true,
                                     });
-                                }}
-                                error={errors.headman?.photo?.message}
-                                disabled={loading}
-                                accept="image/jpeg,image/png,image/webp"
-                                aspectRatio="4/5"
-                            />
-                        </div>
+
+                                    setValue(
+                                        "headman.photoSettings",
+                                        {
+                                            zoom: 1,
+                                            positionX: 50,
+                                            positionY: 50,
+                                        },
+                                        {
+                                            shouldDirty: true,
+                                            shouldValidate: true,
+                                        },
+                                    );
+                                }
+                            }}
+                            onUploaded={(url) => {
+                                setValue("headman.photoUrl", url, {
+                                    shouldDirty: true,
+                                    shouldValidate: true,
+                                });
+                            }}
+                            onPhotoSettingsChange={(settings) => {
+                                setValue("headman.photoSettings", settings, {
+                                    shouldDirty: true,
+                                    shouldValidate: true,
+                                });
+                            }}
+                            error={errors.headman?.photo?.message}
+                            disabled={loading}
+                            accept="image/jpeg,image/png,image/webp"
+                            aspectRatio="4/5"
+                        />
                     )}
                 />
+
+                {/* ============================================
+                    SAMBUTAN
+                ============================================ */}
 
                 <FormTextarea
                     id="headman-greeting"
